@@ -122,7 +122,7 @@ export default function PromptLab() {
             onClick={() => setF(t.fields)}
             className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border-soft bg-surface px-4 text-sm font-medium transition-colors hover:border-primary hover:text-primary"
           >
-            {t.name} <span lang="ar" className="text-xs text-fg-subtle">{t.ar}</span>
+            {t.name} <span lang="ar" data-ar-help className="text-xs text-fg-subtle">{t.ar}</span>
           </button>
         ))}
         <button
@@ -141,7 +141,7 @@ export default function PromptLab() {
               <div className="mb-1.5 flex items-baseline justify-between">
                 <label htmlFor={`f-${m.key}`} className="text-[15px] font-semibold">
                   {m.label} {m.required && <span className="text-danger" aria-hidden>*</span>}
-                  <span lang="ar" className="ml-2 text-xs font-normal text-fg-subtle">{m.ar}</span>
+                  <span lang="ar" data-ar-help className="ml-2 text-xs font-normal text-fg-subtle">{m.ar}</span>
                 </label>
                 <span className="text-xs text-fg-muted" id={`h-${m.key}`}>{m.hint}</span>
               </div>
@@ -158,7 +158,7 @@ export default function PromptLab() {
           ))}
           <fieldset>
             <legend className="mb-2 text-[15px] font-semibold">
-              Tone <span lang="ar" className="ml-2 text-xs font-normal text-fg-subtle">الأسلوب</span>
+              Tone <span lang="ar" data-ar-help className="ml-2 text-xs font-normal text-fg-subtle">الأسلوب</span>
             </legend>
             <div className="flex flex-wrap gap-2">
               {TONES.map((t) => (
@@ -207,7 +207,7 @@ export default function PromptLab() {
                     </span>
                     <span className="leading-tight">
                       {c.en}
-                      <span lang="ar" className="block text-xs text-fg-subtle">{c.ar}</span>
+                      <span lang="ar" data-ar-help className="block text-xs text-fg-subtle">{c.ar}</span>
                     </span>
                   </li>
                 ))}

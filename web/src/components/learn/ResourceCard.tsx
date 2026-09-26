@@ -47,7 +47,7 @@ export function ResourceCard({ r, compact }: { r: Resource; compact?: boolean })
         </span>
         {!compact && r.description && <span className="mt-1 block text-sm text-fg-muted">{r.description}</span>}
         {!compact && r.descriptionAr && (
-          <span lang="ar" className="block text-xs text-fg-subtle">
+          <span lang="ar" data-ar-help className="block text-xs text-fg-subtle">
             {r.descriptionAr}
           </span>
         )}

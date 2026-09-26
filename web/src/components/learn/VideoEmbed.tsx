@@ -51,7 +51,7 @@ export function VideoEmbed({ video, className }: { video: Resource; className?: 
         <div className="min-w-0">
           <p className="font-semibold leading-snug">{video.title}</p>
           {video.description && <p className="mt-0.5 text-sm text-fg-muted">{video.description}</p>}
-          {video.descriptionAr && <p lang="ar" className="text-xs text-fg-subtle">{video.descriptionAr}</p>}
+          {video.descriptionAr && <p lang="ar" data-ar-help className="text-xs text-fg-subtle">{video.descriptionAr}</p>}
         </div>
         <a
           href={video.url}

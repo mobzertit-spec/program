@@ -52,6 +52,9 @@ type AppState = {
   recordPronunciation: (ok: boolean) => void
   // preferences
   showArabic: boolean
+  /** Arabic subtitles under English titles and hints */
+  arabicHelp: boolean
+  setArabicHelp: (v: boolean) => void
   setShowArabic: (v: boolean) => void
   theme: Theme
   setTheme: (t: Theme) => void
@@ -85,6 +88,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [reviewsDone, setReviewsDone] = usePersistentState('pe:reviews', 0)
   const [pronunciationHits, setPronunciationHits] = usePersistentState('pe:pron', 0)
   const [showArabic, setShowArabic] = usePersistentState('pe:show-ar', false)
+  const [arabicHelp, setArabicHelp] = usePersistentState('pe:ar-help', true)
+  useEffect(() => {
+    document.documentElement.classList.toggle('ar-help-off', !arabicHelp)
+  }, [arabicHelp])
   const [theme, setTheme] = usePersistentState<Theme>('pe:theme', 'system')
 
   useEffect(() => {
@@ -199,14 +206,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       completed, markComplete, quizScores, setQuizScore,
       xp, xpToday, xpLog, addXp, level, streak, bestStreak, dailyGoal, setDailyGoal,
       reviewsDone, pronunciationHits, recordPronunciation,
-      showArabic, setShowArabic, theme, setTheme, resetProgress,
+      showArabic, setShowArabic, arabicHelp, setArabicHelp, theme, setTheme, resetProgress,
     }),
     [
       saved, isSaved, toggleSave, removeWord, rateWord, dueWords,
       completed, markComplete, quizScores, setQuizScore,
       xp, xpToday, xpLog, addXp, level, streak, bestStreak, dailyGoal, setDailyGoal,
       reviewsDone, pronunciationHits, recordPronunciation,
-      showArabic, setShowArabic, theme, setTheme, resetProgress,
+      showArabic, setShowArabic, arabicHelp, setArabicHelp, theme, setTheme, resetProgress,
     ],
   )
 

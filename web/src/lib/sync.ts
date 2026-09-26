@@ -10,6 +10,7 @@ export const SYNC_KEYS = [
   'pe:goal',
   'pe:reviews',
   'pe:pron',
+  'pe:profile',
 ] as const
 
 export type ProgressData = Partial<Record<(typeof SYNC_KEYS)[number], unknown>>
@@ -64,6 +65,7 @@ export function mergeProgress(local: ProgressData, remote: ProgressData): Progre
     'pe:goal': local['pe:goal'] ?? remote['pe:goal'] ?? 30,
     'pe:reviews': Math.max(num(remote['pe:reviews']), num(local['pe:reviews'])),
     'pe:pron': Math.max(num(remote['pe:pron']), num(local['pe:pron'])),
+    'pe:profile': (local['pe:profile'] as { onboarded?: boolean } | undefined)?.onboarded ? local['pe:profile'] : (remote['pe:profile'] ?? local['pe:profile']),
   }
 }
 

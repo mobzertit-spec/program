@@ -3,11 +3,14 @@ import {
   ArrowRight, Award, BookOpen, Check, Crown, Download, Flame, Layers, Lock, Medal, Mic, RotateCcw, Rocket, Star,
   Trophy, Upload, Zap,
 } from 'lucide-react'
-import { useRef, type ChangeEvent } from 'react'
+import { useRef, useState, type ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { LessonIcon } from '@/components/LessonIcon'
 import { Parallax, TrackArt } from '@/components/art/TrackArt'
+import { Onboarding } from '@/components/learn/Onboarding'
 import { WordOfTheDay } from '@/components/learn/WordOfTheDay'
+import { useProfile } from '@/lib/profile'
+import { trackOf } from '@/data/lessons'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { ProgressRing } from '@/components/ui/progress-ring'
 import { useToast } from '@/components/ui/toast'
@@ -26,33 +29,53 @@ const OFFSETS = [0, 72, 100, 72, 0, -72, -100, -72]
 
 export default function Path() {
   const app = useApp()
-  const next = nextLesson(app.completed)
+  const { profile, track: preferred } = useProfile()
+  const [onboarding, setOnboarding] = useState(!profile.onboarded)
+  const next = nextLesson(app.completed, preferred)
   const done = app.completed.length
+  const isNew = done === 0 && app.xp === 0
 
   return (
     <div className="mx-auto max-w-[1024px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
       <PageHeader eyebrow={{ en: 'Your journey', ar: 'رحلتك' }} title={{ en: 'Learning path.', ar: 'المسار التعليمي' }} intro={{ en: `Five tracks, ${lessons.length} lessons. Finish a lesson to unlock the next one, keep your streak alive, and collect badges.`, ar: `خمسة مسارات و${lessons.length} درسًا. أنهِ درسًا ليُفتح التالي، وحافظ على سلسلة أيامك، واجمع الشارات.` }} />
 
-      <Dashboard />
+      <Onboarding open={onboarding} onClose={() => setOnboarding(false)} />
 
       {next && (
-        <BlurFade delay={0.1}>
+        <BlurFade delay={0.05}>
           <Link
             to={`/lessons/${next.id}`}
-            className="group mt-6 flex items-center gap-4 rounded-3xl bg-fg p-5 text-bg shadow-pop transition-transform hover:-translate-y-0.5 sm:p-6"
+            className="group mt-8 flex items-center gap-4 rounded-3xl bg-fg p-5 text-bg shadow-pop transition-transform hover:-translate-y-0.5 sm:p-6"
           >
             <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-bg/10">
               <LessonIcon name={next.icon} className="size-7" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-sm opacity-70">{done ? 'Continue with' : 'Start with'} · Lesson {next.number}</span>
-              <span className="block truncate text-xl font-semibold tracking-tight">{next.title}</span>
-              <span lang="ar" className="block text-sm opacity-70">{next.titleAr}</span>
+              <span className="block text-sm opacity-70">
+                {done ? 'Continue with' : 'Start here'} · {trackOf(next.track).title}
+              </span>
+              <span className="block text-xl font-semibold leading-tight tracking-tight">{next.title}</span>
+              <span lang="ar" data-ar-help className="block text-sm opacity-70">{next.titleAr}</span>
             </span>
             <ArrowRight className="size-6 shrink-0 transition-transform group-hover:translate-x-1" />
           </Link>
+          <p className="mt-3 flex flex-wrap items-center gap-x-2 text-sm text-fg-muted">
+            {preferred ? (
+              <>
+                Recommended track: <span className="font-medium text-fg">{trackOf(preferred).title}</span>
+              </>
+            ) : (
+              'Not sure where to start?'
+            )}
+            <button onClick={() => setOnboarding(true)} className="cursor-pointer font-medium text-link hover:underline">
+              {preferred ? 'Change' : 'Get a recommendation'}
+            </button>
+          </p>
         </BlurFade>
       )}
+
+      {/* stats appear once there is something to show */}
+      {!isNew && <Dashboard />}
 
       <div className="mt-16 space-y-20">
         {tracks.map((t, i) => (
@@ -117,7 +140,7 @@ function Dashboard() {
               <p className="text-2xl font-bold tracking-tight">
                 {xpToday}/{dailyGoal} <span className="text-base font-medium text-fg-muted">XP</span>
               </p>
-              <p lang="ar" className="text-xs text-fg-subtle">هدفك اليومي</p>
+              <p lang="ar" data-ar-help className="text-xs text-fg-subtle">هدفك اليومي</p>
             </div>
           </div>
           <div className="mt-auto pt-4">
@@ -186,7 +209,7 @@ function TrackMap({ track, index, currentId }: { track: Track; index: number; cu
             <h2 id={`track-${track.id}`} className="text-3xl font-bold tracking-tight sm:text-4xl">
               {track.title}
             </h2>
-            <p lang="ar" className="text-fg-muted">{track.titleAr}</p>
+            <p lang="ar" data-ar-help className="text-fg-muted">{track.titleAr}</p>
             <p className="mt-2 max-w-xl text-fg-muted">{track.description}</p>
             <div className="mt-4 inline-flex items-center gap-3 rounded-2xl bg-bg-alt px-4 py-3">
             <ProgressRing value={doneCount / items.length} size={40} stroke={4} label={`${doneCount} of ${items.length} lessons done`} />
@@ -347,7 +370,7 @@ function Achievements() {
       <div className="flex items-end justify-between">
         <div>
           <h2 id="badges-title" className="text-3xl font-bold tracking-tight sm:text-4xl">Badges</h2>
-          <p lang="ar" className="text-fg-muted">الشارات</p>
+          <p lang="ar" data-ar-help className="text-fg-muted">الشارات</p>
         </div>
         <p className="text-sm text-fg-muted">
           <span className="font-semibold text-fg">{count}</span> / {list.length} earned
@@ -368,7 +391,7 @@ function Achievements() {
                 {a.got ? <Icon className="size-6" /> : <Lock className="size-5" />}
               </span>
               <p className="mt-3 text-sm font-semibold leading-tight">{a.title}</p>
-              <p lang="ar" className="text-center text-xs text-fg-muted">{a.titleAr}</p>
+              <p lang="ar" data-ar-help className="text-center text-xs text-fg-muted">{a.titleAr}</p>
               <p className="mt-1 text-xs text-fg-subtle">{a.description}</p>
               <span className="sr-only">{a.got ? 'Earned' : 'Not earned yet'}</span>
             </li>
@@ -405,7 +428,7 @@ function DataCard() {
         <p className="mt-1 text-sm text-fg-muted">
           Progress is saved in this browser — no account needed. Download a backup to move it to another device.
         </p>
-        <p lang="ar" className="text-xs text-fg-subtle">يُحفظ تقدّمك في هذا المتصفح. نزّل نسخة احتياطية لنقله إلى جهاز آخر.</p>
+        <p lang="ar" data-ar-help className="text-xs text-fg-subtle">يُحفظ تقدّمك في هذا المتصفح. نزّل نسخة احتياطية لنقله إلى جهاز آخر.</p>
         <div className="mt-4 flex flex-wrap gap-2">
           <button
             onClick={exportProgress}

@@ -110,7 +110,7 @@ function OrderGame() {
           Task {(index % orderTasks.length) + 1} of {orderTasks.length}
         </p>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight">{task.goal}</h2>
-        <p lang="ar" className="text-sm text-fg-subtle">{task.goalAr}</p>
+        <p lang="ar" data-ar-help className="text-sm text-fg-subtle">{task.goalAr}</p>
         <p className="mt-3 text-sm text-fg-muted">Drag the parts (or use the arrows) to build the clearest prompt.</p>
 
         <Reorder.Group axis="y" values={items} onReorder={(v) => { setItems(v); setChecked(false) }} className="mt-5 space-y-2.5">
@@ -176,7 +176,7 @@ function OrderGame() {
             </li>
           ))}
         </ol>
-        <p lang="ar" className="mt-4 text-sm text-fg-muted">الدور ← السياق ← المهمة ← المثال ← التنسيق</p>
+        <p lang="ar" data-ar-help className="mt-4 text-sm text-fg-muted">الدور ← السياق ← المهمة ← المثال ← التنسيق</p>
       </aside>
     </div>
   )
@@ -222,7 +222,7 @@ function FixGame() {
         <p className="mt-2 font-mono text-lg">“{task.weak}”</p>
       </div>
       <h2 className="mt-6 text-xl font-semibold tracking-tight">Which changes make it better? Choose all that help.</h2>
-      <p lang="ar" className="text-sm text-fg-subtle">اختر كل التعديلات التي تحسّن الطلب.</p>
+      <p lang="ar" data-ar-help className="text-sm text-fg-subtle">اختر كل التعديلات التي تحسّن الطلب.</p>
 
       <ul className="mt-4 space-y-2.5">
         {task.options.map((o, i) => {
@@ -251,7 +251,7 @@ function FixGame() {
                         {o.good ? 'Helps. ' : 'Does not help. '}
                       </span>
                       <span className="text-fg-muted">{o.why}</span>
-                      <span lang="ar" className="block text-xs text-fg-subtle">{o.whyAr}</span>
+                      <span lang="ar" data-ar-help className="block text-xs text-fg-subtle">{o.whyAr}</span>
                     </span>
                   )}
                 </span>
@@ -372,7 +372,7 @@ function Dictation() {
                     </button>
                   </div>
                   <p className="mt-4 text-fg-muted">Listen and type the word you hear.</p>
-                  <p lang="ar" className="text-center text-sm text-fg-subtle">استمع واكتب الكلمة.</p>
+                  <p lang="ar" data-ar-help className="text-center text-sm text-fg-subtle">استمع واكتب الكلمة.</p>
                 </>
               ) : (
                 <>

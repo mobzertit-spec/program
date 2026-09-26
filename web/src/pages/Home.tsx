@@ -1,14 +1,16 @@
 import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'motion/react'
 import { ArrowRight, Award, BookmarkCheck, Check, ChevronRight, Flame, GraduationCap, Languages, LifeBuoy, Lock, MousePointerClick, PlayCircle, TextSelect, Volume2, Wand2 } from 'lucide-react'
-import { useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { useRef, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { LessonIcon, levelTone } from '@/components/LessonIcon'
 import { Parallax, TrackArt } from '@/components/art/TrackArt'
 import { TranslatableText } from '@/components/translate/TranslatableText'
 import { Badge } from '@/components/ui/badge'
 import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
 import { BlurFade } from '@/components/ui/blur-fade'
-import { ButtonLink } from '@/components/ui/button'
+import { ButtonLink, buttonClass } from '@/components/ui/button'
+import { Onboarding } from '@/components/learn/Onboarding'
+import { useProfile } from '@/lib/profile'
 import { Marquee } from '@/components/ui/marquee'
 import { WordReveal } from '@/components/ui/word-reveal'
 import { useTranslator } from '@/context/TranslatorContext'
@@ -42,28 +44,39 @@ export default function Home() {
                 C<span className="text-brand">E</span>
               </span>
               Learn Claude · Learn English
-              <span lang="ar" className="text-fg-subtle">· تعلّم الاثنين معًا</span>
+              <span lang="ar" data-ar-help className="text-fg-subtle">· تعلّم الاثنين معًا</span>
             </p>
           </BlurFade>
           <WordReveal
             text="Talk to AI. Speak better English."
-            className="mx-auto max-w-4xl text-balance text-[44px] font-bold leading-[1.05] tracking-[-0.035em] sm:text-7xl md:text-[84px]"
+            className="mx-auto max-w-4xl text-balance text-[40px] font-bold leading-[1.05] tracking-[-0.035em] sm:text-7xl md:text-[84px]"
             wordClassName={(_, i) => (i >= 3 ? 'headline-gradient' : undefined)}
           />
+          {/* phones: the magic moment right away — tap a word */}
+          <BlurFade delay={0.35} className="sm:hidden">
+            <div className="mx-auto mt-6 max-w-sm rounded-3xl border border-border-soft bg-surface/90 p-4 text-left shadow-card backdrop-blur">
+              <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-clay">
+                <MousePointerClick className="size-3.5" /> Try it — tap a word
+              </p>
+              <TranslatableText
+                text="Give Claude clear context and a specific goal."
+                className="mt-2 text-lg leading-relaxed"
+                highlight={new Set(['context', 'specific', 'goal', 'clear'])}
+              />
+            </div>
+          </BlurFade>
           <BlurFade delay={0.45}>
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-fg-muted sm:text-[21px]">
               Short, beautiful lessons that teach you how to use Claude — written in simple English, with an instant Arabic
               translation for every single word.
             </p>
-            <p lang="ar" dir="rtl" className="mx-auto mt-3 max-w-xl text-center text-base text-fg-subtle">
+            <p lang="ar" data-ar-help dir="rtl" className="mx-auto mt-3 max-w-xl text-center text-base text-fg-subtle">
               دروس قصيرة تعلّمك استخدام Claude بإنجليزية بسيطة، مع ترجمة عربية فورية لكل كلمة.
             </p>
           </BlurFade>
           <BlurFade delay={0.6}>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <ButtonLink to="/path" size="lg">
-                Start your learning path <ArrowRight className="size-5" />
-              </ButtonLink>
+              <StartButton />
               <ButtonLink to="/lessons" size="lg" variant="link" className="text-[17px]">
                 Browse all lessons <ChevronRight className="size-4" />
               </ButtonLink>
@@ -101,7 +114,7 @@ export default function Home() {
                 </div>
                 <p className="flex items-center justify-center gap-2 pt-2 text-sm text-fg-muted">
                   <MousePointerClick className="size-4" /> Click an underlined word to see its Arabic meaning
-                  <span lang="ar" className="hidden text-fg-subtle sm:inline">· اضغط على أي كلمة</span>
+                  <span lang="ar" data-ar-help className="hidden text-fg-subtle sm:inline">· اضغط على أي كلمة</span>
                 </p>
               </div>
             </div>
@@ -121,7 +134,7 @@ export default function Home() {
             <BlurFade key={s.l} delay={i * 0.08}>
               <p className="text-4xl font-bold tracking-tight sm:text-5xl">{s.n}</p>
               <p className="mt-1 text-sm text-fg-muted">{s.l}</p>
-              <p lang="ar" className="text-center text-xs text-fg-subtle">{s.ar}</p>
+              <p lang="ar" data-ar-help className="text-center text-xs text-fg-subtle">{s.ar}</p>
             </BlurFade>
           ))}
         </div>
@@ -134,7 +147,7 @@ export default function Home() {
           <h2 className="mt-2 max-w-3xl text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">
             From your first message to <span className="text-brand">Claude Code</span>.
           </h2>
-          <p lang="ar" className="mt-3 text-fg-muted">خمسة مسارات: من رسالتك الأولى حتى Claude Code والدراسة.</p>
+          <p lang="ar" data-ar-help className="mt-3 text-fg-muted">خمسة مسارات: من رسالتك الأولى حتى Claude Code والدراسة.</p>
         </BlurFade>
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
           {tracks.map((t, i) => (
@@ -152,7 +165,7 @@ export default function Home() {
                       Track {i + 1} · {lessonsByTrack(t.id).length} lessons
                     </p>
                     <h3 className="mt-1 text-2xl font-semibold tracking-tight">{t.title}</h3>
-                    <p lang="ar" className="text-sm text-fg-muted">{t.titleAr}</p>
+                    <p lang="ar" data-ar-help className="text-sm text-fg-muted">{t.titleAr}</p>
                     <p className="mt-2 text-[15px] text-fg-muted">{t.description}</p>
                   </div>
                   <ArrowRight className="mt-6 size-5 shrink-0 text-link transition-transform group-hover:translate-x-1" />
@@ -169,7 +182,7 @@ export default function Home() {
           <h2 className="max-w-3xl text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">
             Everything you need. <span className="text-fg-subtle">Nothing you don’t.</span>
           </h2>
-          <p lang="ar" dir="rtl" className="mt-3 text-left text-fg-muted">كل ما تحتاجه، ولا شيء زائد.</p>
+          <p lang="ar" data-ar-help dir="rtl" className="mt-3 text-left text-fg-muted">كل ما تحتاجه، ولا شيء زائد.</p>
         </BlurFade>
 
         <BlurFade delay={0.1} className="mt-12">
@@ -285,7 +298,7 @@ export default function Home() {
               Unlock lessons one by one, earn XP, keep your daily streak, and collect badges. Smart reviews bring every word back
               right before you forget it.
             </p>
-            <p lang="ar" className="mt-2 text-fg-subtle">مسار يحفّزك كل يوم: نقاط، وسلسلة أيام، وشارات، ومراجعة ذكية.</p>
+            <p lang="ar" data-ar-help className="mt-2 text-fg-subtle">مسار يحفّزك كل يوم: نقاط، وسلسلة أيام، وشارات، ومراجعة ذكية.</p>
             <ButtonLink to="/path" className="mt-7">
               See your path <ArrowRight className="size-4" />
             </ButtonLink>
@@ -349,7 +362,7 @@ export default function Home() {
                 <c.icon className="size-8 text-clay" aria-hidden />
                 <h3 className="mt-5 text-xl font-semibold tracking-tight">{c.t}</h3>
                 <p className="mt-2 text-[15px] text-fg-muted">{c.d}</p>
-                <p lang="ar" className="mt-1 text-sm text-fg-subtle">{c.ar}</p>
+                <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-subtle">{c.ar}</p>
                 <span className="mt-auto inline-flex items-center gap-1 pt-5 text-sm font-medium text-link">
                   Open the library <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" />
                 </span>
@@ -376,7 +389,7 @@ export default function Home() {
                   <div key={v.word} className="flex items-center gap-3 rounded-full border border-border-soft bg-surface px-5 py-3 shadow-card">
                     <span className="font-semibold">{v.word}</span>
                     <span className="h-4 w-px bg-border" />
-                    <span lang="ar" className="text-fg-muted">{v.ar}</span>
+                    <span lang="ar" data-ar-help className="text-fg-muted">{v.ar}</span>
                   </div>
                 ))}
             </Marquee>
@@ -389,7 +402,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-[1024px] items-end justify-between gap-4 px-4 sm:px-6">
           <BlurFade>
             <h2 className="text-4xl font-bold tracking-[-0.03em] sm:text-5xl">Explore the lessons.</h2>
-            <p lang="ar" className="mt-2 text-fg-muted">اكتشف الدروس</p>
+            <p lang="ar" data-ar-help className="mt-2 text-fg-muted">اكتشف الدروس</p>
           </BlurFade>
           <Link to="/lessons" className="hidden shrink-0 items-center gap-1 text-link hover:underline sm:inline-flex">
             View all <ChevronRight className="size-4" />
@@ -410,7 +423,7 @@ export default function Home() {
                     <span className="text-sm font-medium text-fg-subtle">{String(l.number).padStart(2, '0')}</span>
                   </div>
                   <h3 className="mt-6 text-2xl font-semibold tracking-tight">{l.title}</h3>
-                  <p lang="ar" className="mt-1 text-sm text-fg-muted">{l.titleAr}</p>
+                  <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-muted">{l.titleAr}</p>
                   <p className="mt-3 line-clamp-3 text-[15px] leading-relaxed text-fg-muted">{l.summary.en}</p>
                 </div>
                 <div className="flex items-center justify-between">
@@ -522,5 +535,23 @@ function Chip({ chip, progress, delay }: { chip: (typeof CHIPS)[number]; progres
         </span>
       </motion.div>
     </motion.div>
+  )
+}
+
+/** First visit → two quick questions; afterwards straight to the path. */
+function StartButton() {
+  const { profile } = useProfile()
+  const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <button
+        onClick={() => (profile.onboarded ? navigate('/path') : setOpen(true))}
+        className={buttonClass('primary', 'lg')}
+      >
+        Start learning — it’s free <ArrowRight className="size-5" />
+      </button>
+      <Onboarding open={open} onClose={() => setOpen(false)} />
+    </>
   )
 }

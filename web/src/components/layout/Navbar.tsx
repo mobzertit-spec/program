@@ -1,10 +1,11 @@
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from 'motion/react'
-import { BookA, BookOpen, CircleUserRound, Flame, Gamepad2, Library, Moon, Route, Sun } from 'lucide-react'
+import { BookA, BookOpen, CircleUserRound, Flame, Gamepad2, Languages, Library, Moon, Route, Sun } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useApp } from '@/context/AppContext'
 import { avatarUrl, displayName, useAuth } from '@/context/AuthContext'
 import { useLocale } from '@/context/LocaleContext'
+import { useTranslator } from '@/context/TranslatorContext'
 import { cn } from '@/lib/utils'
 import { Wordmark } from './Logo'
 
@@ -18,7 +19,8 @@ const links = [
 
 /** Floating glass navbar: hides while scrolling down, returns on scroll up, shows page progress. */
 export function Navbar() {
-  const { theme, setTheme, showArabic, setShowArabic, dueWords, streak, xpToday, dailyGoal } = useApp()
+  const { theme, setTheme, arabicHelp, setArabicHelp, dueWords, streak, xp, xpToday, dailyGoal } = useApp()
+  const { setPanelOpen } = useTranslator()
   const { user } = useAuth()
   const { t, rtl } = useLocale()
   const reduce = useReducedMotion()
@@ -91,7 +93,8 @@ export function Navbar() {
             ))}
           </ul>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            {xp > 0 && (
             <Link
               to="/path"
               title={`${xpToday}/${dailyGoal} XP today`}
@@ -101,14 +104,23 @@ export function Navbar() {
               <Flame className={cn('size-[18px]', streak ? 'fill-clay text-clay' : 'text-fg-subtle')} />
               <span className={streak ? 'text-clay' : 'text-fg-muted'}>{streak}</span>
             </Link>
+            )}
             <button
-              onClick={() => setShowArabic(!showArabic)}
-              aria-pressed={showArabic}
-              title={showArabic ? 'Hide Arabic translations' : 'Show Arabic translations'}
-              aria-label={showArabic ? 'Hide Arabic translations' : 'Show Arabic translations'}
+              onClick={() => setPanelOpen(true)}
+              aria-label="Open the translator"
+              title="Translate (/)"
+              className="grid size-10 cursor-pointer place-items-center rounded-full text-fg-muted transition-colors hover:bg-bg-alt hover:text-fg lg:hidden"
+            >
+              <Languages className="size-[19px]" />
+            </button>
+            <button
+              onClick={() => setArabicHelp(!arabicHelp)}
+              aria-pressed={arabicHelp}
+              title={arabicHelp ? 'Hide Arabic help' : 'Show Arabic help'}
+              aria-label={arabicHelp ? 'Hide Arabic help' : 'Show Arabic help'}
               className={cn(
                 'grid size-10 cursor-pointer place-items-center rounded-full font-arabic text-base transition-colors',
-                showArabic ? 'bg-fg text-bg' : 'text-fg-muted hover:bg-bg-alt hover:text-fg',
+                arabicHelp ? 'bg-fg text-bg' : 'text-fg-muted hover:bg-bg-alt hover:text-fg',
               )}
             >
               ع

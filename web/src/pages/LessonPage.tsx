@@ -44,7 +44,7 @@ export default function LessonPage() {
 }
 
 function LessonView({ lesson }: { lesson: Lesson }) {
-  const { completed, markComplete } = useApp()
+  const { completed, markComplete, showArabic, setShowArabic } = useApp()
   const highlight = useMemo(() => new Set(lesson.vocab.map((v) => v.word)), [lesson])
   const idx = lessons.findIndex((l) => l.id === lesson.id)
   const prev = lessons[idx - 1]
@@ -73,7 +73,7 @@ function LessonView({ lesson }: { lesson: Lesson }) {
                 <LessonIcon name={lesson.icon} className="size-6 text-clay" />
               </span>
               <span className="text-sm font-medium text-fg-muted">
-                Lesson {lesson.number} of {lessons.length} · {track.title} <span lang="ar" className="text-fg-subtle">{track.titleAr}</span>
+                Lesson {lesson.number} of {lessons.length} · {track.title} <span lang="ar" data-ar-help className="text-fg-subtle">{track.titleAr}</span>
               </span>
             </div>
             <h1 className="mt-5 text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">{lesson.title}</h1>
@@ -109,9 +109,16 @@ function LessonView({ lesson }: { lesson: Lesson }) {
           <p>
             <strong className="text-fg">Click any word</strong> to translate it. <strong className="text-fg">Select a sentence</strong> to
             translate the whole phrase. Tap <span className="font-arabic font-semibold text-fg">ع</span> to see the Arabic version of a paragraph.
-            <span lang="ar" dir="rtl" className="mt-1 block text-right text-fg-subtle">
+            <span lang="ar" data-ar-help dir="rtl" className="mt-1 block text-right text-fg-subtle">
               اضغط على أي كلمة لترجمتها، أو حدّد جملة كاملة لترجمتها.
             </span>
+            <button
+              onClick={() => setShowArabic(!showArabic)}
+              aria-pressed={showArabic}
+              className="mt-3 inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border-soft px-3 text-sm font-medium text-fg hover:bg-bg-alt"
+            >
+              <span className="font-arabic">ع</span> {showArabic ? 'Hide all Arabic translations' : 'Show all Arabic translations'}
+            </button>
           </p>
         </div>
 
@@ -120,7 +127,7 @@ function LessonView({ lesson }: { lesson: Lesson }) {
           <section key={i} className="mb-12">
             <BlurFade>
               <TranslatableText as="h2" text={s.heading} className="text-2xl font-semibold tracking-tight sm:text-3xl" highlight={highlight} />
-              <p lang="ar" className="mt-1 text-sm text-fg-subtle">{s.headingAr}</p>
+              <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-subtle">{s.headingAr}</p>
             </BlurFade>
             <div className="mt-5 space-y-5">
               {s.paragraphs.map((p, j) => (
@@ -133,7 +140,7 @@ function LessonView({ lesson }: { lesson: Lesson }) {
         {lesson.video && (
           <section className="my-14" aria-labelledby="watch-title">
             <h2 id="watch-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">Watch</h2>
-            <p lang="ar" className="mt-1 text-sm text-fg-subtle">شاهد — فيديو رسمي من Anthropic (فعّل الترجمة الإنجليزية)</p>
+            <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-subtle">شاهد — فيديو رسمي من Anthropic (فعّل الترجمة الإنجليزية)</p>
             <VideoEmbed video={lesson.video} className="mt-6" />
           </section>
         )}
@@ -147,14 +154,14 @@ function LessonView({ lesson }: { lesson: Lesson }) {
               <Lightbulb className="size-4" /> Pro tip
             </p>
             <TranslatableText text={lesson.tip.en} className="mt-3 text-lg leading-relaxed text-fg" highlight={highlight} />
-            <p lang="ar" dir="rtl" className="mt-2 text-right text-fg-muted">{lesson.tip.ar}</p>
+            <p lang="ar" data-ar-help dir="rtl" className="mt-2 text-right text-fg-muted">{lesson.tip.ar}</p>
           </aside>
         </BlurFade>
 
         {/* Vocabulary */}
         <section className="my-16">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Key vocabulary</h2>
-          <p lang="ar" className="mt-1 text-sm text-fg-subtle">مفردات الدرس</p>
+          <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-subtle">مفردات الدرس</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {lesson.vocab.map((v, i) => (
               <BlurFade key={v.word} delay={i * 0.05}>
@@ -170,7 +177,7 @@ function LessonView({ lesson }: { lesson: Lesson }) {
         {/* Go deeper */}
         <section className="my-16" aria-labelledby="deeper-title">
           <h2 id="deeper-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">Go deeper</h2>
-          <p lang="ar" className="mt-1 text-sm text-fg-subtle">تعمّق أكثر — مصادر رسمية من Anthropic</p>
+          <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-subtle">تعمّق أكثر — مصادر رسمية من Anthropic</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {lesson.resources.map((r) => (
               <ResourceCard key={r.url} r={r} />
@@ -271,7 +278,7 @@ function PromptCompare({ example, highlight }: { example: NonNullable<Lesson['ex
   return (
     <section className="my-14">
       <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">See the difference</h2>
-      <p lang="ar" className="mt-1 text-sm text-fg-subtle">لاحظ الفرق</p>
+      <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-subtle">لاحظ الفرق</p>
       <div className="mt-6 grid gap-3">
         <BlurFade>
           <div className="rounded-3xl border border-border-soft bg-bg-alt p-6">
@@ -300,7 +307,7 @@ function PromptCompare({ example, highlight }: { example: NonNullable<Lesson['ex
         <BlurFade delay={0.12}>
           <div className="px-2 text-[15px]">
             <TranslatableText text={example.why.en} className="text-fg-muted" highlight={highlight} />
-            <p lang="ar" dir="rtl" className="mt-1 text-right text-fg-subtle">{example.why.ar}</p>
+            <p lang="ar" data-ar-help dir="rtl" className="mt-1 text-right text-fg-subtle">{example.why.ar}</p>
           </div>
         </BlurFade>
       </div>
@@ -375,7 +382,7 @@ function Quiz({ lesson }: { lesson: Lesson }) {
       <div className="flex items-center justify-between">
         <div>
           <h2 id="quiz-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">Quick check</h2>
-          <p lang="ar" className="mt-1 text-sm text-fg-subtle">اختبر نفسك</p>
+          <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-subtle">اختبر نفسك</p>
         </div>
         {finished && (
           <button
@@ -421,7 +428,7 @@ function QuizItem({ q, index, picked, onPick }: { q: QuizQuestion; index: number
   return (
     <li>
       <TranslatableText as="div" text={`${index + 1}. ${q.q}`} className="text-lg font-medium" />
-      <p lang="ar" dir="rtl" className="text-right text-sm text-fg-subtle">{q.qAr}</p>
+      <p lang="ar" data-ar-help dir="rtl" className="text-right text-sm text-fg-subtle">{q.qAr}</p>
       <div className="mt-3 grid gap-2" role="group" aria-label={`Question ${index + 1} options`}>
         {q.options.map((o, oi) => {
           const isAnswer = oi === q.answer
@@ -456,7 +463,7 @@ function QuizItem({ q, index, picked, onPick }: { q: QuizQuestion; index: number
           >
             <p className={cn('mt-3 text-sm font-medium', correct ? 'text-success' : 'text-danger')}>{correct ? 'Correct!' : 'Not quite.'}</p>
             <p className="text-sm text-fg-muted">{q.explain.en}</p>
-            <p lang="ar" dir="rtl" className="text-right text-sm text-fg-subtle">{q.explain.ar}</p>
+            <p lang="ar" data-ar-help dir="rtl" className="text-right text-sm text-fg-subtle">{q.explain.ar}</p>
           </motion.div>
         )}
       </AnimatePresence>

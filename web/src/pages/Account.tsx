@@ -74,7 +74,7 @@ function SignIn() {
       <BlurFade>
         <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Your account</p>
         <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em] sm:text-6xl">Keep your progress everywhere.</h1>
-        <p lang="ar" className="mt-3 text-lg text-fg-muted">احفظ تقدّمك على كل أجهزتك.</p>
+        <p lang="ar" data-ar-help className="mt-3 text-lg text-fg-muted">احفظ تقدّمك على كل أجهزتك.</p>
         <ul className="mt-8 space-y-4 text-fg-muted">
           {[
             { icon: Smartphone, t: 'Continue on your phone, laptop, or any browser', ar: 'تابع على الجوال أو الحاسوب أو أي متصفح' },
@@ -113,7 +113,7 @@ function SignIn() {
                 <p className="mt-2 text-sm text-fg">
                   We sent a sign-in link to <strong>{email}</strong>. Open it on this device to finish.
                 </p>
-                <p lang="ar" className="mt-1 text-sm text-fg-muted">أرسلنا رابط الدخول إلى بريدك. افتحه على هذا الجهاز.</p>
+                <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-muted">أرسلنا رابط الدخول إلى بريدك. افتحه على هذا الجهاز.</p>
                 <button onClick={() => setState('idle')} className="mt-4 cursor-pointer text-sm font-medium text-link hover:underline">
                   Use a different email
                 </button>
@@ -135,7 +135,7 @@ function SignIn() {
 
                 <form onSubmit={onEmail} noValidate>
                   <label htmlFor="email" className="text-sm font-medium">
-                    Email address <span lang="ar" className="font-normal text-fg-subtle">· البريد الإلكتروني</span>
+                    Email address <span lang="ar" data-ar-help className="font-normal text-fg-subtle">· البريد الإلكتروني</span>
                   </label>
                   <input
                     id="email"
@@ -258,7 +258,7 @@ function Profile() {
 
       <div className="mt-6 flex flex-wrap items-center gap-3 rounded-3xl border border-border-soft bg-surface p-5 shadow-card">
         <p className="flex-1 font-semibold">
-          Interface language <span lang="ar" className="font-normal text-fg-muted">· لغة الواجهة</span>
+          Interface language <span lang="ar" data-ar-help className="font-normal text-fg-muted">· لغة الواجهة</span>
         </p>
         <LanguageSwitch />
       </div>
@@ -275,7 +275,7 @@ function NotConfigured() {
     <BlurFade>
       <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Your account</p>
       <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em]">Sign-in is coming soon.</h1>
-      <p lang="ar" className="mt-2 text-fg-muted">تسجيل الدخول غير مفعّل بعد على هذه النسخة من الموقع.</p>
+      <p lang="ar" data-ar-help className="mt-2 text-fg-muted">تسجيل الدخول غير مفعّل بعد على هذه النسخة من الموقع.</p>
       <p className="mt-4 max-w-2xl text-lg text-fg-muted">
         This copy of CE runs without a server, so your progress is saved in this browser. You can still move it to another device
         with a backup file on the Path page.

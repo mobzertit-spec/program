@@ -68,10 +68,10 @@ export function TranslatorPanel() {
         whileTap={{ scale: 0.95 }}
         aria-expanded={panelOpen}
         aria-controls="translator-panel"
-        className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-40 lg:bottom-5 inline-flex min-h-12 min-w-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-fg px-3.5 sm:right-5 sm:pl-4 sm:pr-5 text-[15px] font-medium text-bg shadow-pop transition-transform hover:scale-[1.03]"
+        className="fixed bottom-5 right-5 z-40 hidden min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-fg pl-3.5 pr-4 text-[14px] lg:inline-flex font-medium text-bg shadow-pop transition-transform hover:scale-[1.03]"
       >
         <Languages className="size-5" />
-        <span className="sr-only sm:not-sr-only">Translate</span>
+        <span>Translate</span>
         <kbd className="ml-1 hidden rounded-md border border-bg/30 px-1.5 text-xs opacity-70 sm:inline">/</kbd>
       </motion.button>
 
@@ -96,7 +96,7 @@ export function TranslatorPanel() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.98, transition: { duration: 0.15 } }}
               transition={{ type: 'spring', bounce: 0.18, duration: 0.45 }}
-              className="fixed inset-x-3 bottom-[calc(9rem+env(safe-area-inset-bottom))] z-50 lg:bottom-20 overflow-hidden rounded-3xl border border-border-soft bg-surface/95 shadow-pop backdrop-blur-2xl sm:inset-x-auto sm:right-5 sm:w-[400px]"
+              className="fixed inset-x-3 top-[76px] z-[60] lg:top-auto lg:bottom-20 overflow-hidden rounded-3xl border border-border-soft bg-surface/95 shadow-pop backdrop-blur-2xl sm:inset-x-auto sm:right-5 sm:w-[400px]"
             >
               <div className="flex items-center justify-between px-5 pt-5">
                 <div>

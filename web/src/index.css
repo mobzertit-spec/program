@@ -129,6 +129,9 @@ body {
 
 /* Arabic runs are isolated RTL so mixed lines ("أعطِ Claude السياق") keep the right word order.
    They sit left-aligned under the English text by default; text-center / text-right utilities override. */
+/* "Arabic help" off: hide secondary Arabic subtitles (real translations always stay) */
+.ar-help-off [data-ar-help] { display: none !important; }
+
 @layer base {
   [lang="ar"]:not([dir]) {
     direction: rtl;

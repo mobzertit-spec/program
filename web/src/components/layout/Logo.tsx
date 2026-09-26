@@ -40,7 +40,7 @@ export function Wordmark({ className, compact }: { className?: string; compact?:
         <span className="text-[17px] font-extrabold tracking-[-0.04em]">
           C<span className="text-brand">E</span>
         </span>
-        {!compact && <span className="mt-0.5 text-[10px] font-medium tracking-wide text-fg-subtle">Claude · English</span>}
+        {!compact && <span className="mt-0.5 hidden text-[10px] font-medium tracking-wide text-fg-subtle min-[400px]:block">Claude · English</span>}
       </span>
     </span>
   )

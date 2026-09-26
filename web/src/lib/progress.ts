@@ -1,4 +1,4 @@
-import type { Lesson } from '@/data/lessons'
+import type { Lesson, TrackId } from '@/data/lessons'
 import { lessons } from '@/data/lessons'
 
 /** Local calendar day, e.g. "2026-09-26". */
@@ -35,8 +35,13 @@ export function isUnlocked(lesson: Lesson, completed: string[]) {
 }
 
 /** The next lesson to study: the first unlocked, unfinished lesson in path order. */
-export function nextLesson(completed: string[]) {
-  return lessons.find((l) => !completed.includes(l.id) && isUnlocked(l, completed))
+/**
+ * The next lesson to study: the first unlocked, unfinished lesson — inside the learner's
+ * preferred track when they chose one, otherwise in path order.
+ */
+export function nextLesson(completed: string[], preferredTrack?: TrackId | null) {
+  const open = (l: Lesson) => !completed.includes(l.id) && isUnlocked(l, completed)
+  return (preferredTrack && lessons.find((l) => l.track === preferredTrack && open(l))) || lessons.find(open)
 }
 
 /** Last `days` days of XP, oldest first — for the activity chart. */

@@ -20,7 +20,7 @@ export function PageHeader({ eyebrow, title, intro, children }: { eyebrow: Text;
         <p lang={rtl ? 'ar' : 'en'} dir={rtl ? 'rtl' : undefined} className="mt-4 max-w-2xl text-lg text-fg-muted sm:text-xl">
           {rtl ? intro.ar : intro.en}
         </p>
-        <p lang={rtl ? 'en' : 'ar'} dir={rtl ? 'ltr' : 'rtl'} className="mt-1 max-w-2xl text-fg-subtle" style={{ textAlign: rtl ? 'right' : 'left' }}>
+        <p lang={rtl ? 'en' : 'ar'} dir={rtl ? 'ltr' : 'rtl'} data-ar-help={rtl ? undefined : ''} className="mt-1 max-w-2xl text-fg-subtle" style={{ textAlign: rtl ? 'right' : 'left' }}>
           {rtl ? intro.en : intro.ar}
         </p>
         {children}

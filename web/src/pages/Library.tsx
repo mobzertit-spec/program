@@ -35,7 +35,7 @@ export default function Library() {
             onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-2 rounded-full border border-border-soft bg-surface px-4 text-sm font-medium hover:bg-bg-alt"
           >
-            {s.label} <span lang="ar" className="text-xs text-fg-subtle">{s.ar}</span>
+            {s.label} <span lang="ar" data-ar-help className="text-xs text-fg-subtle">{s.ar}</span>
           </button>
         ))}
       </nav>
@@ -71,7 +71,7 @@ export default function Library() {
               <span className="min-w-0 flex-1">
                 <span className="block text-[11px] font-medium uppercase tracking-wider text-fg-subtle">Playlist · Anthropic on YouTube</span>
                 <span className="block font-semibold leading-snug">{p.title}</span>
-                <span lang="ar" className="block text-xs text-fg-subtle">{p.titleAr}</span>
+                <span lang="ar" data-ar-help className="block text-xs text-fg-subtle">{p.titleAr}</span>
               </span>
               <ExternalLink className="size-4 shrink-0 opacity-50" />
             </a>
@@ -121,7 +121,7 @@ function Section({
       <h2 id={`${id}-title`} className="text-3xl font-bold tracking-tight sm:text-4xl">
         {title}
       </h2>
-      <p lang="ar" className="text-fg-muted">{titleAr}</p>
+      <p lang="ar" data-ar-help className="text-fg-muted">{titleAr}</p>
       <p className="mt-2 text-fg-muted">{note}</p>
       <div className="mt-6">{children}</div>
     </section>

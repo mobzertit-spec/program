@@ -93,7 +93,7 @@ export default function Lessons() {
                       )}
                     </div>
                     <h2 className="mt-5 text-2xl font-semibold tracking-tight">{l.title}</h2>
-                    <p lang="ar" className="text-sm text-fg-muted">{l.titleAr}</p>
+                    <p lang="ar" data-ar-help className="text-sm text-fg-muted">{l.titleAr}</p>
                     <p className="mt-3 text-[15px] leading-relaxed text-fg-muted">{l.summary.en}</p>
                     <div className="mt-5 flex flex-wrap items-center gap-2">
                       <Badge tone={levelTone(l.level)}>{l.level}</Badge>

@@ -80,7 +80,7 @@ function Review() {
         <div className="flex flex-col items-center justify-center rounded-[28px] bg-bg-alt px-6 py-14 text-center">
           <Brain className="size-12 text-primary" />
           <h2 className="mt-4 text-2xl font-semibold tracking-tight">{dueWords.length} words ready</h2>
-          <p lang="ar" className="text-center text-sm text-fg-muted">كلمات جاهزة للمراجعة</p>
+          <p lang="ar" data-ar-help className="text-center text-sm text-fg-muted">كلمات جاهزة للمراجعة</p>
           <button
             onClick={() => setSession('review')}
             className="mt-6 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-primary px-6 font-medium text-on-primary"
@@ -97,7 +97,7 @@ function Review() {
       <div className="flex flex-col items-center justify-center rounded-[28px] bg-success-soft px-6 py-14 text-center">
         <CheckCircle2 className="size-12 text-success" />
         <h2 className="mt-4 text-2xl font-semibold tracking-tight">All caught up!</h2>
-        <p lang="ar" className="text-center text-sm text-fg-muted">راجعت كل كلماتك المستحقة.</p>
+        <p lang="ar" data-ar-help className="text-center text-sm text-fg-muted">راجعت كل كلماتك المستحقة.</p>
         <p className="mt-2 text-fg-muted">Next review {formatDue(nextDue)}.</p>
         <button
           onClick={() => setSession('practice')}
@@ -148,7 +148,7 @@ function Flashcards({ deck, scheduled, onDone }: { deck: Row[]; scheduled: boole
           {known}/{deck.length}
         </p>
         <p className="mt-2 text-lg text-fg-muted">words you remembered</p>
-        <p lang="ar" className="text-center text-sm text-fg-subtle">كلمات تذكّرتها</p>
+        <p lang="ar" data-ar-help className="text-center text-sm text-fg-subtle">كلمات تذكّرتها</p>
         {scheduled && <p className="mt-3 max-w-xs text-sm text-fg-muted">Words you knew will come back later; the others come back soon.</p>}
         <button
           onClick={onDone}
@@ -417,7 +417,7 @@ function EmptyState() {
       <p className="mt-2 max-w-sm text-fg-muted">
         Click any word in a lesson and press <strong className="text-fg">Save word</strong>, or pick words from the word bank.
       </p>
-      <p lang="ar" className="mt-1 text-center text-sm text-fg-subtle">اضغط على أي كلمة في الدروس ثم اختر "حفظ"، أو اختر من بنك الكلمات.</p>
+      <p lang="ar" data-ar-help className="mt-1 text-center text-sm text-fg-subtle">اضغط على أي كلمة في الدروس ثم اختر "حفظ"، أو اختر من بنك الكلمات.</p>
       <div className="mt-6 flex flex-col gap-2 sm:flex-row">
         <ButtonLink to="/path">
           Open your path <ArrowRight className="size-4" />

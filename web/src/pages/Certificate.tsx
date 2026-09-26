@@ -81,7 +81,7 @@ function CertificateView({ track }: { track: Track }) {
           <Lock className="absolute inset-0 m-auto size-8 text-fg-subtle" />
         </div>
         <h1 className="mt-6 text-3xl font-bold tracking-tight">Certificate locked</h1>
-        <p lang="ar" className="text-center text-fg-muted">الشهادة مقفلة</p>
+        <p lang="ar" data-ar-help className="text-center text-fg-muted">الشهادة مقفلة</p>
         <p className="mt-3 text-fg-muted">
           Finish all {items.length} lessons of “{track.title}” to unlock it. You have done {done}.
         </p>
@@ -99,13 +99,13 @@ function CertificateView({ track }: { track: Track }) {
           <ArrowLeft className="size-4" /> Learning path
         </Link>
         <h1 className="mt-4 text-4xl font-bold tracking-[-0.03em] sm:text-5xl">Congratulations!</h1>
-        <p lang="ar" className="mt-1 text-lg text-fg-muted">مبروك! أنهيت مسار {track.titleAr}.</p>
+        <p lang="ar" data-ar-help className="mt-1 text-lg text-fg-muted">مبروك! أنهيت مسار {track.titleAr}.</p>
       </BlurFade>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex-1">
           <label htmlFor="cert-name" className="text-sm font-medium">
-            Name on the certificate <span lang="ar" className="font-normal text-fg-subtle">· الاسم على الشهادة</span>
+            Name on the certificate <span lang="ar" data-ar-help className="font-normal text-fg-subtle">· الاسم على الشهادة</span>
           </label>
           <input
             id="cert-name"
