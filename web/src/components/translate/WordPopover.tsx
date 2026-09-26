@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Bookmark, BookmarkCheck, Loader2, Volume2, X } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { isServer } from '@/lib/boot'
 import { POS_AR } from '@/data/dictionary'
 import { useApp } from '@/context/AppContext'
 import { useTranslator } from '@/context/TranslatorContext'
@@ -106,6 +107,7 @@ export function WordPopover() {
     toast(added ? `“${saveKey}” saved to your words` : `Removed “${saveKey}”`)
   }
 
+  if (isServer) return null // portals need the DOM
   return createPortal(
     <AnimatePresence>
       {target && (

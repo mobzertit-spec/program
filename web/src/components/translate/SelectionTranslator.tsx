@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Languages } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { isServer } from '@/lib/boot'
 import { useTranslator } from '@/context/TranslatorContext'
 
 type Pill = { text: string; rect: { top: number; left: number; bottom: number; width: number } }
@@ -53,6 +54,7 @@ export function SelectionTranslator() {
   const top = pill ? Math.max(8, pill.rect.top - 48) : 0
   const left = pill ? Math.min(Math.max(8, pill.rect.left + pill.rect.width / 2 - 60), window.innerWidth - 128) : 0
 
+  if (isServer) return null // portals need the DOM
   return createPortal(
     <AnimatePresence>
       {pill && (

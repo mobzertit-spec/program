@@ -20,9 +20,14 @@
     <meta name="description" content="Short lessons on using Claude, in simple English, with instant Arabic translation for every word. Free." />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#07080f" media="(prefers-color-scheme: dark)" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=Alexandria:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <!-- apply the saved theme before the first paint (no light flash in dark mode) -->
+    <script>
+      try {
+        var t = JSON.parse(localStorage.getItem('pe:theme') || '"system"')
+        if (t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
+        if (JSON.parse(localStorage.getItem('pe:ar-help') || 'true') === false) document.documentElement.classList.add('ar-help-off')
+      } catch (e) {}
+    </script>
     <title>CE — Learn Claude, speak better English</title>
   </head>
   <body>

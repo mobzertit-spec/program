@@ -52,7 +52,7 @@ const ART: Record<string, (grad: string) => React.ReactNode> = {
         <rect width="76" height="40" rx="14" fill="var(--ink)" />
         <text x="14" y="26" fontSize="15" fontWeight="700" fill="#fff" fontFamily="Inter, sans-serif">Aa</text>
         <path d="M38 20h8m-3-3l3 3-3 3" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <text x="54" y="27" fontSize="16" fill="#ffb07a" fontFamily="Alexandria, sans-serif">ع</text>
+        <text x="54" y="27" fontSize="16" fill="#ffb07a" fontFamily="Alexandria Variable, Alexandria, sans-serif">ع</text>
       </g>
     </g>
   ),
@@ -112,7 +112,7 @@ const ART: Record<string, (grad: string) => React.ReactNode> = {
       <g transform="translate(196 132)">
         <rect width="100" height="34" rx="12" fill="var(--surface)" stroke="var(--border)" />
         <text x="14" y="22" fontSize="13" fontWeight="600" fill="var(--fg)" fontFamily="Inter, sans-serif">fluent</text>
-        <text x="84" y="23" fontSize="13" textAnchor="end" fill="var(--clay)" fontFamily="Alexandria, sans-serif">طليق</text>
+        <text x="84" y="23" fontSize="13" textAnchor="end" fill="var(--clay)" fontFamily="Alexandria Variable, Alexandria, sans-serif">طليق</text>
       </g>
     </g>
   ),

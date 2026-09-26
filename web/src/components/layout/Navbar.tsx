@@ -52,8 +52,9 @@ export function Navbar() {
             scrolled ? 'shadow-[0_8px_30px_rgb(18_20_43/0.1)]' : 'shadow-[0_2px_10px_rgb(18_20_43/0.04)]',
           )}
         >
-          <Link to="/" className="rounded-full pr-2" aria-label="CE home">
+          <Link to="/" className="rounded-full pr-2">
             <Wordmark />
+            <span className="sr-only"> — home</span>
           </Link>
 
           <ul className="hidden items-center gap-0.5 lg:flex" dir={rtl ? 'rtl' : 'ltr'}>

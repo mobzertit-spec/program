@@ -385,7 +385,7 @@ function Achievements() {
               key={a.id}
               className={cn(
                 'flex flex-col items-center rounded-3xl border p-4 text-center transition-colors',
-                a.got ? 'border-clay/30 bg-clay-soft' : 'border-border-soft bg-surface opacity-60',
+                a.got ? 'border-clay/30 bg-clay-soft' : 'border-dashed border-border bg-surface/60',
               )}
             >
               <span className={cn('grid size-12 place-items-center rounded-full', a.got ? 'bg-clay text-white' : 'bg-bg-alt text-fg-subtle')}>

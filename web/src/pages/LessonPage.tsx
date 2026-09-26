@@ -34,6 +34,7 @@ import { POS_AR } from '@/data/dictionary'
 import { getLesson, lessons, lessonsByTrack, trackOf, type Bilingual, type Lesson, type QuizQuestion, type VocabItem } from '@/data/lessons'
 import { isUnlocked } from '@/lib/path'
 import { canSpeak, speak } from '@/lib/speech'
+import { useDocumentTitle } from '@/lib/meta'
 import { cn } from '@/lib/utils'
 
 export default function LessonPage() {
@@ -44,6 +45,7 @@ export default function LessonPage() {
 }
 
 function LessonView({ lesson }: { lesson: Lesson }) {
+  useDocumentTitle(lesson.title)
   const { completed, markComplete, showArabic, setShowArabic } = useApp()
   const highlight = useMemo(() => new Set(lesson.vocab.map((v) => v.word)), [lesson])
   const idx = lessons.findIndex((l) => l.id === lesson.id)

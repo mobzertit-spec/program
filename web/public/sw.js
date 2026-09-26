@@ -1,8 +1,9 @@
 /* CE service worker — makes the site installable and usable offline after the first visit.
-   Pages: network first (fresh content), falling back to the cached app shell.
-   Assets (hashed JS/CSS, icons, fonts): cache first. Supabase / translation APIs are never cached. */
-const VERSION = 'ce-v2'
-const SHELL = ['./', './index.html', './manifest.webmanifest', './favicon.svg', './icons/icon-192.png']
+   Pages: network first (fresh content), falling back to the cached copy of that page, then to the app shell
+   (404.html: an empty shell that renders any route). Assets (hashed JS/CSS, icons, fonts): cache first.
+   Supabase / translation APIs are never cached. */
+const VERSION = 'ce-v3'
+const SHELL = ['./', './404.html', './manifest.webmanifest', './favicon.svg', './icons/icon-192.png']
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()))
@@ -15,7 +16,6 @@ self.addEventListener('activate', (e) => {
 })
 
 const CACHEABLE = /\.(js|css|png|svg|webmanifest|woff2?)$/
-const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com']
 
 self.addEventListener('fetch', (e) => {
   const req = e.request
@@ -27,16 +27,18 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone()
-          caches.open(VERSION).then((c) => c.put('./index.html', copy))
+          if (res.ok) {
+            const copy = res.clone()
+            caches.open(VERSION).then((c) => c.put(req, copy))
+          }
           return res
         })
-        .catch(() => caches.match('./index.html')),
+        .catch(() => caches.match(req).then((hit) => hit || caches.match('./404.html'))),
     )
     return
   }
 
-  if ((sameOrigin && CACHEABLE.test(url.pathname)) || FONT_HOSTS.includes(url.hostname)) {
+  if (sameOrigin && CACHEABLE.test(url.pathname)) {
     e.respondWith(
       caches.match(req).then(
         (hit) =>

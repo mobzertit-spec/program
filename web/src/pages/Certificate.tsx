@@ -8,6 +8,7 @@ import { useApp } from '@/context/AppContext'
 import { displayName, useAuth } from '@/context/AuthContext'
 import { lessonsByTrack, tracks, type Track } from '@/data/lessons'
 import { usePersistentState } from '@/lib/storage'
+import { useDocumentTitle } from '@/lib/meta'
 
 const W = 1600
 const H = 1130
@@ -20,6 +21,7 @@ export default function Certificate() {
 }
 
 function CertificateView({ track }: { track: Track }) {
+  useDocumentTitle(`${track.title} certificate`)
   const { completed } = useApp()
   const { user } = useAuth()
   const toast = useToast()

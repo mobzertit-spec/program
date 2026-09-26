@@ -63,7 +63,8 @@ export default function Lessons() {
               to={`/lessons/${next.id}`}
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-5 text-[15px] font-medium text-on-primary transition-colors hover:bg-primary-hover"
             >
-              {done ? 'Continue' : 'Start'} <ArrowRight className="size-4" />
+              {done ? 'Continue' : 'Start'} <span className="sr-only">lesson {next.number}: {next.title}</span>
+              <ArrowRight className="size-4" />
             </Link>
           )}
         </div>
@@ -79,7 +80,7 @@ export default function Lessons() {
       </div>
 
       <motion.ul layout className="mt-6 grid gap-4 sm:grid-cols-2">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="popLayout" initial={false}>
           {shown.map((l) => {
             const isDone = completed.includes(l.id)
             return (

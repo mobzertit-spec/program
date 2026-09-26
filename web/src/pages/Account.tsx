@@ -104,7 +104,7 @@ function SignIn() {
             </div>
           </div>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             {state === 'sent' ? (
               <motion.div key="sent" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-8 rounded-2xl bg-success-soft p-5" role="status">
                 <p className="flex items-center gap-2 font-semibold text-success">

@@ -13,6 +13,7 @@ function hosting(base: string, siteUrl: string | undefined): Plugin {
   let outDir = 'dist'
   return {
     name: 'ce-hosting',
+    apply: 'build', // the prerender script starts a dev server — its shutdown must not touch dist/
     configResolved: (c) => {
       outDir = c.build.outDir
     },
@@ -36,5 +37,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: { '@': path.resolve(__dirname, 'src') },
     },
+    // the manifest tells scripts/prerender.ts which chunks each page needs (it is removed afterwards)
+    build: { manifest: true },
   }
 })

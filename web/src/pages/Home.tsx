@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } f
 import { ArrowRight, Award, BookmarkCheck, Check, ChevronRight, Flame, GraduationCap, Languages, LifeBuoy, Lock, MousePointerClick, PlayCircle, TextSelect, Volume2, Wand2 } from 'lucide-react'
 import { lazy, Suspense, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { lazyWithPreload } from '@/lib/boot'
 import { TranslatableText } from '@/components/translate/TranslatableText'
 import { Badge } from '@/components/ui/badge'
 import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
@@ -13,9 +14,12 @@ import { WordReveal } from '@/components/ui/word-reveal'
 import { useTranslator } from '@/context/TranslatorContext'
 import { LESSON_COUNT, TRACK_COUNT } from '@/data/lessons/meta'
 
-const TracksSection = lazy(() => import('./home/HomeLessons').then((m) => ({ default: m.TracksSection })))
-const VocabMarquee = lazy(() => import('./home/HomeLessons').then((m) => ({ default: m.VocabMarquee })))
-const LessonLineup = lazy(() => import('./home/HomeLessons').then((m) => ({ default: m.LessonLineup })))
+const homeLessons = () => import('./home/HomeLessons')
+const TracksSection = lazyWithPreload(() => homeLessons().then((m) => ({ default: m.TracksSection })))
+const VocabMarquee = lazyWithPreload(() => homeLessons().then((m) => ({ default: m.VocabMarquee })))
+const LessonLineup = lazyWithPreload(() => homeLessons().then((m) => ({ default: m.LessonLineup })))
+/** Everything the home page renders, so a prerendered home page can be taken over without a gap. */
+export const preloadHome = () => Promise.all([TracksSection.preload(), VocabMarquee.preload(), LessonLineup.preload()])
 const Onboarding = lazy(() => import('@/components/learn/Onboarding').then((m) => ({ default: m.Onboarding })))
 
 const demoPrompt =

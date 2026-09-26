@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { type ReactNode } from 'react'
+import { createBrowserRouter, matchRoutes, RouterProvider, type RouteObject } from 'react-router-dom'
 import { Layout } from '@/components/layout/Layout'
 import { ToastProvider } from '@/components/ui/toast'
 import { AppProvider } from '@/context/AppContext'
@@ -7,55 +7,79 @@ import { AuthProvider } from '@/context/AuthContext'
 import { LocaleProvider } from '@/context/LocaleContext'
 import { SyncProvider } from '@/context/SyncContext'
 import { TranslatorProvider } from '@/context/TranslatorContext'
-import Home from '@/pages/Home'
+import { loadWordBank } from '@/data/dictionary'
+import { lazyWithPreload } from '@/lib/boot'
+import Home, { preloadHome } from '@/pages/Home'
 
-const Lessons = lazy(() => import('@/pages/Lessons'))
-const LessonPage = lazy(() => import('@/pages/LessonPage'))
-const Vocabulary = lazy(() => import('@/pages/Vocabulary'))
-const PromptLab = lazy(() => import('@/pages/PromptLab'))
-const Path = lazy(() => import('@/pages/Path'))
-const Library = lazy(() => import('@/pages/Library'))
-const Account = lazy(() => import('@/pages/Account'))
-const Practice = lazy(() => import('@/pages/Practice'))
-const Certificate = lazy(() => import('@/pages/Certificate'))
-const NotFound = lazy(() => import('@/pages/NotFound'))
+const Lessons = lazyWithPreload(() => import('@/pages/Lessons'))
+const LessonPage = lazyWithPreload(() => import('@/pages/LessonPage'))
+const Vocabulary = lazyWithPreload(() => import('@/pages/Vocabulary'))
+const PromptLab = lazyWithPreload(() => import('@/pages/PromptLab'))
+const Path = lazyWithPreload(() => import('@/pages/Path'))
+const Library = lazyWithPreload(() => import('@/pages/Library'))
+const Account = lazyWithPreload(() => import('@/pages/Account'))
+const Practice = lazyWithPreload(() => import('@/pages/Practice'))
+const Certificate = lazyWithPreload(() => import('@/pages/Certificate'))
+const NotFound = lazyWithPreload(() => import('@/pages/NotFound'))
 
-const Fallback = () => <div className="min-h-[60vh]" aria-busy="true" />
-const page = (el: React.ReactNode) => <Suspense fallback={<Fallback />}>{el}</Suspense>
+export const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
 
-const router = createBrowserRouter([
+type Page = ReturnType<typeof lazyWithPreload>
+/** `data`: what the page needs besides its code to render its final layout (e.g. the word bank). */
+const route = (path: string, Page: Page, data?: () => Promise<unknown>): RouteObject => ({
+  path,
+  element: <Page />,
+  handle: { preload: data ? () => Promise.all([Page.preload(), data()]) : Page.preload },
+})
+
+export const routes: RouteObject[] = [
   {
     element: <Layout />,
     children: [
-      { path: '/', element: <Home /> },
-      { path: '/lessons', element: page(<Lessons />) },
-      { path: '/lessons/:id', element: page(<LessonPage />) },
-      { path: '/vocabulary', element: page(<Vocabulary />) },
-      { path: '/lab', element: page(<PromptLab />) },
-      { path: '/path', element: page(<Path />) },
-      { path: '/library', element: page(<Library />) },
-      { path: '/account', element: page(<Account />) },
-      { path: '/practice', element: page(<Practice />) },
-      { path: '/certificate/:track', element: page(<Certificate />) },
-      { path: '*', element: page(<NotFound />) },
+      { path: '/', element: <Home />, handle: { preload: preloadHome } },
+      route('/lessons', Lessons),
+      route('/lessons/:id', LessonPage),
+      route('/vocabulary', Vocabulary, loadWordBank),
+      route('/lab', PromptLab),
+      route('/path', Path, loadWordBank),
+      route('/library', Library),
+      route('/account', Account),
+      route('/practice', Practice, loadWordBank),
+      route('/certificate/:track', Certificate),
+      route('*', NotFound),
     ],
   },
-], { basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/' })
+]
 
-export default function App() {
+/** Load the code for a URL before the first render, so prerendered HTML is replaced without a blank frame. */
+export function preloadRoute(pathname: string) {
+  const matches = matchRoutes(routes, pathname, basename) ?? []
+  return Promise.all(matches.map((m) => (m.route.handle as { preload?: () => Promise<unknown> } | undefined)?.preload?.()))
+}
+
+export function Providers({ children }: { children: ReactNode }) {
   return (
     <ToastProvider>
       <LocaleProvider>
-      <AuthProvider>
-        <AppProvider>
-          <SyncProvider>
-            <TranslatorProvider>
-              <RouterProvider router={router} />
-            </TranslatorProvider>
-          </SyncProvider>
-        </AppProvider>
-      </AuthProvider>
+        <AuthProvider>
+          <AppProvider>
+            <SyncProvider>
+              <TranslatorProvider>{children}</TranslatorProvider>
+            </SyncProvider>
+          </AppProvider>
+        </AuthProvider>
       </LocaleProvider>
     </ToastProvider>
+  )
+}
+
+let router: ReturnType<typeof createBrowserRouter> | undefined
+
+export default function App() {
+  router ??= createBrowserRouter(routes, { basename })
+  return (
+    <Providers>
+      <RouterProvider router={router} />
+    </Providers>
   )
 }

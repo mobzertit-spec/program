@@ -20,18 +20,17 @@ export function AmbientBackground() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       <motion.div style={{ rotate: rot }} className="absolute inset-[-20%]">
-        <motion.div
-          style={{ x: x1, y: y1, opacity: 'var(--orb-opacity)' }}
-          className="absolute left-[8%] top-[-6%] size-[46vmax] rounded-full bg-[radial-gradient(closest-side,var(--ember),transparent)] blur-3xl motion-safe:animate-[float_22s_ease-in-out_infinite]"
-        />
-        <motion.div
-          style={{ x: x2, y: y2, opacity: 'var(--orb-opacity)' }}
-          className="absolute right-[4%] top-[10%] size-[44vmax] rounded-full bg-[radial-gradient(closest-side,var(--iris),transparent)] blur-3xl motion-safe:animate-[float_26s_ease-in-out_infinite_reverse]"
-        />
-        <motion.div
-          style={{ y: y3, scale: s3, opacity: 'calc(var(--orb-opacity) * 0.8)' }}
-          className="absolute bottom-[-10%] left-[30%] size-[40vmax] rounded-full bg-[radial-gradient(closest-side,#38bdf8,transparent)] blur-3xl motion-safe:animate-[float_30s_ease-in-out_infinite]"
-        />
+        {/* outer layer follows the scroll, inner layer drifts on its own (two transforms, no conflict).
+            The radial gradients are already soft, so no costly blur filter is needed. */}
+        <motion.div style={{ x: x1, y: y1, opacity: 'var(--orb-opacity)' }} className="absolute left-[8%] top-[-6%] size-[46vmax]">
+          <div className="size-full rounded-full bg-[radial-gradient(closest-side,var(--ember),transparent)] will-change-transform motion-safe:animate-[float_22s_ease-in-out_infinite]" />
+        </motion.div>
+        <motion.div style={{ x: x2, y: y2, opacity: 'var(--orb-opacity)' }} className="absolute right-[4%] top-[10%] size-[44vmax]">
+          <div className="size-full rounded-full bg-[radial-gradient(closest-side,var(--iris),transparent)] will-change-transform motion-safe:animate-[float_26s_ease-in-out_infinite_reverse]" />
+        </motion.div>
+        <motion.div style={{ y: y3, scale: s3, opacity: 'calc(var(--orb-opacity) * 0.8)' }} className="absolute bottom-[-10%] left-[30%] size-[40vmax]">
+          <div className="size-full rounded-full bg-[radial-gradient(closest-side,#38bdf8,transparent)] will-change-transform motion-safe:animate-[float_30s_ease-in-out_infinite]" />
+        </motion.div>
       </motion.div>
       {/* frosted veil keeps text contrast high */}
       <div className="absolute inset-0 bg-bg/70 dark:bg-bg/60" />

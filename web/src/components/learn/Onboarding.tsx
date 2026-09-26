@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { ArrowRight, Briefcase, Code2, GraduationCap, MessageCircle, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { isServer } from '@/lib/boot'
 import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/layout/Logo'
 import { useApp } from '@/context/AppContext'
@@ -55,6 +56,7 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
     navigate(first ? `/lessons/${first.id}` : '/path')
   }
 
+  if (isServer) return null
   // portal: page transitions use transforms, which would trap a fixed overlay inside the page
   return createPortal(
     <AnimatePresence>
@@ -81,7 +83,7 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
             </button>
             <div className="flex items-center gap-3">
               <Logo className="size-10" />
-              <div className="flex gap-1.5" aria-label={`Step ${step + 1} of 2`}>
+              <div className="flex gap-1.5" role="img" aria-label={`Step ${step + 1} of 2`}>
                 {[0, 1].map((i) => (
                   <span key={i} className={cn('h-1.5 w-8 rounded-full', i <= step ? 'bg-primary' : 'bg-border-soft')} />
                 ))}

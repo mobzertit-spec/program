@@ -25,13 +25,18 @@ Learn how to use **Claude** while improving your **English** — every word on t
 
 React 19 · TypeScript · Vite · Tailwind CSS v4 · Motion · Lucide icons · React Router with clean URLs (`dist/404.html` makes deep links work on static hosts; old `#/` links redirect automatically). Set `VITE_BASE` when the site lives in a sub-folder, e.g. `VITE_BASE=/program/`.
 
+`npm run build` also runs `scripts/prerender.ts`: each page (home, path, all lessons, …) is rendered to its own
+`dist/<page>/index.html`, so content shows before any JavaScript loads and search engines can read it. The app then
+starts after the first paint and takes over the page. The script also writes `robots.txt`, `llms.txt` and — when
+`VITE_SITE_URL` is set — `sitemap.xml` and canonical links. Fonts are self-hosted (`src/fonts.css`).
+
 ## Run
 
 ```bash
 cd web
 npm install
 npm run dev             # http://localhost:5173
-npm run build           # static output in dist/
+npm run build           # static output in dist/ (every page prerendered to HTML)
 npm run check:content   # validate lessons: translations, vocab, quizzes, official links
 ```
 
