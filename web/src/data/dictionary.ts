@@ -701,6 +701,15 @@ unauthorized|adj|غير مصرّح به
 emoji|n|رمز تعبيري
 commit|n|حفظ تغييرات في Git (commit)
 stuff|n|أشياء (عامية)
+skip|v|يتخطّى / يتجاوز
+newton|n|نيوتن (عالم فيزياء)
+stuck|adj|عالق / متوقف
+weekday|n|يوم من أيام الأسبوع (غير العطلة)
+genetics|n|علم الوراثة
+anonymous|adj|مجهول الهوية
+side|n|جانب
+africa|n|أفريقيا
+clarity|n|وضوح
 `
 
 import a1 from './wordbank/a1'

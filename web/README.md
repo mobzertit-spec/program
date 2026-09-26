@@ -6,7 +6,7 @@ Learn how to use **Claude** while improving your **English** — every word on t
 
 ## Features
 
-- **Learning path**: 26 lessons in 4 tracks (Foundations · Prompting craft · Claude’s toolbox · English for work), shown as a visual map. Each lesson unlocks the next one in its track.
+- **Learning path**: 31 lessons in 5 tracks (Foundations · Prompting craft · Claude’s toolbox · English for work · Claude for students), shown as a visual map. Each lesson unlocks the next one in its track.
 - **Motivation**: XP, levels, a daily goal, a daily streak with a 7-day activity chart, and 17 badges.
 - **Lessons** — each with bilingual paragraphs, a weak-vs-strong prompt, a pro tip, 5 key words, a quiz, an optional official video and **“Go deeper”** links to Claude Academy, Claude Docs and the Help Center.
 - **Library**: official Claude Academy courses, Anthropic videos (click-to-load, privacy-friendly embeds), docs and Help Center guides.

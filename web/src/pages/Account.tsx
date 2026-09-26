@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { AlertCircle, ArrowRight, Check, CloudCheck, CloudOff, Loader2, LogOut, Mail, RefreshCw, ShieldCheck, Smartphone } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { LanguageSwitch } from '@/components/layout/LanguageSwitch'
 import { Logo } from '@/components/layout/Logo'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { useApp } from '@/context/AppContext'
@@ -253,6 +254,13 @@ function Profile() {
         >
           <RefreshCw className="size-4" /> Sync now
         </button>
+      </div>
+
+      <div className="mt-6 flex flex-wrap items-center gap-3 rounded-3xl border border-border-soft bg-surface p-5 shadow-card">
+        <p className="flex-1 font-semibold">
+          Interface language <span lang="ar" className="font-normal text-fg-muted">· لغة الواجهة</span>
+        </p>
+        <LanguageSwitch />
       </div>
 
       <Link to="/path" className="mt-8 inline-flex items-center gap-2 font-medium text-link hover:underline">

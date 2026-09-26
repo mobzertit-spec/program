@@ -4,6 +4,7 @@ import { Layout } from '@/components/layout/Layout'
 import { ToastProvider } from '@/components/ui/toast'
 import { AppProvider } from '@/context/AppContext'
 import { AuthProvider } from '@/context/AuthContext'
+import { LocaleProvider } from '@/context/LocaleContext'
 import { SyncProvider } from '@/context/SyncContext'
 import { TranslatorProvider } from '@/context/TranslatorContext'
 import Home from '@/pages/Home'
@@ -15,6 +16,7 @@ const PromptLab = lazy(() => import('@/pages/PromptLab'))
 const Path = lazy(() => import('@/pages/Path'))
 const Library = lazy(() => import('@/pages/Library'))
 const Account = lazy(() => import('@/pages/Account'))
+const Practice = lazy(() => import('@/pages/Practice'))
 const Certificate = lazy(() => import('@/pages/Certificate'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -33,6 +35,7 @@ const router = createHashRouter([
       { path: '/path', element: page(<Path />) },
       { path: '/library', element: page(<Library />) },
       { path: '/account', element: page(<Account />) },
+      { path: '/practice', element: page(<Practice />) },
       { path: '/certificate/:track', element: page(<Certificate />) },
       { path: '*', element: page(<NotFound />) },
     ],
@@ -42,6 +45,7 @@ const router = createHashRouter([
 export default function App() {
   return (
     <ToastProvider>
+      <LocaleProvider>
       <AuthProvider>
         <AppProvider>
           <SyncProvider>
@@ -51,6 +55,7 @@ export default function App() {
           </SyncProvider>
         </AppProvider>
       </AuthProvider>
+      </LocaleProvider>
     </ToastProvider>
   )
 }

@@ -113,7 +113,7 @@ export default function Home() {
       <section className="border-y border-border-soft bg-bg-alt">
         <div className="mx-auto grid max-w-[1024px] grid-cols-2 gap-y-8 px-4 py-12 text-center sm:px-6 md:grid-cols-4">
           {[
-            { n: `${lessons.length}`, l: `lessons in ${tracks.length} tracks`, ar: 'درسًا في أربعة مسارات' },
+            { n: `${lessons.length}`, l: `lessons in ${tracks.length} tracks`, ar: 'درسًا في خمسة مسارات' },
             { n: `${(Math.floor(wordBank.length / 100) * 100).toLocaleString()}+`, l: 'words from A1 to C1', ar: 'كلمة من المبتدئ للمتقدم' },
             { n: '1 tap', l: 'to translate any word', ar: 'لترجمة أي كلمة' },
             { n: '100%', l: 'free, no sign-up', ar: 'مجاني بلا تسجيل' },
@@ -130,11 +130,11 @@ export default function Home() {
       {/* ---------------- Tracks ---------------- */}
       <section className="mx-auto max-w-[1024px] px-4 pt-24 sm:px-6">
         <BlurFade>
-          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Four tracks</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Five tracks</p>
           <h2 className="mt-2 max-w-3xl text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">
             From your first message to <span className="text-brand">Claude Code</span>.
           </h2>
-          <p lang="ar" className="mt-3 text-fg-muted">أربعة مسارات: من رسالتك الأولى حتى Claude Code.</p>
+          <p lang="ar" className="mt-3 text-fg-muted">خمسة مسارات: من رسالتك الأولى حتى Claude Code والدراسة.</p>
         </BlurFade>
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
           {tracks.map((t, i) => (

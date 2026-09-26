@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { SelectionTranslator } from '@/components/translate/SelectionTranslator'
 import { TranslatorPanel } from '@/components/translate/TranslatorPanel'
@@ -11,6 +12,7 @@ import { Navbar } from './Navbar'
 export function Layout() {
   const { pathname } = useLocation()
   const { close } = useTranslator()
+  const reduce = useReducedMotion()
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
     close()
@@ -27,7 +29,15 @@ export function Layout() {
       </button>
       <Navbar />
       <main id="main" tabIndex={-1} className="flex-1 pt-[72px] outline-none">
-        <Outlet />
+        {/* soft page transition: each route fades and rises in */}
+        <motion.div
+          key={pathname}
+          initial={reduce ? false : { opacity: 0, y: 14, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.45, ease: [0.2, 0.7, 0.3, 1] }}
+        >
+          <Outlet />
+        </motion.div>
       </main>
       <Footer />
       <TranslatorPanel />

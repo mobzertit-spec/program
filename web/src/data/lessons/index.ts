@@ -2,6 +2,7 @@ import { english } from './english'
 import { features } from './features'
 import { foundations } from './foundations'
 import { prompting } from './prompting'
+import { students } from './students'
 import type { Lesson, Track, TrackId } from './types'
 
 export type * from './types'
@@ -35,10 +36,17 @@ export const tracks: Track[] = [
     description: 'Emails, interviews, meetings, pronunciation, and English for developers.',
     descriptionAr: 'البريد، والمقابلات، والاجتماعات، والنطق، والإنجليزية للمبرمجين.',
   },
+  {
+    id: 'students',
+    title: 'Claude for students',
+    titleAr: 'Claude للطلاب',
+    description: 'Study, plan, research, write honestly, and prepare for exams.',
+    descriptionAr: 'ادرس، وخطّط، وابحث، واكتب بنزاهة، واستعد للامتحانات.',
+  },
 ]
 
 /** All lessons in path order, numbered 1…n. */
-export const lessons: Lesson[] = [...foundations, ...prompting, ...features, ...english].map((l, i) => ({
+export const lessons: Lesson[] = [...foundations, ...prompting, ...features, ...english, ...students].map((l, i) => ({
   ...l,
   number: i + 1,
 }))

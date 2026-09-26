@@ -31,11 +31,12 @@ const LABELS: Record<TrackId, string> = {
   prompting: 'Illustration: prompt cards with XML tags',
   features: 'Illustration: a grid of Claude tools',
   english: 'Illustration: a microphone with sound waves and a speech bubble',
+  students: 'Illustration: a graduation cap on a stack of books with a checklist',
 }
 
 const line = (x: number, y: number, w: number, fill = 'var(--border)') => <rect x={x} y={y} width={w} height="7" rx="3.5" fill={fill} />
 
-const ART: Record<TrackId, (grad: string) => React.ReactNode> = {
+const ART: Record<string, (grad: string) => React.ReactNode> = {
   foundations: (grad) => (
     <g>
       <rect x="120" y="34" width="160" height="58" rx="20" fill={grad} />
@@ -116,6 +117,30 @@ const ART: Record<TrackId, (grad: string) => React.ReactNode> = {
     </g>
   ),
 }
+
+ART.students = (grad: string) => (
+  <g>
+    {[0, 1, 2].map((i) => (
+      <rect key={i} x={70 + i * 6} y={150 - i * 24} width={130 - i * 12} height="20" rx="6" fill={i === 1 ? grad : 'var(--surface)'} stroke="var(--border)" />
+    ))}
+    <g transform="translate(134 66)">
+      <path d="M0 -26L52 -6 0 14-52-6z" fill="var(--ink)" />
+      <path d="M-30 4v18c0 8 60 8 60 0V4" fill="var(--ink)" opacity="0.85" />
+      <path d="M40 -2v24" stroke="var(--ember)" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="40" cy="26" r="5" fill="var(--ember)" />
+    </g>
+    <g transform="translate(214 60)">
+      <rect width="74" height="96" rx="14" fill="var(--surface)" stroke="var(--border)" />
+      {[0, 1, 2].map((i) => (
+        <g key={i} transform={`translate(12 ${18 + i * 26})`}>
+          <rect width="14" height="14" rx="4" fill={i < 2 ? 'var(--iris)' : 'none'} stroke="var(--iris)" strokeWidth="2" />
+          {i < 2 && <path d="M3.5 7l2.5 2.5 4.5-5" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" />}
+          <rect x="22" y="4" width="30" height="6" rx="3" fill="var(--border)" />
+        </g>
+      ))}
+    </g>
+  </g>
+)
 
 const GLYPHS: ((c: string) => React.ReactNode)[] = [
   (c) => <path d="M14 20h10l4 4h14v16H14z" fill="none" stroke={c} strokeWidth="3" strokeLinejoin="round" />,

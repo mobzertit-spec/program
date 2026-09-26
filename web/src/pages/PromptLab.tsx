@@ -1,9 +1,9 @@
 import { motion } from 'motion/react'
 import { Check, Copy, ExternalLink, RotateCcw, Sparkles } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { BlurFade } from '@/components/ui/blur-fade'
 import { useToast } from '@/components/ui/toast'
 import { cn } from '@/lib/utils'
+import { PageHeader } from '@/components/ui/page-header'
 
 type Fields = {
   role: string
@@ -112,14 +112,7 @@ export default function PromptLab() {
 
   return (
     <div className="mx-auto max-w-[1100px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
-      <BlurFade>
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Practice</p>
-        <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em] sm:text-7xl">Prompt Lab.</h1>
-        <p className="mt-4 max-w-2xl text-lg text-fg-muted sm:text-xl">
-          Build a great prompt piece by piece. Write in English — the lab scores your prompt as you type.
-        </p>
-        <p lang="ar" dir="rtl" className="mt-1 text-left text-fg-subtle">ابنِ طلبًا ممتازًا خطوة بخطوة واكتب بالإنجليزية.</p>
-      </BlurFade>
+      <PageHeader eyebrow={{ en: 'Practice', ar: 'تدرّب' }} title={{ en: 'Prompt Lab.', ar: 'مختبر الطلبات' }} intro={{ en: 'Build a great prompt piece by piece. Write in English — the lab scores your prompt as you type.', ar: 'ابنِ طلبًا ممتازًا خطوة بخطوة. اكتب بالإنجليزية، وسيقيّم المختبر طلبك أثناء الكتابة.' }} />
 
       <div className="mt-8 flex flex-wrap gap-2">
         <span className="self-center pr-1 text-sm text-fg-muted">Start from:</span>

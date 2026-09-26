@@ -3,6 +3,7 @@ import { ResourceCard } from '@/components/learn/ResourceCard'
 import { VideoEmbed } from '@/components/learn/VideoEmbed'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { PLAYLISTS, R, type Resource } from '@/data/resources'
+import { PageHeader } from '@/components/ui/page-header'
 
 const courses: Resource[] = [
   R.claude101, R.aiFluency, R.aiFluencyStudents, R.aiFluencyEducators, R.aiFluencyBuilders,
@@ -25,17 +26,7 @@ const SECTIONS = [
 export default function Library() {
   return (
     <div className="mx-auto max-w-[1024px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
-      <BlurFade>
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Official sources only</p>
-        <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em] sm:text-7xl">Library.</h1>
-        <p className="mt-4 max-w-2xl text-lg text-fg-muted sm:text-xl">
-          The best free material about Claude, straight from Anthropic: Claude Academy courses with certificates, official videos,
-          documentation and Help Center guides.
-        </p>
-        <p lang="ar" dir="rtl" className="mt-1 text-left text-fg-subtle">
-          أفضل المحتوى المجاني عن Claude مباشرة من Anthropic: دورات Claude Academy بشهادات، وفيديوهات رسمية، ووثائق، وأدلة مركز المساعدة.
-        </p>
-      </BlurFade>
+      <PageHeader eyebrow={{ en: 'Official sources only', ar: 'مصادر رسمية فقط' }} title={{ en: 'Library.', ar: 'المكتبة' }} intro={{ en: 'The best free material about Claude, straight from Anthropic: Claude Academy courses with certificates, official videos, documentation and Help Center guides.', ar: 'أفضل المحتوى المجاني عن Claude مباشرة من Anthropic: دورات Claude Academy بشهادات، وفيديوهات رسمية، ووثائق، وأدلة مركز المساعدة.' }} />
 
       <nav aria-label="Library sections" className="no-scrollbar mt-8 flex gap-2 overflow-x-auto">
         {SECTIONS.map((s) => (

@@ -19,12 +19,12 @@ export type QuizQuestion = {
   explain: Bilingual
 }
 
-export type TrackId = 'foundations' | 'prompting' | 'features' | 'english'
+export type TrackId = 'foundations' | 'prompting' | 'features' | 'english' | 'students'
 
 export type LessonIconName =
   | 'sparkles' | 'target' | 'layers' | 'quote' | 'user' | 'code' | 'brain' | 'refresh' | 'graduation' | 'file'
   | 'app' | 'shield' | 'list' | 'book' | 'link' | 'folder' | 'layout' | 'globe' | 'plug' | 'puzzle'
-  | 'terminal' | 'mail' | 'briefcase' | 'presentation' | 'mic' | 'bug'
+  | 'terminal' | 'mail' | 'briefcase' | 'presentation' | 'mic' | 'bug' | 'calendar' | 'search' | 'pen' | 'check'
 
 export type LessonInput = {
   id: string

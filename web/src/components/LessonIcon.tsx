@@ -1,5 +1,5 @@
 import {
-  AppWindow, BookOpenText, Brain, Briefcase, Bug, Code2, FileText, FolderKanban, Globe, GraduationCap, Layers,
+  AppWindow, BookOpenText, CalendarDays, ClipboardCheck, PenLine, Search, Brain, Briefcase, Bug, Code2, FileText, FolderKanban, Globe, GraduationCap, Layers,
   LayoutTemplate, Link2, ListChecks, Mail, Mic, Plug, Presentation, Puzzle, Quote, RefreshCw, ShieldCheck, Sparkles,
   Target, Terminal, UserRound, type LucideProps,
 } from 'lucide-react'
@@ -32,6 +32,10 @@ const map = {
   presentation: Presentation,
   mic: Mic,
   bug: Bug,
+  calendar: CalendarDays,
+  search: Search,
+  pen: PenLine,
+  check: ClipboardCheck,
 } satisfies Record<LessonIconName, unknown>
 
 export function LessonIcon({ name, ...props }: { name: LessonIconName } & LucideProps) {

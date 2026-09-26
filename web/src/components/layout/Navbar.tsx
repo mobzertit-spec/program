@@ -1,9 +1,10 @@
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from 'motion/react'
-import { BookA, BookOpen, CircleUserRound, Flame, FlaskConical, Library, Moon, Route, Sun } from 'lucide-react'
+import { BookA, BookOpen, CircleUserRound, Flame, Gamepad2, Library, Moon, Route, Sun } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useApp } from '@/context/AppContext'
 import { avatarUrl, displayName, useAuth } from '@/context/AuthContext'
+import { useLocale } from '@/context/LocaleContext'
 import { cn } from '@/lib/utils'
 import { Wordmark } from './Logo'
 
@@ -11,7 +12,7 @@ const links = [
   { to: '/path', label: 'Path', ar: 'المسار', icon: Route },
   { to: '/lessons', label: 'Lessons', ar: 'الدروس', icon: BookOpen },
   { to: '/vocabulary', label: 'Words', ar: 'الكلمات', icon: BookA },
-  { to: '/lab', label: 'Lab', ar: 'المختبر', icon: FlaskConical },
+  { to: '/practice', label: 'Practice', ar: 'تدرّب', icon: Gamepad2 },
   { to: '/library', label: 'Library', ar: 'المكتبة', icon: Library },
 ]
 
@@ -19,6 +20,7 @@ const links = [
 export function Navbar() {
   const { theme, setTheme, showArabic, setShowArabic, dueWords, streak, xpToday, dailyGoal } = useApp()
   const { user } = useAuth()
+  const { t, rtl } = useLocale()
   const reduce = useReducedMotion()
   const { scrollY, scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 })
@@ -52,8 +54,8 @@ export function Navbar() {
             <Wordmark />
           </Link>
 
-          <ul className="hidden items-center gap-0.5 lg:flex">
-            {links.map(({ to, label, icon: Icon }) => (
+          <ul className="hidden items-center gap-0.5 lg:flex" dir={rtl ? 'rtl' : 'ltr'}>
+            {links.map(({ to, label, ar, icon: Icon }) => (
               <li key={to}>
                 <NavLink
                   to={to}
@@ -74,7 +76,9 @@ export function Navbar() {
                         />
                       )}
                       <Icon className={cn('relative size-4', isActive && 'text-primary')} aria-hidden />
-                      <span className="relative">{label}</span>
+                      <span className="relative" lang={rtl ? 'ar' : 'en'}>
+                        {t(label, ar)}
+                      </span>
                       {to === '/vocabulary' && dueWords.length > 0 && (
                         <span className="relative rounded-full bg-clay px-1.5 py-px text-[10px] font-semibold text-white" aria-label={`${dueWords.length} words to review`}>
                           {dueWords.length}
@@ -147,7 +151,7 @@ export function Navbar() {
         aria-label="Sections"
         className="fixed inset-x-0 bottom-0 z-50 border-t border-border-soft bg-[var(--nav-bg)] pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 lg:hidden"
       >
-        <ul className="mx-auto grid h-16 max-w-lg grid-cols-5">
+        <ul className="mx-auto grid h-16 max-w-lg grid-cols-5" dir={rtl ? 'rtl' : 'ltr'}>
           {links.map(({ to, label, ar, icon: Icon }) => (
             <li key={to}>
               <NavLink
@@ -168,10 +172,7 @@ export function Navbar() {
                         <span className="absolute -right-2 -top-1 size-2.5 rounded-full border-2 border-bg bg-clay" aria-hidden />
                       )}
                     </span>
-                    <span>{label}</span>
-                    <span className="sr-only" lang="ar">
-                      {ar}
-                    </span>
+                    <span lang={rtl ? 'ar' : 'en'}>{t(label, ar)}</span>
                   </>
                 )}
               </NavLink>

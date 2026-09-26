@@ -17,6 +17,7 @@ import { achievements, type Achievement } from '@/lib/achievements'
 import { exportProgress, importProgress } from '@/lib/backup'
 import { isUnlocked, nextLesson, recentDays } from '@/lib/progress'
 import { cn } from '@/lib/utils'
+import { PageHeader } from '@/components/ui/page-header'
 
 const ROW = 150
 const NODE = 72
@@ -30,16 +31,7 @@ export default function Path() {
 
   return (
     <div className="mx-auto max-w-[1024px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
-      <BlurFade>
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Your journey</p>
-        <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em] sm:text-7xl">Learning path.</h1>
-        <p className="mt-4 max-w-2xl text-lg text-fg-muted sm:text-xl">
-          Four tracks, {lessons.length} lessons. Finish a lesson to unlock the next one, keep your streak alive, and collect badges.
-        </p>
-        <p lang="ar" dir="rtl" className="mt-1 text-left text-fg-subtle">
-          أربعة مسارات و{lessons.length} درسًا. أنهِ درسًا ليُفتح التالي، وحافظ على سلسلة أيامك، واجمع الشارات.
-        </p>
-      </BlurFade>
+      <PageHeader eyebrow={{ en: 'Your journey', ar: 'رحلتك' }} title={{ en: 'Learning path.', ar: 'المسار التعليمي' }} intro={{ en: `Five tracks, ${lessons.length} lessons. Finish a lesson to unlock the next one, keep your streak alive, and collect badges.`, ar: `خمسة مسارات و${lessons.length} درسًا. أنهِ درسًا ليُفتح التالي، وحافظ على سلسلة أيامك، واجمع الشارات.` }} />
 
       <Dashboard />
 

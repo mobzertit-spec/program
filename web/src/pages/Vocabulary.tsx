@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { SpeakCheck } from '@/components/learn/SpeakCheck'
 import { WordOfTheDay } from '@/components/learn/WordOfTheDay'
-import { BlurFade } from '@/components/ui/blur-fade'
 import { ButtonLink } from '@/components/ui/button'
 import { Segmented } from '@/components/ui/segmented'
 import { useToast } from '@/components/ui/toast'
@@ -14,6 +13,7 @@ import { lessons } from '@/data/lessons'
 import { canSpeak, speak } from '@/lib/speech'
 import { formatDue, isMastered, MAX_BOX } from '@/lib/srs'
 import { cn } from '@/lib/utils'
+import { PageHeader } from '@/components/ui/page-header'
 
 type Tab = 'review' | 'mine' | 'bank' | 'lessons'
 const TABS: Tab[] = ['review', 'mine', 'bank', 'lessons']
@@ -31,17 +31,7 @@ export default function Vocabulary() {
 
   return (
     <div className="mx-auto max-w-[1024px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
-      <BlurFade>
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Your words</p>
-        <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em] sm:text-7xl">Vocabulary.</h1>
-        <p className="mt-4 max-w-2xl text-lg text-fg-muted sm:text-xl">
-          {wordBank.length.toLocaleString()} words from beginner to advanced. Save the ones you need — smart reviews bring each
-          word back just before you forget it.
-        </p>
-        <p lang="ar" dir="rtl" className="mt-1 text-left text-fg-subtle">
-          أكثر من {wordBank.length.toLocaleString()} كلمة من المبتدئ إلى المتقدم، مع مراجعة ذكية تعيد الكلمة قبل أن تنساها.
-        </p>
-      </BlurFade>
+      <PageHeader eyebrow={{ en: 'Your words', ar: 'كلماتك' }} title={{ en: 'Vocabulary.', ar: 'المفردات' }} intro={{ en: `${wordBank.length.toLocaleString()} words from beginner to advanced. Save the ones you need — smart reviews bring each word back just before you forget it.`, ar: `أكثر من ${wordBank.length.toLocaleString()} كلمة من المبتدئ إلى المتقدم، مع مراجعة ذكية تعيد الكلمة قبل أن تنساها.` }} />
 
       <div className="no-scrollbar mt-10 overflow-x-auto">
         <Segmented

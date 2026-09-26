@@ -11,6 +11,7 @@ import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { useApp } from '@/context/AppContext'
 import { lessons, tracks, type TrackId } from '@/data/lessons'
 import { nextLesson } from '@/lib/progress'
+import { PageHeader } from '@/components/ui/page-header'
 
 type Filter = 'all' | TrackId
 
@@ -23,15 +24,7 @@ export default function Lessons() {
 
   return (
     <div className="mx-auto max-w-[1024px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
-      <BlurFade>
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">The course</p>
-        <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em] sm:text-7xl">Lessons.</h1>
-        <p className="mt-4 max-w-2xl text-lg text-fg-muted sm:text-xl">
-          {lessons.length} short lessons in four tracks — from your very first message to Skills and Claude Code. Every word is
-          translatable.
-        </p>
-        <p lang="ar" dir="rtl" className="mt-1 text-left text-fg-subtle">{lessons.length} درسًا قصيرًا في أربعة مسارات، من رسالتك الأولى حتى الاحتراف.</p>
-      </BlurFade>
+      <PageHeader eyebrow={{ en: 'The course', ar: 'الدورة' }} title={{ en: 'Lessons.', ar: 'الدروس' }} intro={{ en: `${lessons.length} short lessons in ${tracks.length} tracks — from your very first message to Skills and Claude Code. Every word is translatable.`, ar: `${lessons.length} درسًا قصيرًا في ${tracks.length} مسارات، من رسالتك الأولى حتى الاحتراف. كل كلمة قابلة للترجمة.` }} />
 
       <BlurFade delay={0.1}>
         <div className="mt-10 flex flex-col gap-5 rounded-3xl border border-border-soft bg-bg-alt p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
