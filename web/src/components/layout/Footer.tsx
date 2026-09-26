@@ -1,0 +1,31 @@
+import { Link } from 'react-router-dom'
+import { Logo } from './Logo'
+
+export function Footer() {
+  return (
+    <footer className="border-t border-border-soft bg-bg-alt">
+      <div className="mx-auto max-w-[1024px] px-4 py-10 text-xs text-fg-muted sm:px-6">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex items-center gap-2">
+            <Logo className="size-6" />
+            <span className="text-sm font-semibold text-fg">Prompt English</span>
+          </div>
+          <nav aria-label="Footer" className="flex gap-6">
+            <Link to="/lessons" className="hover:text-fg hover:underline">Lessons</Link>
+            <Link to="/vocabulary" className="hover:text-fg hover:underline">Vocabulary</Link>
+            <Link to="/lab" className="hover:text-fg hover:underline">Prompt Lab</Link>
+          </nav>
+        </div>
+        <div className="mt-8 border-t border-border-soft pt-6 leading-relaxed">
+          <p>
+            An independent learning project. Not affiliated with Anthropic. “Claude” is a trademark of Anthropic, PBC.
+            Online translations are provided by the free MyMemory API.
+          </p>
+          <p lang="ar" className="mt-2">
+            مشروع تعليمي مستقل لتعلّم استخدام Claude وتطوير لغتك الإنجليزية في الوقت نفسه.
+          </p>
+        </div>
+      </div>
+    </footer>
+  )
+}

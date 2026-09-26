@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Design tokens (Apple-inspired, semantic) ---------- */
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f5f5f7;
+  --surface: #ffffff;
+  --surface-2: #fbfbfd;
+  --fg: #1d1d1f;
+  --fg-muted: #6e6e73;
+  --fg-subtle: #86868b;
+  --border: #d2d2d7;
+  --border-soft: #e8e8ed;
+  --primary: #0071e3;
+  --primary-hover: #0077ed;
+  --on-primary: #ffffff;
+  --link: #0066cc;
+  --clay: #c96442;
+  --clay-soft: #fbeee8;
+  --success: #1d8a3a;
+  --success-soft: #e7f6ec;
+  --danger: #d70015;
+  --danger-soft: #fdecee;
+  --nav-bg: rgba(255, 255, 255, 0.72);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.04), 0 12px 40px rgba(0, 0, 0, 0.06);
+  --shadow-pop: 0 10px 40px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #000000;
+  --bg-alt: #0b0b0d;
+  --surface: #161617;
+  --surface-2: #1d1d1f;
+  --fg: #f5f5f7;
+  --fg-muted: #a1a1a6;
+  --fg-subtle: #86868b;
+  --border: #424245;
+  --border-soft: #2c2c2e;
+  --primary: #2997ff;
+  --primary-hover: #47a6ff;
+  --on-primary: #000000;
+  --link: #2997ff;
+  --clay: #e58a66;
+  --clay-soft: #2a1a13;
+  --success: #30d158;
+  --success-soft: #0f2a17;
+  --danger: #ff453a;
+  --danger-soft: #2e0f0d;
+  --nav-bg: rgba(22, 22, 23, 0.72);
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-pop: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-alt: var(--bg-alt);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-link: var(--link);
+  --color-clay: var(--clay);
+  --color-clay-soft: var(--clay-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - var(--gap, 1rem) / 2)); }
+}
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  letter-spacing: -0.011em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[lang="ar"], .font-arabic {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+/* Arabic runs are isolated RTL so mixed lines ("أعطِ Claude السياق") keep the right word order.
+   They sit left-aligned under the English text by default; text-center / text-right utilities override. */
+@layer base {
+  [lang="ar"]:not([dir]) {
+    direction: rtl;
+    unicode-bidi: isolate;
+    text-align: left;
+  }
+}
+
+::selection { background: color-mix(in srgb, var(--primary) 25%, transparent); }
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.text-balance { text-wrap: balance; }
+.text-pretty { text-wrap: pretty; }
+
+/* Apple-style headline gradient */
+.headline-gradient {
+  background: linear-gradient(90deg, #c96442 0%, #e0875f 35%, #8a5cf6 70%, #0071e3 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Translatable word */
+.tw {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: color-mix(in srgb, var(--fg-subtle) 55%, transparent);
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+}
+.tw-plain { text-decoration-line: none; }
+.tw:hover, .tw[data-active="true"] {
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--fg);
+}
+.tw[data-saved="true"] {
+  text-decoration-style: solid;
+  text-decoration-color: var(--clay);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

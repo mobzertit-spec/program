@@ -1,0 +1,36 @@
+import { useEffect } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
+import { SelectionTranslator } from '@/components/translate/SelectionTranslator'
+import { TranslatorPanel } from '@/components/translate/TranslatorPanel'
+import { WordPopover } from '@/components/translate/WordPopover'
+import { useTranslator } from '@/context/TranslatorContext'
+import { Footer } from './Footer'
+import { Navbar } from './Navbar'
+
+export function Layout() {
+  const { pathname } = useLocation()
+  const { close } = useTranslator()
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+    close()
+  }, [pathname, close])
+
+  return (
+    <div className="flex min-h-dvh flex-col">
+      <button
+        onClick={() => document.getElementById('main')?.focus()}
+        className="sr-only cursor-pointer focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[80] focus:rounded-full focus:bg-fg focus:px-4 focus:py-2 focus:text-bg"
+      >
+        Skip to content
+      </button>
+      <Navbar />
+      <main id="main" tabIndex={-1} className="flex-1 outline-none">
+        <Outlet />
+      </main>
+      <Footer />
+      <TranslatorPanel />
+      <WordPopover />
+      <SelectionTranslator />
+    </div>
+  )
+}
