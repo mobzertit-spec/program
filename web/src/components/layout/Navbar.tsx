@@ -1,8 +1,9 @@
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from 'motion/react'
-import { BookA, BookOpen, Flame, FlaskConical, Library, Moon, Route, Sun } from 'lucide-react'
+import { BookA, BookOpen, CircleUserRound, Flame, FlaskConical, Library, Moon, Route, Sun } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useApp } from '@/context/AppContext'
+import { avatarUrl, displayName, useAuth } from '@/context/AuthContext'
 import { cn } from '@/lib/utils'
 import { Wordmark } from './Logo'
 
@@ -17,6 +18,7 @@ const links = [
 /** Floating glass navbar: hides while scrolling down, returns on scroll up, shows page progress. */
 export function Navbar() {
   const { theme, setTheme, showArabic, setShowArabic, dueWords, streak, xpToday, dailyGoal } = useApp()
+  const { user } = useAuth()
   const reduce = useReducedMotion()
   const { scrollY, scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 })
@@ -114,6 +116,22 @@ export function Navbar() {
             >
               {isDark ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
             </button>
+            <NavLink
+              to="/account"
+              aria-label={user ? `Your account: ${displayName(user)}` : 'Sign in'}
+              title={user ? displayName(user) : 'Sign in'}
+              className="grid size-10 place-items-center rounded-full text-fg-muted transition-colors hover:bg-bg-alt hover:text-fg"
+            >
+              {user && avatarUrl(user) ? (
+                <img src={avatarUrl(user)} alt="" referrerPolicy="no-referrer" className="size-8 rounded-full object-cover" />
+              ) : user ? (
+                <span className="bg-brand grid size-8 place-items-center rounded-full text-sm font-bold text-white">
+                  {displayName(user)[0]?.toUpperCase()}
+                </span>
+              ) : (
+                <CircleUserRound className="size-[20px]" />
+              )}
+            </NavLink>
           </div>
 
           <motion.span

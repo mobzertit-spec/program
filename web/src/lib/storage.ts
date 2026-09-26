@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 
+/** Fired after progress is replaced from the cloud, so every persistent state re-reads storage. */
+export const STORAGE_SYNC_EVENT = 'ce:storage-sync'
+
 /** localStorage can throw (private mode, blocked storage) — never let it break the page. */
 export function readStorage<T>(key: string, fallback: T): T {
   try {
@@ -24,5 +27,11 @@ export function usePersistentState<T>(key: string, initial: T | (() => T)) {
     typeof initial === 'function' ? (initial as () => T)() : readStorage(key, initial),
   )
   useEffect(() => writeStorage(key, value), [key, value])
+  // re-read when cloud sync replaces stored data
+  useEffect(() => {
+    const reload = () => setValue(typeof initial === 'function' ? (initial as () => T)() : readStorage(key, initial))
+    window.addEventListener(STORAGE_SYNC_EVENT, reload)
+    return () => window.removeEventListener(STORAGE_SYNC_EVENT, reload)
+  }, [key])
   return [value, setValue] as const
 }

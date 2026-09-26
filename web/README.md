@@ -41,6 +41,23 @@ Ask Claude Code to use the **lesson-writer** skill (`.claude/skills/lesson-write
 “Add a lesson about Claude’s memory feature to the features track.” The skill explains the lesson format,
 the writing rules and the official sources to link.
 
+## Sign-in and cloud sync (optional)
+
+CE works without any server. To let learners sign in with **email (magic link)** or **Google** and sync
+progress across devices, connect a free [Supabase](https://supabase.com) project:
+
+1. Create a project, then run `supabase/migrations/001_progress.sql` in **SQL Editor** (creates the `progress`
+   table with Row Level Security — each user can only read and write their own row).
+2. **Authentication → URL Configuration**: set *Site URL* to your site (e.g. `https://USER.github.io/program/`)
+   and add `http://localhost:5173/` to *Redirect URLs*.
+3. **Email**: the magic link works out of the box (Supabase’s built-in email has a low hourly limit —
+   add your own SMTP under Authentication → Emails for real traffic).
+4. **Google**: in Google Cloud Console create an OAuth client (type *Web application*) and add the redirect URI
+   shown in Supabase → Authentication → Providers → Google, then paste the client ID and secret there.
+5. Copy `web/.env.example` to `web/.env.local` and fill in the project URL and anon key
+   (Project Settings → API). For GitHub Pages, add the same two values as **repository variables**
+   (Settings → Secrets and variables → Actions → Variables).
+
 ## Deploy (free, GitHub Pages)
 
 The workflow in `.github/workflows/deploy-pages.yml` builds and publishes `web/` on every push to `main`.

@@ -205,6 +205,16 @@ function TrackMap({ track, index, currentId }: { track: Track; index: number; cu
               <span className="text-fg-muted">lessons</span>
             </p>
             </div>
+            <Link
+              to={`/certificate/${track.id}`}
+              className={cn(
+                'ml-2 mt-4 inline-flex min-h-11 items-center gap-2 rounded-2xl px-4 text-sm font-medium transition-colors',
+                doneCount === items.length ? 'bg-brand text-white shadow-card' : 'text-fg-muted hover:bg-bg-alt',
+              )}
+            >
+              {doneCount === items.length ? <Award className="size-4" /> : <Lock className="size-4" />}
+              Certificate
+            </Link>
           </div>
           <Parallax className="hidden md:block">
             <TrackArt track={track.id} />

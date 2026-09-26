@@ -28,10 +28,18 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: web/package-lock.json
+      - id: pages
+        uses: actions/configure-pages@v5
       - run: npm ci
       - run: npm run check:content
       - run: npm run lint
+      - run: npm run test:sync
       - run: npm run build
+        env:
+          VITE_SITE_URL: ${{ steps.pages.outputs.base_url }}/
+          # optional — set these as repository variables to enable email + Google sign-in
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web/dist

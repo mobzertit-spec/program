@@ -3,6 +3,8 @@ import { createHashRouter, RouterProvider } from 'react-router-dom'
 import { Layout } from '@/components/layout/Layout'
 import { ToastProvider } from '@/components/ui/toast'
 import { AppProvider } from '@/context/AppContext'
+import { AuthProvider } from '@/context/AuthContext'
+import { SyncProvider } from '@/context/SyncContext'
 import { TranslatorProvider } from '@/context/TranslatorContext'
 import Home from '@/pages/Home'
 
@@ -12,6 +14,8 @@ const Vocabulary = lazy(() => import('@/pages/Vocabulary'))
 const PromptLab = lazy(() => import('@/pages/PromptLab'))
 const Path = lazy(() => import('@/pages/Path'))
 const Library = lazy(() => import('@/pages/Library'))
+const Account = lazy(() => import('@/pages/Account'))
+const Certificate = lazy(() => import('@/pages/Certificate'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
 const Fallback = () => <div className="min-h-[60vh]" aria-busy="true" />
@@ -28,6 +32,8 @@ const router = createHashRouter([
       { path: '/lab', element: page(<PromptLab />) },
       { path: '/path', element: page(<Path />) },
       { path: '/library', element: page(<Library />) },
+      { path: '/account', element: page(<Account />) },
+      { path: '/certificate/:track', element: page(<Certificate />) },
       { path: '*', element: page(<NotFound />) },
     ],
   },
@@ -36,11 +42,15 @@ const router = createHashRouter([
 export default function App() {
   return (
     <ToastProvider>
-      <AppProvider>
-        <TranslatorProvider>
-          <RouterProvider router={router} />
-        </TranslatorProvider>
-      </AppProvider>
+      <AuthProvider>
+        <AppProvider>
+          <SyncProvider>
+            <TranslatorProvider>
+              <RouterProvider router={router} />
+            </TranslatorProvider>
+          </SyncProvider>
+        </AppProvider>
+      </AuthProvider>
     </ToastProvider>
   )
 }
