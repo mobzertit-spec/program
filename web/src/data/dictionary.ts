@@ -712,11 +712,6 @@ africa|n|أفريقيا
 clarity|n|وضوح
 `
 
-import a1 from './wordbank/a1'
-import a2 from './wordbank/a2'
-import b1 from './wordbank/b1'
-import b2 from './wordbank/b2'
-import c1 from './wordbank/c1'
 
 export type CefrLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1'
 export const LEVELS: CefrLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1']
@@ -773,13 +768,41 @@ function load(raw: string, level?: CefrLevel) {
 }
 
 load(RAW)
-const banks: [string, CefrLevel][] = [[a1, 'A1'], [a2, 'A2'], [b1, 'B1'], [b2, 'B2'], [c1, 'C1']]
-for (const [raw, level] of banks) load(raw, level)
 
-/** Browsable word bank: every entry that has a CEFR level, in level then alphabetical order. */
-export const wordBank: DictEntry[] = [...dictionary.values()]
-  .filter((e) => e.level && !e.word.includes(' '))
-  .sort((a, b) => LEVELS.indexOf(a.level!) - LEVELS.indexOf(b.level!) || a.word.localeCompare(b.word))
+/**
+ * Browsable word bank (every entry with a CEFR level, level then alphabetical order).
+ * The ~3,000 extra words load in a separate chunk right after the first paint — see loadWordBank().
+ */
+export const wordBank: DictEntry[] = []
+let loaded = false
+let loading: Promise<void> | null = null
+const listeners = new Set<() => void>()
+
+export function loadWordBank(): Promise<void> {
+  loading ??= Promise.all([
+    import('./wordbank/a1'),
+    import('./wordbank/a2'),
+    import('./wordbank/b1'),
+    import('./wordbank/b2'),
+    import('./wordbank/c1'),
+  ]).then((mods) => {
+    mods.forEach((m, i) => load(m.default, LEVELS[i]))
+    wordBank.push(
+      ...[...dictionary.values()]
+        .filter((e) => e.level && !e.word.includes(' '))
+        .sort((a, b) => LEVELS.indexOf(a.level!) - LEVELS.indexOf(b.level!) || a.word.localeCompare(b.word)),
+    )
+    loaded = true
+    listeners.forEach((l) => l())
+  })
+  return loading
+}
+
+export const isWordBankLoaded = () => loaded
+export function subscribeWordBank(cb: () => void) {
+  listeners.add(cb)
+  return () => listeners.delete(cb)
+}
 
 /** Irregular forms → base form */
 export const IRREGULAR: Record<string, string> = {

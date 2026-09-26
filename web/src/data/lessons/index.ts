@@ -3,6 +3,7 @@ import { features } from './features'
 import { foundations } from './foundations'
 import { prompting } from './prompting'
 import { students } from './students'
+import { registerLessonVocab } from '@/lib/translate'
 import type { Lesson, Track, TrackId } from './types'
 
 export type * from './types'
@@ -56,3 +57,5 @@ export const getLesson = (id: string) => lessons.find((l) => l.id === id)
 export const lessonsByTrack = (track: TrackId) => lessons.filter((l) => l.track === track)
 
 export const trackOf = (id: TrackId) => tracks.find((t) => t.id === id)!
+
+registerLessonVocab(lessons.flatMap((l) => l.vocab))

@@ -8,7 +8,8 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { TranslatableText } from '@/components/translate/TranslatableText'
 import { Segmented } from '@/components/ui/segmented'
 import { useApp } from '@/context/AppContext'
-import { LEVELS, wordBank, type CefrLevel } from '@/data/dictionary'
+import { LEVELS, type CefrLevel } from '@/data/dictionary'
+import { useWordBank } from '@/lib/useWordBank'
 import { fixTasks, orderTasks } from '@/data/practice'
 import { canSpeak, speak } from '@/lib/speech'
 import { cn } from '@/lib/utils'
@@ -297,10 +298,11 @@ function Dictation() {
   const [level, setLevel] = useState<CefrLevel>('A2')
   const [mode, setMode] = useState<'listen' | 'translate'>(voice ? 'listen' : 'translate')
   const [round, setRound] = useState(0)
+  const { ready, words: wordBank } = useWordBank()
   const deck = useMemo(
     () => shuffle(wordBank.filter((w) => w.level === level && /^[a-z]{3,12}$/.test(w.word))).slice(0, ROUNDS),
     // a fresh deck for every round, level or mode
-    [level, mode, round],
+    [level, mode, round, ready, wordBank],
   )
   const [i, setI] = useState(0)
   const [answer, setAnswer] = useState('')
@@ -342,7 +344,9 @@ function Dictation() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
       <div className="rounded-[28px] border border-border-soft bg-surface p-5 shadow-card sm:p-7">
-        {i >= deck.length ? (
+        {!ready ? (
+          <p className="py-16 text-center text-fg-muted" role="status">Loading words…</p>
+        ) : i >= deck.length ? (
           <div className="py-10 text-center">
             <p className="text-6xl font-bold tracking-tight">
               {score}/{deck.length}

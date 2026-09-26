@@ -1,5 +1,6 @@
 import type { TrackId } from '@/data/lessons'
-import { usePersistentState } from './storage'
+import { useCallback } from 'react'
+import { usePersistentState, writeStorage } from './storage'
 
 export type EnglishLevel = 'beginner' | 'intermediate' | 'advanced'
 export type Goal = 'daily' | 'work' | 'code' | 'study'
@@ -16,7 +17,15 @@ export const GOAL_TRACK: Record<Goal, TrackId> = {
 export const EMPTY_PROFILE: Profile = { level: null, goal: null, onboarded: false }
 
 export function useProfile() {
-  const [profile, setProfile] = usePersistentState<Profile>('pe:profile', EMPTY_PROFILE)
+  const [profile, setState] = usePersistentState<Profile>('pe:profile', EMPTY_PROFILE)
+  // write straight away: the welcome sheet navigates (and unmounts) right after saving
+  const setProfile = useCallback(
+    (p: Profile) => {
+      writeStorage('pe:profile', p)
+      setState(p)
+    },
+    [setState],
+  )
   const track = profile.goal ? GOAL_TRACK[profile.goal] : null
   return { profile, setProfile, track }
 }

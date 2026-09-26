@@ -1,6 +1,6 @@
 import type { User } from '@supabase/supabase-js'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { redirectUrl, supabase } from '@/lib/supabase'
+import { authEnabled, getSupabase, redirectUrl } from '@/lib/supabase'
 
 type AuthState = {
   enabled: boolean
@@ -35,37 +35,47 @@ function cleanAuthParams() {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(!!supabase)
+  const [loading, setLoading] = useState(authEnabled)
 
   useEffect(() => {
-    if (!supabase) return
+    const pending = getSupabase()
+    if (!pending) return
     let active = true
-    supabase.auth.getSession().then(({ data }) => {
+    let unsubscribe = () => {}
+    pending.then((supabase) => {
       if (!active) return
-      setUser(data.session?.user ?? null)
-      setLoading(false)
-      cleanAuthParams()
-    })
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-      cleanAuthParams()
+      supabase.auth.getSession().then(({ data }) => {
+        if (!active) return
+        setUser(data.session?.user ?? null)
+        setLoading(false)
+        cleanAuthParams()
+      })
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null)
+        setLoading(false)
+        cleanAuthParams()
+      })
+      unsubscribe = () => data.subscription.unsubscribe()
     })
     return () => {
       active = false
-      data.subscription.unsubscribe()
+      unsubscribe()
     }
   }, [])
 
   const signInWithGoogle = useCallback(async () => {
-    if (!supabase) return 'Sign-in is not configured.'
+    const pending = getSupabase()
+    if (!pending) return 'Sign-in is not configured.'
+    const supabase = await pending
     const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: redirectUrl() } })
     return error ? friendly(error.message) : null
   }, [])
 
   const sendMagicLink = useCallback(async (email: string) => {
-    if (!supabase) return 'Sign-in is not configured.'
+    const pending = getSupabase()
+    if (!pending) return 'Sign-in is not configured.'
     try {
+      const supabase = await pending
       const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl() } })
       return error ? friendly(error.message) : null
     } catch (e) {
@@ -74,11 +84,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = useCallback(async () => {
-    await supabase?.auth.signOut()
+    const pending = getSupabase()
+    if (pending) await (await pending).auth.signOut()
   }, [])
 
   const value = useMemo(
-    () => ({ enabled: !!supabase, loading, user, signInWithGoogle, sendMagicLink, signOut }),
+    () => ({ enabled: authEnabled, loading, user, signInWithGoogle, sendMagicLink, signOut }),
     [loading, user, signInWithGoogle, sendMagicLink, signOut],
   )
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>

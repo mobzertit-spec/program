@@ -10,7 +10,7 @@ import { Segmented } from '@/components/ui/segmented'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { useApp } from '@/context/AppContext'
 import { lessons, tracks, type TrackId } from '@/data/lessons'
-import { nextLesson } from '@/lib/progress'
+import { nextLesson } from '@/lib/path'
 import { PageHeader } from '@/components/ui/page-header'
 
 type Filter = 'all' | TrackId

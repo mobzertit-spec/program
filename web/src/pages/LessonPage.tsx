@@ -32,7 +32,7 @@ import { useToast } from '@/components/ui/toast'
 import { useApp } from '@/context/AppContext'
 import { POS_AR } from '@/data/dictionary'
 import { getLesson, lessons, lessonsByTrack, trackOf, type Bilingual, type Lesson, type QuizQuestion, type VocabItem } from '@/data/lessons'
-import { isUnlocked } from '@/lib/progress'
+import { isUnlocked } from '@/lib/path'
 import { canSpeak, speak } from '@/lib/speech'
 import { cn } from '@/lib/utils'
 

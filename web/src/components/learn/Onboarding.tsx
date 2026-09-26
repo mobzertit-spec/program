@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/layout/Logo'
 import { useApp } from '@/context/AppContext'
-import { nextLesson } from '@/lib/progress'
+import { nextLesson } from '@/lib/path'
 import { GOAL_TRACK, useProfile, type EnglishLevel, type Goal } from '@/lib/profile'
 import { cn } from '@/lib/utils'
 

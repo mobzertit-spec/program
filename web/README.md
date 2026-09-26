@@ -23,7 +23,7 @@ Learn how to use **Claude** while improving your **English** — every word on t
 
 ## Stack
 
-React 19 · TypeScript · Vite · Tailwind CSS v4 · Motion · Lucide icons · React Router (hash routing, so `dist/` works on any static host).
+React 19 · TypeScript · Vite · Tailwind CSS v4 · Motion · Lucide icons · React Router with clean URLs (`dist/404.html` makes deep links work on static hosts; old `#/` links redirect automatically). Set `VITE_BASE` when the site lives in a sub-folder, e.g. `VITE_BASE=/program/`.
 
 ## Run
 

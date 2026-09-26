@@ -2,7 +2,7 @@
   "name": "CE — Learn Claude, speak better English",
   "short_name": "CE",
   "description": "Short lessons on using Claude, in simple English, with instant Arabic translation for every word.",
-  "start_url": "./#/path",
+  "start_url": "./path",
   "scope": "./",
   "display": "standalone",
   "background_color": "#07080f",
@@ -16,7 +16,7 @@
     { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Review words", "url": "./#/vocabulary?tab=review" },
-    { "name": "Practice", "url": "./#/practice" }
+    { "name": "Review words", "url": "./vocabulary?tab=review" },
+    { "name": "Practice", "url": "./practice" }
   ]
 }

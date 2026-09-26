@@ -8,7 +8,8 @@ import { ButtonLink } from '@/components/ui/button'
 import { Segmented } from '@/components/ui/segmented'
 import { useToast } from '@/components/ui/toast'
 import { useApp, type SavedWord } from '@/context/AppContext'
-import { LEVEL_INFO, LEVELS, POS_AR, wordBank, type CefrLevel } from '@/data/dictionary'
+import { LEVEL_INFO, LEVELS, POS_AR, type CefrLevel } from '@/data/dictionary'
+import { useWordBank } from '@/lib/useWordBank'
 import { lessons } from '@/data/lessons'
 import { canSpeak, speak } from '@/lib/speech'
 import { formatDue, isMastered, MAX_BOX } from '@/lib/srs'
@@ -31,7 +32,7 @@ export default function Vocabulary() {
 
   return (
     <div className="mx-auto max-w-[1024px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
-      <PageHeader eyebrow={{ en: 'Your words', ar: 'كلماتك' }} title={{ en: 'Vocabulary.', ar: 'المفردات' }} intro={{ en: `${wordBank.length.toLocaleString()} words from beginner to advanced. Save the ones you need — smart reviews bring each word back just before you forget it.`, ar: `أكثر من ${wordBank.length.toLocaleString()} كلمة من المبتدئ إلى المتقدم، مع مراجعة ذكية تعيد الكلمة قبل أن تنساها.` }} />
+      <PageHeader eyebrow={{ en: 'Your words', ar: 'كلماتك' }} title={{ en: 'Vocabulary.', ar: 'المفردات' }} intro={{ en: `3,000+ words from beginner to advanced. Save the ones you need — smart reviews bring each word back just before you forget it.`, ar: `أكثر من 3,000 كلمة من المبتدئ إلى المتقدم، مع مراجعة ذكية تعيد الكلمة قبل أن تنساها.` }} />
 
       <div className="no-scrollbar mt-10 overflow-x-auto">
         <Segmented
@@ -250,6 +251,8 @@ function MyWords() {
 
 function WordBank() {
   const [level, setLevel] = useState<CefrLevel | 'all'>('A1')
+  const { ready, words: wordBank } = useWordBank()
+  if (!ready) return <p className="py-16 text-center text-fg-muted" role="status">Loading the word bank…</p>
   return (
     <>
       <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Filter by level">

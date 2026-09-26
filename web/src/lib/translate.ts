@@ -1,5 +1,4 @@
-import { dictionary, IRREGULAR, type DictEntry } from '@/data/dictionary'
-import { lessons } from '@/data/lessons'
+import { dictionary, IRREGULAR, isWordBankLoaded, loadWordBank, type DictEntry } from '@/data/dictionary'
 import { readStorage, writeStorage } from './storage'
 
 export type Translation = {
@@ -12,7 +11,11 @@ export type Translation = {
 
 /** Lesson vocabulary has richer meanings — it wins over the generic dictionary. */
 const lessonVocab = new Map<string, DictEntry>()
-for (const l of lessons) for (const v of l.vocab) lessonVocab.set(v.word, { word: v.word, pos: v.pos, ar: v.ar })
+
+/** Called by the lessons module when it loads (it is code-split from the home page). */
+export function registerLessonVocab(items: { word: string; pos: string; ar: string }[]) {
+  for (const v of items) lessonVocab.set(v.word, { word: v.word, pos: v.pos, ar: v.ar })
+}
 
 export const normalize = (w: string) =>
   w
@@ -95,6 +98,11 @@ export async function translateOnline(text: string, signal?: AbortSignal): Promi
 export async function translateWord(word: string, signal?: AbortSignal): Promise<Translation> {
   const local = lookupLocal(word)
   if (local) return local
+  if (!isWordBankLoaded()) {
+    await loadWordBank()
+    const again = lookupLocal(word)
+    if (again) return again
+  }
   const base = lemmatize(word)
   const ar = await translateOnline(normalize(word), signal)
   return { word: normalize(word), base, ar, source: 'online' }
@@ -105,6 +113,7 @@ export async function translateText(text: string, signal?: AbortSignal): Promise
   const t = text.trim()
   if (!t) return ''
   if (/^[A-Za-z'’-]+$/.test(t)) {
+    if (!isWordBankLoaded()) await loadWordBank()
     const local = lookupLocal(t)
     if (local) return local.ar
   }

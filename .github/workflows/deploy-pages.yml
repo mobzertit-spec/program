@@ -36,6 +36,7 @@ jobs:
       - run: npm run test:sync
       - run: npm run build
         env:
+          VITE_BASE: ${{ steps.pages.outputs.base_path }}/
           VITE_SITE_URL: ${{ steps.pages.outputs.base_url }}/
           # optional — set these as repository variables to enable email + Google sign-in
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}

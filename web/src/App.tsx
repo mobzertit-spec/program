@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createHashRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Layout } from '@/components/layout/Layout'
 import { ToastProvider } from '@/components/ui/toast'
 import { AppProvider } from '@/context/AppContext'
@@ -23,7 +23,7 @@ const NotFound = lazy(() => import('@/pages/NotFound'))
 const Fallback = () => <div className="min-h-[60vh]" aria-busy="true" />
 const page = (el: React.ReactNode) => <Suspense fallback={<Fallback />}>{el}</Suspense>
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
@@ -40,7 +40,7 @@ const router = createHashRouter([
       { path: '*', element: page(<NotFound />) },
     ],
   },
-])
+], { basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/' })
 
 export default function App() {
   return (

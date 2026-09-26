@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useApp } from '@/context/AppContext'
 import { useAuth } from '@/context/AuthContext'
-import { supabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/supabase'
 import { applyLocal, collectLocal, mergeProgress, sameProgress, type ProgressData } from '@/lib/sync'
 
 type Status = 'off' | 'syncing' | 'synced' | 'error'
@@ -23,8 +23,10 @@ export function SyncProvider({ children }: { children: ReactNode }) {
 
   const upload = useCallback(
     async (data: ProgressData) => {
-      if (!supabase || !user) return
+      const pending = getSupabase()
+      if (!pending || !user) return
       setStatus('syncing')
+      const supabase = await pending
       const { error: err } = await supabase
         .from('progress')
         .upsert({ user_id: user.id, data, updated_at: new Date().toISOString() })
@@ -41,8 +43,10 @@ export function SyncProvider({ children }: { children: ReactNode }) {
   )
 
   const pullAndMerge = useCallback(async () => {
-    if (!supabase || !user) return
+    const pending = getSupabase()
+    if (!pending || !user) return
     setStatus('syncing')
+    const supabase = await pending
     const { data, error: err } = await supabase.from('progress').select('data').eq('user_id', user.id).maybeSingle()
     if (err) {
       setStatus('error')

@@ -1,13 +1,13 @@
 import { Bookmark, BookmarkCheck, CalendarDays, Volume2 } from 'lucide-react'
 import { useApp } from '@/context/AppContext'
-import { LEVEL_INFO, wordBank } from '@/data/dictionary'
+import { LEVEL_INFO, type DictEntry } from '@/data/dictionary'
+import { useWordBank } from '@/lib/useWordBank'
 import { POS_AR } from '@/data/dictionary'
 import { dayKey } from '@/lib/progress'
 import { canSpeak, speak } from '@/lib/speech'
 import { useToast } from '@/components/ui/toast'
 import { SpeakCheck } from './SpeakCheck'
 
-const pool = wordBank.filter((w) => w.level === 'B1' || w.level === 'B2')
 
 function hash(s: string) {
   let h = 2166136261
@@ -15,12 +15,17 @@ function hash(s: string) {
   return h >>> 0
 }
 
-export const wordOfTheDay = () => pool[hash(dayKey()) % pool.length]
+function pick(words: DictEntry[]) {
+  const pool = words.filter((w) => w.level === 'B1' || w.level === 'B2')
+  return pool[hash(dayKey()) % pool.length]
+}
 
 export function WordOfTheDay() {
   const { isSaved, toggleSave } = useApp()
   const toast = useToast()
-  const w = wordOfTheDay()
+  const { ready, words } = useWordBank()
+  if (!ready) return <div className="h-full min-h-56 animate-pulse rounded-3xl bg-bg-alt" aria-label="Loading word of the day" />
+  const w = pick(words)
   const saved = isSaved(w.word)
   return (
     <div className="flex h-full flex-col rounded-3xl border border-border-soft bg-surface p-5 shadow-card">

@@ -5,8 +5,12 @@
  * - quiz answers point at an existing option
  * - resources come only from official sources
  */
-import { lessons } from '../src/data/lessons'
+import { lessons, tracks } from '../src/data/lessons'
+import { LESSON_COUNT, TRACK_COUNT } from '../src/data/lessons/meta'
+import { loadWordBank } from '../src/data/dictionary'
 import { lemmatize, lookupLocal } from '../src/lib/translate'
+
+await loadWordBank()
 
 const ALLOWED = [
   'https://academy.claude.com/',
@@ -66,6 +70,8 @@ for (const l of lessons) {
     if (!ALLOWED.some((a) => r.url.startsWith(a))) errors.push(`${l.id}: non-official link ${r.url}`)
 }
 
+if (LESSON_COUNT !== lessons.length || TRACK_COUNT !== tracks.length)
+  errors.push(`update src/data/lessons/meta.ts: ${lessons.length} lessons, ${tracks.length} tracks`)
 console.log(`${lessons.length} lessons, ${seenVocab.size} vocab words`)
 if (missing.size) {
   console.log(`\n${missing.size} words without offline translation (add them to src/data/dictionary.ts):`)

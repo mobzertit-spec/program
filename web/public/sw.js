@@ -1,7 +1,7 @@
 /* CE service worker — makes the site installable and usable offline after the first visit.
    Pages: network first (fresh content), falling back to the cached app shell.
    Assets (hashed JS/CSS, icons, fonts): cache first. Supabase / translation APIs are never cached. */
-const VERSION = 'ce-v1'
+const VERSION = 'ce-v2'
 const SHELL = ['./', './index.html', './manifest.webmanifest', './favicon.svg', './icons/icon-192.png']
 
 self.addEventListener('install', (e) => {
