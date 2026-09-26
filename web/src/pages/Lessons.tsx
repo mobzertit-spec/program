@@ -8,6 +8,7 @@ import { BlurFade } from '@/components/ui/blur-fade'
 import { ProgressRing } from '@/components/ui/progress-ring'
 import { Segmented } from '@/components/ui/segmented'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
+import { Tilt } from '@/components/ui/tilt'
 import { useApp } from '@/context/AppContext'
 import { lessons, tracks, type TrackId } from '@/data/lessons'
 import { nextLesson } from '@/lib/path'
@@ -24,12 +25,24 @@ export default function Lessons() {
 
   return (
     <div className="mx-auto max-w-[1024px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
-      <PageHeader eyebrow={{ en: 'The course', ar: 'الدورة' }} title={{ en: 'Lessons.', ar: 'الدروس' }} intro={{ en: `${lessons.length} short lessons in ${tracks.length} tracks — from your very first message to Skills and Claude Code. Every word is translatable.`, ar: `${lessons.length} درسًا قصيرًا في ${tracks.length} مسارات، من رسالتك الأولى حتى الاحتراف. كل كلمة قابلة للترجمة.` }} />
+      <PageHeader
+        eyebrow={{ en: 'The course', ar: 'الدورة' }}
+        title={{ en: 'Lessons.', ar: 'الدروس' }}
+        intro={{
+          en: `${lessons.length} short lessons in ${tracks.length} tracks — from your very first message to Skills and Claude Code. Every word is translatable.`,
+          ar: `${lessons.length} درسًا قصيرًا في ${tracks.length} مسارات، من رسالتك الأولى حتى الاحتراف. كل كلمة قابلة للترجمة.`,
+        }}
+      />
 
       <BlurFade delay={0.1}>
         <div className="mt-10 flex flex-col gap-5 rounded-3xl border border-border-soft bg-bg-alt p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div className="flex items-center gap-4">
-            <ProgressRing value={done / lessons.length} size={56} stroke={5} label={`${done} of ${lessons.length} lessons completed`} />
+            <ProgressRing
+              value={done / lessons.length}
+              size={56}
+              stroke={5}
+              label={`${done} of ${lessons.length} lessons completed`}
+            />
             <div>
               <p className="font-semibold">
                 {done} of {lessons.length} completed
@@ -79,34 +92,38 @@ export default function Lessons() {
                 transition={{ duration: 0.3 }}
               >
                 <Link to={`/lessons/${l.id}`} className="block h-full rounded-3xl">
-                  <SpotlightCard className="h-full p-6 hover:-translate-y-0.5">
-                    <div className="flex items-start justify-between">
-                      <span className="grid size-12 place-items-center rounded-2xl bg-bg-alt">
-                        <LessonIcon name={l.icon} className="size-6 text-clay" />
-                      </span>
-                      {isDone ? (
-                        <span className="inline-flex items-center gap-1 text-sm font-medium text-success">
-                          <CheckCircle2 className="size-5" /> Done
+                  <Tilt className="h-full" max={4} lift={3}>
+                    <SpotlightCard className="h-full p-6 hover:transform-none">
+                      <div className="flex items-start justify-between">
+                        <span className="grid size-12 place-items-center rounded-2xl bg-bg-alt">
+                          <LessonIcon name={l.icon} className="icon-pop size-6 text-clay" />
                         </span>
-                      ) : (
-                        <span className="text-sm font-medium text-fg-subtle">Lesson {l.number}</span>
-                      )}
-                    </div>
-                    <h2 className="mt-5 text-2xl font-semibold tracking-tight">{l.title}</h2>
-                    <p lang="ar" data-ar-help className="text-sm text-fg-muted">{l.titleAr}</p>
-                    <p className="mt-3 text-[15px] leading-relaxed text-fg-muted">{l.summary.en}</p>
-                    <div className="mt-5 flex flex-wrap items-center gap-2">
-                      <Badge tone={levelTone(l.level)}>{l.level}</Badge>
-                      <Badge>
-                        <Clock className="size-3" /> {l.minutes} min
-                      </Badge>
-                      {quizScores[l.id] !== undefined && (
-                        <Badge tone="success">
-                          Quiz {quizScores[l.id]}/{l.quiz.length}
+                        {isDone ? (
+                          <span className="inline-flex items-center gap-1 text-sm font-medium text-success">
+                            <CheckCircle2 className="size-5" /> Done
+                          </span>
+                        ) : (
+                          <span className="text-sm font-medium text-fg-subtle">Lesson {l.number}</span>
+                        )}
+                      </div>
+                      <h2 className="mt-5 text-2xl font-semibold tracking-tight">{l.title}</h2>
+                      <p lang="ar" data-ar-help className="text-sm text-fg-muted">
+                        {l.titleAr}
+                      </p>
+                      <p className="mt-3 text-[15px] leading-relaxed text-fg-muted">{l.summary.en}</p>
+                      <div className="mt-5 flex flex-wrap items-center gap-2">
+                        <Badge tone={levelTone(l.level)}>{l.level}</Badge>
+                        <Badge>
+                          <Clock className="size-3" /> {l.minutes} min
                         </Badge>
-                      )}
-                    </div>
-                  </SpotlightCard>
+                        {quizScores[l.id] !== undefined && (
+                          <Badge tone="success">
+                            Quiz {quizScores[l.id]}/{l.quiz.length}
+                          </Badge>
+                        )}
+                      </div>
+                    </SpotlightCard>
+                  </Tilt>
                 </Link>
               </motion.li>
             )

@@ -8,6 +8,7 @@ import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { ButtonLink, buttonClass } from '@/components/ui/button'
 import { useProfile } from '@/lib/profile'
+import { Magnetic } from '@/components/ui/tilt'
 import { WordReveal } from '@/components/ui/word-reveal'
 import { useTranslator } from '@/context/TranslatorContext'
 import { LESSON_COUNT, TRACK_COUNT } from '@/data/lessons/meta'
@@ -75,7 +76,9 @@ export default function Home() {
           </BlurFade>
           <BlurFade delay={0.6}>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <StartButton />
+              <Magnetic>
+                <StartButton />
+              </Magnetic>
               <ButtonLink to="/lessons" size="lg" variant="link" className="text-[17px]">
                 Browse all lessons <ChevronRight className="size-4" />
               </ButtonLink>
@@ -86,7 +89,7 @@ export default function Home() {
         {/* Interactive demo */}
         <motion.div style={{ scale: demoScale, opacity: demoOpacity }} className="relative mx-auto max-w-3xl px-4 pb-20 sm:px-6">
           <BlurFade delay={0.75} y={32}>
-            <div className="overflow-hidden rounded-[28px] border border-border-soft bg-surface shadow-pop">
+            <div className="float-slow overflow-hidden rounded-[28px] border border-border-soft bg-surface shadow-pop">
               <div className="flex items-center gap-2 border-b border-border-soft bg-surface-2 px-4 py-3">
                 <span className="size-3 rounded-full bg-[#ff5f57]" />
                 <span className="size-3 rounded-full bg-[#febc2e]" />
@@ -296,10 +299,10 @@ export default function Home() {
               <span className="absolute bottom-0 right-2 grid size-12 place-items-center rounded-full bg-surface text-fg-subtle shadow-card">
                 <Lock className="size-5" />
               </span>
-              <div className="absolute -right-6 top-4 flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-sm font-semibold shadow-pop">
+              <div className="float-soft absolute -right-6 top-4 flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-sm font-semibold shadow-pop">
                 <Flame className="size-4 fill-clay text-clay" /> 7 days
               </div>
-              <div className="absolute -left-8 top-40 flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-sm font-semibold shadow-pop">
+              <div className="float-soft absolute -left-8 top-40 flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-sm font-semibold shadow-pop" style={{ animationDelay: '-3s' }}>
                 <Award className="size-4 text-primary" /> +50 XP
               </div>
             </div>
@@ -325,8 +328,8 @@ export default function Home() {
             { icon: LifeBuoy, t: 'Docs & Help Center', d: 'Prompting best practices and a short guide for every Claude feature.', ar: 'الوثائق ومركز المساعدة' },
           ].map((c, i) => (
             <BlurFade key={c.t} delay={i * 0.06}>
-              <Link to="/library" className="group flex h-full flex-col rounded-3xl border border-border-soft bg-surface p-7 shadow-card transition-all hover:-translate-y-1 hover:shadow-pop">
-                <c.icon className="size-8 text-clay" aria-hidden />
+              <Link to="/library" className="lift group flex h-full flex-col rounded-3xl border border-border-soft bg-surface p-7 shadow-card">
+                <c.icon className="icon-pop size-8 text-clay" aria-hidden />
                 <h3 className="mt-5 text-xl font-semibold tracking-tight">{c.t}</h3>
                 <p className="mt-2 text-[15px] text-fg-muted">{c.d}</p>
                 <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-subtle">{c.ar}</p>

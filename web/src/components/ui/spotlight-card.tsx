@@ -16,7 +16,7 @@ export function SpotlightCard({ className, children, ...props }: HTMLAttributes<
       ref={ref}
       onMouseMove={onMove}
       className={cn(
-        'group relative overflow-hidden rounded-3xl border border-border-soft bg-surface shadow-card transition-transform duration-300',
+        'lift group relative overflow-hidden rounded-3xl border border-border-soft bg-surface shadow-card',
         className,
       )}
       {...props}

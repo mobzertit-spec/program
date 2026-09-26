@@ -206,3 +206,39 @@ body {
   33% { transform: translate3d(4%, -3%, 0) scale(1.06); }
   66% { transform: translate3d(-3%, 4%, 0) scale(0.96); }
 }
+
+/* ---------- Micro-interactions ---------- */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes float-y-sm {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-2deg); }
+}
+/* gentle idle float for decorative elements (use style="animation-delay" to stagger) */
+.float-soft { animation: float-y 6s ease-in-out infinite; will-change: transform; }
+.float-slow { animation: float-y 9s ease-in-out infinite; will-change: transform; }
+.float-icon { animation: float-y-sm 4.5s ease-in-out infinite; }
+
+/* hover lift for cards and buttons — only where a real mouse exists */
+@media (hover: hover) and (pointer: fine) {
+  .lift {
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
+  }
+  .lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-pop);
+  }
+  /* icons inside a hovered element pop slightly */
+  .group:hover .icon-pop,
+  .icon-pop:hover {
+    transform: translateY(-2px) scale(1.12) rotate(-6deg);
+  }
+}
+.icon-pop { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .float-soft, .float-slow, .float-icon { animation: none !important; }
+  .lift:hover { transform: none; }
+}

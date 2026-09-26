@@ -49,7 +49,7 @@ export default function Path() {
             className="group mt-8 flex items-center gap-4 rounded-3xl bg-fg p-5 text-bg shadow-pop transition-transform hover:-translate-y-0.5 sm:p-6"
           >
             <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-bg/10">
-              <LessonIcon name={next.icon} className="size-7" />
+              <LessonIcon name={next.icon} className="float-icon size-7" />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block text-sm opacity-70">
@@ -315,7 +315,7 @@ function PathNode({
   return (
     <div className="absolute flex w-40 flex-col items-center" style={{ left: x - 80, top: y }}>
       {state === 'current' && (
-        <span className="absolute -top-8 z-10 rounded-xl bg-fg px-3 py-1 text-xs font-bold uppercase tracking-wide text-bg shadow-card after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-[6px] after:border-transparent after:border-t-fg">
+        <span className="float-icon absolute -top-8 z-10 rounded-xl bg-fg px-3 py-1 text-xs font-bold uppercase tracking-wide text-bg shadow-card after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-[6px] after:border-transparent after:border-t-fg">
           Start
         </span>
       )}
@@ -389,7 +389,7 @@ function Achievements() {
               )}
             >
               <span className={cn('grid size-12 place-items-center rounded-full', a.got ? 'bg-clay text-white' : 'bg-bg-alt text-fg-subtle')}>
-                {a.got ? <Icon className="size-6" /> : <Lock className="size-5" />}
+                {a.got ? <Icon className="float-icon size-6" /> : <Lock className="size-5" />}
               </span>
               <p className="mt-3 text-sm font-semibold leading-tight">{a.title}</p>
               <p lang="ar" data-ar-help className="text-center text-xs text-fg-muted">{a.titleAr}</p>

@@ -63,7 +63,7 @@ export function Navbar() {
                   to={to}
                   className={({ isActive }) =>
                     cn(
-                      'relative flex h-10 items-center gap-1.5 rounded-full px-3.5 text-[13.5px] font-medium transition-colors',
+                      'group relative flex h-10 items-center gap-1.5 rounded-full px-3.5 text-[13.5px] font-medium transition-colors',
                       isActive ? 'text-fg' : 'text-fg-muted hover:text-fg',
                     )
                   }
@@ -77,7 +77,7 @@ export function Navbar() {
                           transition={{ type: 'spring', bounce: 0.2, duration: 0.45 }}
                         />
                       )}
-                      <Icon className={cn('relative size-4', isActive && 'text-primary')} aria-hidden />
+                      <Icon className={cn('icon-pop relative size-4', isActive && 'text-primary')} aria-hidden />
                       <span className="relative" lang={rtl ? 'ar' : 'en'}>
                         {t(label, ar)}
                       </span>

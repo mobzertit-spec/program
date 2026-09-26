@@ -35,7 +35,7 @@ export function ResourceCard({ r, compact }: { r: Resource; compact?: boolean })
           r.kind === 'course' ? 'bg-clay-soft text-clay' : 'bg-bg-alt text-primary',
         )}
       >
-        <Icon className="size-5" aria-hidden />
+        <Icon className="icon-pop size-5" aria-hidden />
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-fg-subtle">

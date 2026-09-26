@@ -30,7 +30,7 @@ export function WordOfTheDay() {
   return (
     <div className="flex h-full flex-col rounded-3xl border border-border-soft bg-surface p-5 shadow-card">
       <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-clay">
-        <CalendarDays className="size-3.5" /> Word of the day
+        <CalendarDays className="float-icon size-3.5" /> Word of the day
       </p>
       <div className="mt-3 flex items-start justify-between gap-2">
         <div>
