@@ -13,6 +13,13 @@ type AuthState = {
 
 const Ctx = createContext<AuthState | null>(null)
 
+/** Turn technical errors into messages a learner can act on. */
+function friendly(message: string) {
+  if (/fetch|network|load failed/i.test(message)) return 'Could not reach the sign-in server. Check your internet connection and try again.'
+  if (/rate limit|too many/i.test(message)) return 'Too many attempts. Please wait a minute and try again.'
+  return message
+}
+
 /** Remove ?code=… / ?error=… left by the OAuth / magic-link redirect, keeping the hash route. */
 function cleanAuthParams() {
   const url = new URL(window.location.href)
@@ -53,13 +60,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithGoogle = useCallback(async () => {
     if (!supabase) return 'Sign-in is not configured.'
     const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: redirectUrl() } })
-    return error?.message ?? null
+    return error ? friendly(error.message) : null
   }, [])
 
   const sendMagicLink = useCallback(async (email: string) => {
     if (!supabase) return 'Sign-in is not configured.'
-    const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl() } })
-    return error?.message ?? null
+    try {
+      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl() } })
+      return error ? friendly(error.message) : null
+    } catch (e) {
+      return friendly((e as Error).message)
+    }
   }, [])
 
   const signOut = useCallback(async () => {
