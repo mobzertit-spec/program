@@ -46,6 +46,15 @@ Ask Claude Code to use the **lesson-writer** skill (`.claude/skills/lesson-write
 “Add a lesson about Claude’s memory feature to the features track.” The skill explains the lesson format,
 the writing rules and the official sources to link.
 
+## Design files
+
+- **Figma — “CE — Design System”** (in your Figma drafts): *Foundations* page with the logo, all color tokens as
+  variables (collections “CE Color · Light” and “CE Color · Dark”, each with its CSS variable as code syntax), size
+  tokens, 11 text styles (Inter, Alexandria for Arabic, JetBrains Mono); *Components* page with Button (3 variants),
+  Word popover, Lesson card, Lesson feedback and Leaderboard, each linked to its React file in the description.
+  Keep `web/src/index.css` and the Figma variables in sync when the palette changes.
+- **Canva — Instagram launch post** (in your Canva account): an editable 1080×1350 post to share CE.
+
 ## Supabase: feedback, leaderboard, sign-in and cloud sync
 
 CE works fully without a server; Supabase adds the community features. The site is connected to the Supabase
