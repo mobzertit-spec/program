@@ -196,7 +196,7 @@ export default function PromptLab() {
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-bg-alt" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Prompt score">
                 <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-clay via-[#8a5cf6] to-primary"
+                  className="h-full rounded-full bg-brand"
                   animate={{ width: `${pct}%` }}
                   transition={{ type: 'spring', bounce: 0.1, duration: 0.6 }}
                 />

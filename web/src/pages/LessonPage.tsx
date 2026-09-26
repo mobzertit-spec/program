@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import {
   ArrowLeft,
   ArrowRight,
@@ -20,6 +20,7 @@ import {
 import { useMemo, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { LessonIcon, levelTone } from '@/components/LessonIcon'
+import { Parallax, TrackArt } from '@/components/art/TrackArt'
 import { ResourceCard } from '@/components/learn/ResourceCard'
 import { SpeakCheck } from '@/components/learn/SpeakCheck'
 import { VideoEmbed } from '@/components/learn/VideoEmbed'
@@ -44,8 +45,6 @@ export default function LessonPage() {
 
 function LessonView({ lesson }: { lesson: Lesson }) {
   const { completed, markComplete } = useApp()
-  const { scrollYProgress } = useScroll()
-  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 })
   const highlight = useMemo(() => new Set(lesson.vocab.map((v) => v.word)), [lesson])
   const idx = lessons.findIndex((l) => l.id === lesson.id)
   const prev = lessons[idx - 1]
@@ -58,10 +57,12 @@ function LessonView({ lesson }: { lesson: Lesson }) {
 
   return (
     <article>
-      <motion.div aria-hidden style={{ scaleX: progress }} className="fixed inset-x-0 top-13 z-40 h-0.5 origin-left bg-primary" />
 
       {/* Header */}
-      <header className="border-b border-border-soft bg-bg-alt">
+      <header className="relative overflow-hidden border-b border-border-soft bg-bg-alt">
+        <Parallax className="absolute right-[max(1.5rem,calc((100vw-1180px)/2))] top-20 hidden w-[230px] xl:block" distance={24}>
+          <TrackArt track={lesson.track} />
+        </Parallax>
         <div className="mx-auto max-w-[760px] px-4 pb-12 pt-8 sm:px-6 sm:pt-10">
           <Link to="/path" className="inline-flex items-center gap-1 text-sm text-link hover:underline">
             <ChevronLeft className="size-4" /> Learning path

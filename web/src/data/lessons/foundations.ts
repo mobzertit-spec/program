@@ -113,8 +113,8 @@ export const foundations: LessonInput[] = [
         headingAr: 'زر الإضافة ووضع الصوت',
         paragraphs: [
           {
-            en: 'The "+" button in the message box is your toolbox. From there you can attach files and images, turn on web search, and open other features like connectors.',
-            ar: 'زر "+" في صندوق الرسائل هو صندوق أدواتك. من خلاله يمكنك إرفاق الملفات والصور، وتفعيل البحث في الويب، وفتح ميزات أخرى مثل الموصلات.',
+            en: 'The "+" button in the message box is your toolbox. From there you can attach files and images, toggle web search on or off, and open other features like connectors.',
+            ar: 'زر "+" في صندوق الرسائل هو صندوق أدواتك. من خلاله يمكنك إرفاق الملفات والصور، وتشغيل البحث في الويب أو إيقافه، وفتح ميزات أخرى مثل الموصلات.',
           },
           {
             en: 'Voice mode lets you speak to Claude and hear it answer. It works best on your phone and supports many languages — a great way to practice English speaking.',
@@ -416,8 +416,8 @@ export const foundations: LessonInput[] = [
         headingAr: 'التفويض والوصف',
         paragraphs: [
           {
-            en: 'Delegation means deciding which work to do yourself, which work to do with AI, and which work to give to AI. Not every task is a good task for Claude.',
-            ar: 'التفويض يعني أن تقرر أي عمل تقوم به بنفسك، وأي عمل تقوم به مع الذكاء الاصطناعي، وأي عمل تعطيه للذكاء الاصطناعي. ليست كل مهمة مناسبة لـ Claude.',
+            en: 'Delegation means deciding which work to do yourself, which work to do with AI, and which work to delegate to AI. Not every task is a good task for Claude.',
+            ar: 'التفويض يعني أن تقرر أي عمل تقوم به بنفسك، وأي عمل تقوم به مع الذكاء الاصطناعي، وأي عمل تفوّضه للذكاء الاصطناعي. ليست كل مهمة مناسبة لـ Claude.',
           },
           {
             en: 'Description means explaining clearly what you want: the goal, the context, and the kind of result. Everything you learned about clear prompts is part of Description.',
@@ -430,8 +430,8 @@ export const foundations: LessonInput[] = [
         headingAr: 'التمييز والعناية',
         paragraphs: [
           {
-            en: 'Discernment means judging the answer carefully. Is it correct? Is it complete? Does it make sense? You are the expert who decides if the result is good enough.',
-            ar: 'التمييز يعني أن تحكم على الإجابة بعناية. هل هي صحيحة؟ هل هي كاملة؟ هل هي منطقية؟ أنت الخبير الذي يقرر إن كانت النتيجة جيدة بما يكفي.',
+            en: 'Discernment means judging the answer carefully. Is it correct? Is it complete? Does it make sense? Verify important facts, because you are the expert who decides if the result is good enough.',
+            ar: 'التمييز يعني أن تحكم على الإجابة بعناية. هل هي صحيحة؟ هل هي كاملة؟ هل هي منطقية؟ تحقّق من الحقائق المهمة، لأنك أنت الخبير الذي يقرر إن كانت النتيجة جيدة بما يكفي.',
           },
           {
             en: 'Diligence means being responsible for how you use AI. Be honest when AI helped you, protect private information, and take responsibility for the final work.',

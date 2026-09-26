@@ -30,7 +30,7 @@ export function VideoEmbed({ video, className }: { video: Resource; className?: 
             aria-label={`Play video: ${video.title}`}
           >
             {thumbFailed ? (
-              <span className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(201,100,66,.55),transparent_55%),radial-gradient(circle_at_80%_80%,rgba(0,113,227,.5),transparent_55%)]" />
+              <span className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(240,122,69,.55),transparent_55%),radial-gradient(circle_at_80%_80%,rgba(109,93,252,.55),transparent_55%)]" />
             ) : (
               <img
                 src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}

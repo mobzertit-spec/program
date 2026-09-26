@@ -6,6 +6,7 @@ import {
 import { useRef, type ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { LessonIcon } from '@/components/LessonIcon'
+import { Parallax, TrackArt } from '@/components/art/TrackArt'
 import { WordOfTheDay } from '@/components/learn/WordOfTheDay'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { ProgressRing } from '@/components/ui/progress-ring'
@@ -157,7 +158,7 @@ function Dashboard() {
           <p className="mt-2 text-4xl font-bold tracking-tight">{level.level}</p>
           <p className="text-xs text-fg-subtle">{xp.toLocaleString()} XP total</p>
           <div className="mt-3 h-2 overflow-hidden rounded-full bg-bg-alt" role="progressbar" aria-valuenow={level.into} aria-valuemin={0} aria-valuemax={level.span} aria-label="Progress to next level">
-            <motion.div className="h-full rounded-full bg-gradient-to-r from-clay to-primary" animate={{ width: `${(level.into / level.span) * 100}%` }} />
+            <motion.div className="h-full rounded-full bg-brand" animate={{ width: `${(level.into / level.span) * 100}%` }} />
           </div>
           <p className="mt-1 text-xs text-fg-muted">{level.span - level.into} XP to level {level.level + 1}</p>
           <Link
@@ -187,7 +188,7 @@ function TrackMap({ track, index, currentId }: { track: Track; index: number; cu
   return (
     <section aria-labelledby={`track-${track.id}`}>
       <BlurFade>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="grid items-center gap-6 md:grid-cols-[1fr_280px]">
           <div>
             <p className="text-sm font-semibold text-fg-subtle">Track {index + 1}</p>
             <h2 id={`track-${track.id}`} className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -195,8 +196,7 @@ function TrackMap({ track, index, currentId }: { track: Track; index: number; cu
             </h2>
             <p lang="ar" className="text-fg-muted">{track.titleAr}</p>
             <p className="mt-2 max-w-xl text-fg-muted">{track.description}</p>
-          </div>
-          <div className="flex items-center gap-3 rounded-2xl bg-bg-alt px-4 py-3">
+            <div className="mt-4 inline-flex items-center gap-3 rounded-2xl bg-bg-alt px-4 py-3">
             <ProgressRing value={doneCount / items.length} size={40} stroke={4} label={`${doneCount} of ${items.length} lessons done`} />
             <p className="text-sm">
               <span className="font-semibold">
@@ -204,7 +204,11 @@ function TrackMap({ track, index, currentId }: { track: Track; index: number; cu
               </span>{' '}
               <span className="text-fg-muted">lessons</span>
             </p>
+            </div>
           </div>
+          <Parallax className="hidden md:block">
+            <TrackArt track={track.id} />
+          </Parallax>
         </div>
       </BlurFade>
 

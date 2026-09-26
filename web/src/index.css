@@ -2,56 +2,66 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ---------- Design tokens (Apple-inspired, semantic) ---------- */
+/* ---------- CE design tokens ----------
+   Brand: "Ink" (deep navy) · "Ember" (warm orange, the voice of Claude) · "Iris" (indigo, the voice of learning).
+   Semantic tokens only — components never use raw hex. */
 :root {
   --bg: #ffffff;
-  --bg-alt: #f5f5f7;
+  --bg-alt: rgb(244 244 250 / 0.72);
   --surface: #ffffff;
-  --surface-2: #fbfbfd;
-  --fg: #1d1d1f;
-  --fg-muted: #6e6e73;
-  --fg-subtle: #86868b;
-  --border: #d2d2d7;
-  --border-soft: #e8e8ed;
-  --primary: #0071e3;
-  --primary-hover: #0077ed;
+  --surface-2: #fafaff;
+  --fg: #12142b;
+  --fg-muted: #5c6079;
+  --fg-subtle: #7b7f98;
+  --border: #d4d6e4;
+  --border-soft: #e7e8f1;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
   --on-primary: #ffffff;
-  --link: #0066cc;
-  --clay: #c96442;
-  --clay-soft: #fbeee8;
-  --success: #1d8a3a;
-  --success-soft: #e7f6ec;
-  --danger: #d70015;
-  --danger-soft: #fdecee;
-  --nav-bg: rgba(255, 255, 255, 0.72);
-  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.04), 0 12px 40px rgba(0, 0, 0, 0.06);
-  --shadow-pop: 0 10px 40px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08);
+  --link: #4f46e5;
+  --clay: #c4531f;
+  --clay-soft: #fdf0e8;
+  --ember: #f07a45;
+  --iris: #6d5dfc;
+  --ink: #12142b;
+  --success: #15803d;
+  --success-soft: #e8f7ee;
+  --danger: #d7263d;
+  --danger-soft: #fdecef;
+  --nav-bg: rgb(255 255 255 / 0.7);
+  --shadow-card: 0 1px 2px rgb(18 20 43 / 0.04), 0 10px 32px rgb(18 20 43 / 0.06);
+  --shadow-pop: 0 18px 50px rgb(18 20 43 / 0.16), 0 2px 8px rgb(18 20 43 / 0.08);
+  --orb-opacity: 0.55;
   color-scheme: light;
 }
 
 .dark {
-  --bg: #000000;
-  --bg-alt: #0b0b0d;
-  --surface: #161617;
-  --surface-2: #1d1d1f;
-  --fg: #f5f5f7;
-  --fg-muted: #a1a1a6;
-  --fg-subtle: #86868b;
-  --border: #424245;
-  --border-soft: #2c2c2e;
-  --primary: #2997ff;
-  --primary-hover: #47a6ff;
-  --on-primary: #000000;
-  --link: #2997ff;
-  --clay: #e58a66;
-  --clay-soft: #2a1a13;
-  --success: #30d158;
-  --success-soft: #0f2a17;
-  --danger: #ff453a;
-  --danger-soft: #2e0f0d;
-  --nav-bg: rgba(22, 22, 23, 0.72);
-  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.06);
-  --shadow-pop: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --bg: #07080f;
+  --bg-alt: rgb(22 24 40 / 0.6);
+  --surface: #11131f;
+  --surface-2: #171a2a;
+  --fg: #f3f4fb;
+  --fg-muted: #a6aac4;
+  --fg-subtle: #80849f;
+  --border: #33374f;
+  --border-soft: #1f2236;
+  --primary: #8b8dff;
+  --primary-hover: #a3a5ff;
+  --on-primary: #0b0c1a;
+  --link: #9fa1ff;
+  --clay: #f5925f;
+  --clay-soft: #2a1710;
+  --ember: #f5925f;
+  --iris: #8b8dff;
+  --ink: #0b0c1a;
+  --success: #3ddc84;
+  --success-soft: #0e2a1b;
+  --danger: #ff5a6e;
+  --danger-soft: #2e0e14;
+  --nav-bg: rgb(17 19 31 / 0.66);
+  --shadow-card: 0 0 0 1px rgb(255 255 255 / 0.05), 0 10px 30px rgb(0 0 0 / 0.35);
+  --shadow-pop: 0 18px 50px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.08);
+  --orb-opacity: 0.35;
   color-scheme: dark;
 }
 
@@ -71,12 +81,15 @@
   --color-link: var(--link);
   --color-clay: var(--clay);
   --color-clay-soft: var(--clay-soft);
+  --color-ember: var(--ember);
+  --color-iris: var(--iris);
+  --color-ink: var(--ink);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
-  --font-arabic: "IBM Plex Sans Arabic", "Inter", system-ui, sans-serif;
+  --font-arabic: "Alexandria", "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --shadow-card: var(--shadow-card);
   --shadow-pop: var(--shadow-pop);
@@ -111,6 +124,7 @@ body {
 [lang="ar"], .font-arabic {
   font-family: var(--font-arabic);
   letter-spacing: 0;
+  font-weight: 400;
 }
 
 /* Arabic runs are isolated RTL so mixed lines ("أعطِ Claude السياق") keep the right word order.
@@ -136,7 +150,7 @@ body {
 
 /* Apple-style headline gradient */
 .headline-gradient {
-  background: linear-gradient(90deg, #c96442 0%, #e0875f 35%, #8a5cf6 70%, #0071e3 100%);
+  background: linear-gradient(95deg, var(--ember) 0%, #e8704f 30%, var(--iris) 70%, var(--primary) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -173,4 +187,19 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* brand gradient helpers */
+.bg-brand { background-image: linear-gradient(135deg, var(--ember), var(--iris)); }
+.text-brand {
+  background-image: linear-gradient(95deg, var(--ember), var(--iris));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(4%, -3%, 0) scale(1.06); }
+  66% { transform: translate3d(-3%, 4%, 0) scale(0.96); }
 }

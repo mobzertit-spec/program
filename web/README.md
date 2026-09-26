@@ -1,4 +1,4 @@
-# Prompt English
+# CE — Claude · English
 
 Learn how to use **Claude** while improving your **English** — every word on the site can be translated to Arabic with one click.
 

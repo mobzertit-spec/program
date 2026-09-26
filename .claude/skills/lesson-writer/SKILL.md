@@ -1,11 +1,11 @@
 ---
 name: lesson-writer
-description: Write or update lessons for the Prompt English website (web/) — bilingual English/Arabic lessons that teach how to use Claude and improve English. Use when the user asks to add a lesson, a new track, more vocabulary, quiz questions, or "Go deeper" resources, or to fix lesson content.
+description: Write or update lessons for the CE website (web/) — bilingual English/Arabic lessons that teach how to use Claude and improve English. Use when the user asks to add a lesson, a new track, more vocabulary, quiz questions, or "Go deeper" resources, or to fix lesson content.
 ---
 
-# Lesson writer — Prompt English
+# Lesson writer — CE
 
-Prompt English teaches **how to use Claude** in **simple English**, with Arabic help for every word.
+CE teaches **how to use Claude** in **simple English**, with Arabic help for every word.
 Lessons live in `web/src/data/lessons/` and must follow the `LessonInput` type in `web/src/data/lessons/types.ts`.
 
 ## Where things go
@@ -65,7 +65,7 @@ Do not copy text from these sources — write original, simpler explanations and
 Run from `web/`:
 
 ```bash
-npm run check:content   # offline translation for every word, unique vocab, valid quiz answers, official links only
+npm run check:content   # translations, unique vocab used in the text, sentence length, Arabic present, quizzes, official links
 npx tsc -b && npm run lint && npm run build
 ```
 

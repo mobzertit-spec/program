@@ -117,8 +117,8 @@ export const english: LessonInput[] = [
             ar: 'لتحسين لغتك الإنجليزية، اكتب النسخة الأولى بنفسك حتى لو كانت فيها أخطاء. ثم اطلب من Claude تصحيحها وشرح أهم ثلاثة تغييرات.',
           },
           {
-            en: 'Always tell Claude who will read the email and how formal it should be. An email to your manager is different from a message to a close colleague.',
-            ar: 'أخبر Claude دائمًا من سيقرأ البريد ومدى الرسمية المطلوبة. البريد إلى مديرك يختلف عن رسالة إلى زميل مقرّب.',
+            en: 'Always tell Claude who will read the email and how formal it should be. An email to your manager is different from a message to a close colleague. Also say if the email is urgent or if you need to apologize for something.',
+            ar: 'أخبر Claude دائمًا من سيقرأ البريد ومدى الرسمية المطلوبة. البريد إلى مديرك يختلف عن رسالة إلى زميل مقرّب. واذكر أيضًا إن كان البريد عاجلًا أو إن كنت تحتاج إلى الاعتذار عن شيء.',
           },
         ],
       },
@@ -178,8 +178,8 @@ export const english: LessonInput[] = [
         headingAr: 'بروفة واقعية',
         paragraphs: [
           {
-            en: 'Give Claude the job description and your CV. Ask it to act as the interviewer, ask one question at a time, and wait for your answer.',
-            ar: 'أعطِ Claude وصف الوظيفة وسيرتك الذاتية. اطلب منه أن يتصرف كمُجري المقابلة، ويطرح سؤالًا واحدًا في كل مرة، وينتظر إجابتك.',
+            en: 'Give Claude the job description and your CV, so it knows your experience. Ask it to act as the interviewer who decides whether to hire you, ask one question at a time, and wait for your answer.',
+            ar: 'أعطِ Claude وصف الوظيفة وسيرتك الذاتية، حتى يعرف خبرتك. اطلب منه أن يتصرف كمُجري المقابلة الذي يقرر توظيفك، ويطرح سؤالًا واحدًا في كل مرة، وينتظر إجابتك.',
           },
           {
             en: 'Answer in English, with your voice if possible. Voice mode makes the practice feel much closer to a real interview.',
@@ -196,8 +196,8 @@ export const english: LessonInput[] = [
             ar: 'لأسئلة مثل "حدّثني عن تحدٍّ واجهته"، استخدم STAR: الموقف، والمهمة، والإجراء، والنتيجة. تجعل إجابتك واضحة وقصيرة.',
           },
           {
-            en: 'After the interview, ask Claude for feedback: which answers were strong, which were weak, and which English mistakes you repeated.',
-            ar: 'بعد المقابلة، اطلب من Claude ملاحظاته: أي الإجابات كانت قوية، وأيها كانت ضعيفة، وأي الأخطاء الإنجليزية كرّرتها.',
+            en: 'After the interview, ask Claude for feedback: the main strength of each answer, its main weakness, and the English mistakes you repeated.',
+            ar: 'بعد المقابلة، اطلب من Claude ملاحظاته: نقطة القوة الرئيسية في كل إجابة، ونقطة ضعفها الرئيسية، والأخطاء الإنجليزية التي كرّرتها.',
           },
         ],
       },
@@ -271,8 +271,8 @@ export const english: LessonInput[] = [
         headingAr: 'عبارات تساعدك على المشاركة',
         paragraphs: [
           {
-            en: 'To agree: "I completely agree." To disagree politely: "I see your point, but…". To ask: "Could you explain that in more detail?"',
-            ar: 'للموافقة: "I completely agree." وللاعتراض بأدب: "I see your point, but…". وللسؤال: "Could you explain that in more detail?"',
+            en: 'To agree: "I completely agree." To disagree politely: "I see your point, but…". To give your opinion: "In my opinion…". To ask: "Could you explain that in more detail?"',
+            ar: 'للموافقة: "I completely agree." وللاعتراض بأدب: "I see your point, but…". وللتعبير عن رأيك: "In my opinion…". وللسؤال: "Could you explain that in more detail?"',
           },
           {
             en: 'Ask Claude to create a short role-play of a meeting, where you practice these phrases in real situations.',
@@ -336,8 +336,8 @@ export const english: LessonInput[] = [
         headingAr: 'أصوات تحتاج إلى انتباه',
         paragraphs: [
           {
-            en: 'Many Arabic speakers mix "p" and "b" (park and bark) or "v" and "f" (very and fairy), because Arabic does not have "p" or "v".',
-            ar: 'كثير من متحدثي العربية يخلطون بين "p" و"b" (park وbark) أو بين "v" و"f" (very وfairy)، لأن العربية لا تحتوي على صوتي "p" و"v".',
+            en: 'Many Arabic speakers find some sounds hard to pronounce. They often mix "p" and "b" (park and bark) or "v" and "f" (very and fairy), because Arabic does not have "p" or "v".',
+            ar: 'يجد كثير من متحدثي العربية صعوبة في نطق بعض الأصوات. فهم غالبًا يخلطون بين "p" و"b" (park وbark) أو بين "v" و"f" (very وfairy)، لأن العربية لا تحتوي على صوتي "p" و"v".',
           },
           {
             en: 'English also has more vowel sounds than Arabic. Words like "ship" and "sheep" or "full" and "fool" have different vowels and different meanings.',
@@ -350,8 +350,8 @@ export const english: LessonInput[] = [
         headingAr: 'تدرّب كل يوم',
         paragraphs: [
           {
-            en: 'Ask Claude for "minimal pairs": two words that differ in only one sound. Say them out loud, and use voice mode so Claude can hear you.',
-            ar: 'اطلب من Claude "أزواجًا متقاربة": كلمتين تختلفان في صوت واحد فقط. انطقهما بصوت عالٍ، واستخدم وضع الصوت حتى يسمعك Claude.',
+            en: 'Ask Claude for "minimal pairs": two words that differ in only one sound. Say them out loud, record yourself, and use voice mode so Claude can hear you. Do not worry about your accent — the goal is to be clear.',
+            ar: 'اطلب من Claude "أزواجًا متقاربة": كلمتين تختلفان في صوت واحد فقط. انطقهما بصوت عالٍ، وسجّل نفسك، واستخدم وضع الصوت حتى يسمعك Claude. لا تقلق بشأن لكنتك — الهدف أن تكون واضحًا.',
           },
           {
             en: 'On this website, press the speaker icon to hear a word, then press the microphone icon and say it yourself. The site will tell you if it understood you.',
@@ -433,8 +433,8 @@ export const english: LessonInput[] = [
             ar: 'تقرير الخطأ الجيد له ثلاثة أجزاء: ما الذي فعلته، وما الذي توقعته، وما الذي حدث فعلًا. أضف رسالة الخطأ وخطوات إعادة إنتاجه.',
           },
           {
-            en: 'Commit messages are short and use the imperative: "Fix login bug", "Add dark mode". Ask Claude to review your commit messages and pull request descriptions.',
-            ar: 'رسائل commit قصيرة وتستخدم صيغة الأمر: "Fix login bug" و"Add dark mode". اطلب من Claude مراجعة رسائل commit ووصف طلبات الدمج الخاصة بك.',
+            en: 'Commit messages are short and use the imperative: "Fix login bug", "Add dark mode". Clear messages help your team review and deploy changes safely. Ask Claude to review your commit messages and pull request descriptions.',
+            ar: 'رسائل commit قصيرة وتستخدم صيغة الأمر: "Fix login bug" و"Add dark mode". الرسائل الواضحة تساعد فريقك على مراجعة التغييرات ونشرها بأمان. اطلب من Claude مراجعة رسائل commit ووصف طلبات الدمج الخاصة بك.',
           },
         ],
       },

@@ -24,8 +24,8 @@ export const features: LessonInput[] = [
             ar: 'المشروع مساحة عمل لها محادثاتها ومعرفتها الخاصة. يمكنك رفع مستندات أو ملاحظات أو أكواد إلى المشروع، ويستخدمها Claude في كل محادثة داخله.',
           },
           {
-            en: 'This means you do not need to explain the same background again and again. Projects are available on all plans, including the free plan.',
-            ar: 'هذا يعني أنك لا تحتاج إلى شرح الخلفية نفسها مرارًا وتكرارًا. المشاريع متاحة في كل الخطط، بما فيها الخطة المجانية.',
+            en: 'This means you can reuse the same background instead of explaining it again and again. Projects are available on all plans, including the free plan.',
+            ar: 'هذا يعني أنك تستطيع إعادة استخدام الخلفية نفسها بدلًا من شرحها مرارًا وتكرارًا. المشاريع متاحة في كل الخطط، بما فيها الخطة المجانية.',
           },
         ],
       },
@@ -34,12 +34,12 @@ export const features: LessonInput[] = [
         headingAr: 'تعليمات المشروع',
         paragraphs: [
           {
-            en: 'Each project can have instructions that apply to all its chats. For example: "Always answer in simple English and add Arabic translations of difficult words."',
-            ar: 'يمكن أن يكون لكل مشروع تعليمات تنطبق على كل محادثاته. مثلًا: "أجب دائمًا بإنجليزية بسيطة وأضف ترجمة عربية للكلمات الصعبة."',
+            en: 'Each project can have instructions that apply to all its chats, so the answers stay consistent. For example: "Always answer in simple English and add Arabic translations of difficult words."',
+            ar: 'يمكن أن يكون لكل مشروع تعليمات تنطبق على كل محادثاته، فتبقى الإجابات متّسقة. مثلًا: "أجب دائمًا بإنجليزية بسيطة وأضف ترجمة عربية للكلمات الصعبة."',
           },
           {
-            en: 'Good project ideas: an "English Practice" project with your level and goals, a "Job Search" project with your CV, or a "Study" project with your course notes.',
-            ar: 'أفكار جيدة للمشاريع: مشروع "تدريب الإنجليزية" بمستواك وأهدافك، أو مشروع "البحث عن عمل" بسيرتك الذاتية، أو مشروع "الدراسة" بملاحظات مقرراتك.',
+            en: 'Good project ideas: an "English Practice" project with your level and goals, a "Job Search" project with your CV, or a "Study" project with your course notes. On Team and Enterprise plans, you can also share a project and collaborate with colleagues.',
+            ar: 'أفكار جيدة للمشاريع: مشروع "تدريب الإنجليزية" بمستواك وأهدافك، أو مشروع "البحث عن عمل" بسيرتك الذاتية، أو مشروع "الدراسة" بملاحظات مقرراتك. وفي خطط Team وEnterprise يمكنك أيضًا مشاركة مشروع والتعاون مع زملائك.',
           },
         ],
       },
@@ -103,8 +103,8 @@ export const features: LessonInput[] = [
             ar: 'العمل (Artifact) هو شيء يصنعه Claude لك وتعرضه على الآخرين: مستند، أو عرض تقديمي، أو مخطط، أو لوحة بيانات، أو صفحة ويب، أو تطبيق صغير.',
           },
           {
-            en: 'Artifacts open beside the conversation. You can change them by talking to Claude, and you can find everything you made again in the Artifacts area of the app.',
-            ar: 'تُفتح الأعمال بجانب المحادثة. يمكنك تعديلها بالتحدث مع Claude، ويمكنك إيجاد كل ما صنعته مرة أخرى في قسم Artifacts في التطبيق.',
+            en: 'Artifacts open beside the conversation. You can change them by talking to Claude, and you can find everything you made in the Artifacts area of the app. On paid plans, you can also start from a template.',
+            ar: 'تُفتح الأعمال بجانب المحادثة. يمكنك تعديلها بالتحدث مع Claude، ويمكنك إيجاد كل ما صنعته في قسم Artifacts في التطبيق. وفي الخطط المدفوعة يمكنك أيضًا البدء من قالب.',
           },
         ],
       },
@@ -113,8 +113,8 @@ export const features: LessonInput[] = [
         headingAr: 'أفكار للمتعلمين',
         paragraphs: [
           {
-            en: 'Ask Claude to build a small quiz app with ten words you want to learn, or a flashcard game you can play every morning.',
-            ar: 'اطلب من Claude أن يبني تطبيق اختبار صغيرًا بعشر كلمات تريد تعلمها، أو لعبة بطاقات تلعبها كل صباح.',
+            en: 'Ask Claude to build a small quiz app with ten words you want to learn, or a flashcard game you can play every morning. A quick prototype like this takes only minutes.',
+            ar: 'اطلب من Claude أن يبني تطبيق اختبار صغيرًا بعشر كلمات تريد تعلمها، أو لعبة بطاقات تلعبها كل صباح. نموذج أولي سريع كهذا لا يستغرق إلا دقائق.',
           },
           {
             en: 'When the artifact is ready, you can share it with friends or export it. Documents, for example, can be exported to formats like Word or PDF.',
@@ -196,8 +196,8 @@ export const features: LessonInput[] = [
             ar: 'مع جدول البيانات، يمكنك طرح أسئلة حقيقية: "أي شهر كانت مبيعاته الأعلى؟" أو "اصنع رسمًا بيانيًا لمصاريفي الشهرية."',
           },
           {
-            en: 'Always tell Claude what the data is and what decision you need to make. Then check the important numbers yourself.',
-            ar: 'أخبر Claude دائمًا ما هي البيانات وما القرار الذي تحتاج إلى اتخاذه. ثم تحقق من الأرقام المهمة بنفسك.',
+            en: 'Always tell Claude what the data is and what decision you need to make, so it can give you a useful insight. Then check the important numbers yourself.',
+            ar: 'أخبر Claude دائمًا ما هي البيانات وما القرار الذي تحتاج إلى اتخاذه، حتى يقدّم لك استنتاجًا مفيدًا. ثم تحقق من الأرقام المهمة بنفسك.',
           },
         ],
       },
@@ -271,8 +271,8 @@ export const features: LessonInput[] = [
         headingAr: 'وضع البحث المعمّق',
         paragraphs: [
           {
-            en: 'On paid plans, Research goes further. Claude runs many searches that build on each other, looks at a question from different angles, and gives a detailed answer with citations.',
-            ar: 'في الخطط المدفوعة، يذهب وضع Research أبعد من ذلك. يُجري Claude عمليات بحث كثيرة يبني بعضها على بعض، وينظر إلى السؤال من زوايا مختلفة، ويقدّم إجابة مفصلة مع الاستشهادات.',
+            en: 'On paid plans, Research goes further. Claude runs many searches that build on each other, investigates a question from different angles, and gives a detailed answer with citations.',
+            ar: 'في الخطط المدفوعة، يذهب وضع Research أبعد من ذلك. يُجري Claude عمليات بحث كثيرة يبني بعضها على بعض، ويستقصي السؤال من زوايا مختلفة، ويقدّم إجابة مفصلة مع الاستشهادات.',
           },
           {
             en: 'Use it for bigger questions, like comparing universities or planning a trip. For a quick fact, normal web search is enough.',
@@ -354,8 +354,8 @@ export const features: LessonInput[] = [
             ar: 'MCP، أي بروتوكول سياق النموذج، معيار مفتوح لربط الذكاء الاصطناعي بالأدوات والبيانات. فكّر فيه كقابس عالمي: شكل واحد موحّد تستطيع تطبيقات كثيرة استخدامه.',
           },
           {
-            en: 'You can browse ready-made connectors in the Connectors Directory, and developers can build their own MCP servers for any service.',
-            ar: 'يمكنك تصفّح الموصلات الجاهزة في دليل الموصلات، ويستطيع المطورون بناء خوادم MCP خاصة بهم لأي خدمة.',
+            en: 'You can browse ready-made connectors in the Connectors Directory, and developers can build their own MCP servers to integrate any service.',
+            ar: 'يمكنك تصفّح الموصلات الجاهزة في دليل الموصلات، ويستطيع المطورون بناء خوادم MCP خاصة بهم لدمج أي خدمة.',
           },
         ],
       },
@@ -416,12 +416,12 @@ export const features: LessonInput[] = [
         headingAr: 'ما هي المهارة؟',
         paragraphs: [
           {
-            en: 'A skill is a folder with a SKILL.md file inside. The file has a name, a description, and instructions. It can also include scripts, templates, and examples.',
-            ar: 'المهارة مجلد بداخله ملف SKILL.md. يحتوي الملف على اسم ووصف وتعليمات. ويمكن أن يتضمن أيضًا سكربتات وقوالب وأمثلة.',
+            en: 'A skill is a reusable folder with a SKILL.md file inside. The file has a name, a description, and instructions. It can also include scripts, templates, and examples.',
+            ar: 'المهارة مجلد قابل لإعادة الاستخدام بداخله ملف SKILL.md. يحتوي الملف على اسم ووصف وتعليمات. ويمكن أن يتضمن أيضًا سكربتات وقوالب وأمثلة.',
           },
           {
-            en: 'Anthropic provides skills for documents like Word, Excel, PowerPoint, and PDF. You can also create custom skills, for example for your company’s email style.',
-            ar: 'توفر Anthropic مهارات للمستندات مثل Word وExcel وPowerPoint وPDF. ويمكنك أيضًا إنشاء مهارات مخصصة، مثلًا لأسلوب البريد الإلكتروني في شركتك.',
+            en: 'Anthropic provides skills for documents like Word, Excel, PowerPoint, and PDF. You can also create custom skills that add your own expertise or workflow, for example your company’s email style.',
+            ar: 'توفر Anthropic مهارات للمستندات مثل Word وExcel وPowerPoint وPDF. ويمكنك أيضًا إنشاء مهارات مخصصة تضيف خبرتك أو سير عملك، مثل أسلوب البريد الإلكتروني في شركتك.',
           },
         ],
       },
@@ -495,12 +495,12 @@ export const features: LessonInput[] = [
         headingAr: 'من المحادثة إلى التنفيذ',
         paragraphs: [
           {
-            en: 'In a normal chat, you copy code back and forth. Claude Code is different: it works directly in your project. It can read many files, make changes, and run commands like tests.',
-            ar: 'في المحادثة العادية، تنسخ الكود ذهابًا وإيابًا. Claude Code مختلف: فهو يعمل مباشرة داخل مشروعك. يستطيع قراءة ملفات كثيرة، وإجراء تغييرات، وتنفيذ أوامر مثل الاختبارات.',
+            en: 'In a normal chat, you copy code back and forth. Claude Code is different: it works directly in your project repository. It can read many files, make changes, and run commands like tests.',
+            ar: 'في المحادثة العادية، تنسخ الكود ذهابًا وإيابًا. Claude Code مختلف: فهو يعمل مباشرة داخل مستودع مشروعك. يستطيع قراءة ملفات كثيرة، وإجراء تغييرات، وتنفيذ أوامر مثل الاختبارات.',
           },
           {
-            en: 'It asks for your permission before important actions, and you can review every change. You stay in control of your code.',
-            ar: 'يطلب إذنك قبل الإجراءات المهمة، ويمكنك مراجعة كل تغيير. تبقى أنت المتحكم في الكود الخاص بك.',
+            en: 'It asks you to approve important actions, and you can review every change. You stay in control of your code.',
+            ar: 'يطلب منك الموافقة على الإجراءات المهمة، ويمكنك مراجعة كل تغيير. تبقى أنت المتحكم في الكود الخاص بك.',
           },
         ],
       },

@@ -415,8 +415,8 @@ export const prompting: LessonInput[] = [
         headingAr: 'المستند في الأعلى، والسؤال في الأسفل',
         paragraphs: [
           {
-            en: 'When you paste a long text, such as a report or a contract, put it at the top of your message. Write your question and instructions at the end.',
-            ar: 'عندما تلصق نصًا طويلًا، مثل تقرير أو عقد، ضعه في أعلى رسالتك. واكتب سؤالك وتعليماتك في النهاية.',
+            en: 'When you paste a long text, such as a report or a contract, put it at the top of your message. Write your question and instructions in the last section, at the end.',
+            ar: 'عندما تلصق نصًا طويلًا، مثل تقرير أو عقد، ضعه في أعلى رسالتك. واكتب سؤالك وتعليماتك في القسم الأخير، في النهاية.',
           },
           {
             en: 'Anthropic’s own tests show that asking the question at the end can improve the quality of answers, especially with several documents.',
@@ -429,8 +429,8 @@ export const prompting: LessonInput[] = [
         headingAr: 'الاقتباسات أولًا، ثم الإجابة',
         paragraphs: [
           {
-            en: 'Ask Claude to find the relevant quotes before it answers. This keeps the answer close to the real text and makes it easy for you to check.',
-            ar: 'اطلب من Claude أن يجد الاقتباسات ذات الصلة قبل أن يجيب. هذا يُبقي الإجابة قريبة من النص الحقيقي ويسهّل عليك التحقق منها.',
+            en: 'Ask Claude to extract the relevant quotes before it answers. The quotes are evidence: they keep the answer close to the real text and make it easy for you to check.',
+            ar: 'اطلب من Claude أن يستخرج الاقتباسات ذات الصلة قبل أن يجيب. الاقتباسات دليل: فهي تُبقي الإجابة قريبة من النص الحقيقي وتسهّل عليك التحقق منها.',
           },
           {
             en: 'With several documents, wrap each one in its own tags, for example <document> with a <source> name, so Claude can tell you where each fact comes from.',
@@ -508,8 +508,8 @@ export const prompting: LessonInput[] = [
         headingAr: 'سلسلة التصحيح الذاتي',
         paragraphs: [
           {
-            en: 'A very useful chain has three steps: ask Claude for a draft, then ask it to review the draft against clear criteria, then ask it to improve the draft using that review.',
-            ar: 'سلسلة مفيدة جدًا لها ثلاث خطوات: اطلب من Claude مسودة، ثم اطلب منه مراجعتها وفق معايير واضحة، ثم اطلب منه تحسين المسودة بناءً على تلك المراجعة.',
+            en: 'A very useful chain is a sequence of three steps. First, ask Claude for a draft. Next, ask it to evaluate the draft against clear criteria. Finally, ask it to improve the draft using that review.',
+            ar: 'سلسلة مفيدة جدًا هي تسلسل من ثلاث خطوات. أولًا، اطلب من Claude مسودة. ثم اطلب منه تقييم المسودة وفق معايير واضحة. وأخيرًا، اطلب منه تحسين المسودة بناءً على تلك المراجعة.',
           },
           {
             en: 'Good criteria are specific, for example: "Is every sentence under 20 words? Is the tone polite? Is the main request in the first line?"',

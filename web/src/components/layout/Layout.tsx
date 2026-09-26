@@ -4,6 +4,7 @@ import { SelectionTranslator } from '@/components/translate/SelectionTranslator'
 import { TranslatorPanel } from '@/components/translate/TranslatorPanel'
 import { WordPopover } from '@/components/translate/WordPopover'
 import { useTranslator } from '@/context/TranslatorContext'
+import { AmbientBackground } from '@/components/art/AmbientBackground'
 import { Footer } from './Footer'
 import { Navbar } from './Navbar'
 
@@ -16,7 +17,8 @@ export function Layout() {
   }, [pathname, close])
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col pb-16 lg:pb-0">
+      <AmbientBackground />
       <button
         onClick={() => document.getElementById('main')?.focus()}
         className="sr-only cursor-pointer focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[80] focus:rounded-full focus:bg-fg focus:px-4 focus:py-2 focus:text-bg"
@@ -24,7 +26,7 @@ export function Layout() {
         Skip to content
       </button>
       <Navbar />
-      <main id="main" tabIndex={-1} className="flex-1 outline-none">
+      <main id="main" tabIndex={-1} className="flex-1 pt-[72px] outline-none">
         <Outlet />
       </main>
       <Footer />

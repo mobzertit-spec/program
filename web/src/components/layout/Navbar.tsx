@@ -1,69 +1,158 @@
-import { AnimatePresence, motion } from 'motion/react'
-import { Flame, Menu, Moon, Sun, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from 'motion/react'
+import { BookA, BookOpen, Flame, FlaskConical, Library, Moon, Route, Sun } from 'lucide-react'
+import { useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
 import { useApp } from '@/context/AppContext'
 import { cn } from '@/lib/utils'
-import { Logo } from './Logo'
+import { Wordmark } from './Logo'
 
 const links = [
-  { to: '/path', label: 'Path', ar: 'المسار' },
-  { to: '/lessons', label: 'Lessons', ar: 'الدروس' },
-  { to: '/vocabulary', label: 'Vocabulary', ar: 'المفردات' },
-  { to: '/lab', label: 'Prompt Lab', ar: 'مختبر الطلبات' },
-  { to: '/library', label: 'Library', ar: 'المكتبة' },
+  { to: '/path', label: 'Path', ar: 'المسار', icon: Route },
+  { to: '/lessons', label: 'Lessons', ar: 'الدروس', icon: BookOpen },
+  { to: '/vocabulary', label: 'Words', ar: 'الكلمات', icon: BookA },
+  { to: '/lab', label: 'Lab', ar: 'المختبر', icon: FlaskConical },
+  { to: '/library', label: 'Library', ar: 'المكتبة', icon: Library },
 ]
 
+/** Floating glass navbar: hides while scrolling down, returns on scroll up, shows page progress. */
 export function Navbar() {
   const { theme, setTheme, showArabic, setShowArabic, dueWords, streak, xpToday, dailyGoal } = useApp()
-  const location = useLocation()
-  // menu is tied to the path it was opened on, so navigating closes it without an effect
-  const [openPath, setOpenPath] = useState<string | null>(null)
-  const open = openPath === location.pathname
-  const setOpen = (v: boolean) => setOpenPath(v ? location.pathname : null)
+  const reduce = useReducedMotion()
+  const { scrollY, scrollYProgress } = useScroll()
+  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 })
+  const [hidden, setHidden] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    const prev = scrollY.getPrevious() ?? 0
+    setHidden(!reduce && y > prev && y > 160)
+    setScrolled(y > 8)
+  })
   const isDark =
     theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches)
 
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
-  }, [open])
-
   return (
-    <header className="sticky top-0 z-50 border-b border-border-soft/70 bg-[var(--nav-bg)] backdrop-blur-xl backdrop-saturate-150">
-      <nav className="mx-auto flex h-13 max-w-[1024px] items-center justify-between px-4 sm:px-6" aria-label="Main">
-        <Link to="/" className="flex items-center gap-2 rounded-lg" aria-label="Prompt English home">
-          <Logo className="size-7" />
-          <span className="text-[15px] font-semibold tracking-tight">Prompt English</span>
-        </Link>
+    <>
+      <motion.header
+        initial={false}
+        animate={{ y: hidden ? -96 : 0 }}
+        transition={{ duration: 0.3, ease: [0.2, 0.7, 0.3, 1] }}
+        className="fixed inset-x-0 top-0 z-50 px-3 pt-3"
+      >
+        <nav
+          aria-label="Main"
+          className={cn(
+            'relative mx-auto flex h-14 max-w-[1100px] items-center justify-between overflow-hidden rounded-full border pl-3 pr-1.5 backdrop-blur-xl backdrop-saturate-150 transition-[box-shadow,background-color,border-color] duration-300',
+            'border-border-soft bg-[var(--nav-bg)]',
+            scrolled ? 'shadow-[0_8px_30px_rgb(18_20_43/0.1)]' : 'shadow-[0_2px_10px_rgb(18_20_43/0.04)]',
+          )}
+        >
+          <Link to="/" className="rounded-full pr-2" aria-label="CE home">
+            <Wordmark />
+          </Link>
 
-        <ul className="hidden items-center gap-0.5 lg:flex">
-          {links.map((l) => (
-            <li key={l.to}>
+          <ul className="hidden items-center gap-0.5 lg:flex">
+            {links.map(({ to, label, icon: Icon }) => (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  className={({ isActive }) =>
+                    cn(
+                      'relative flex h-10 items-center gap-1.5 rounded-full px-3.5 text-[13.5px] font-medium transition-colors',
+                      isActive ? 'text-fg' : 'text-fg-muted hover:text-fg',
+                    )
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      {isActive && (
+                        <motion.span
+                          layoutId="nav-pill"
+                          className="absolute inset-0 rounded-full bg-surface shadow-[0_1px_6px_rgb(18_20_43/0.1)] dark:bg-surface-2"
+                          transition={{ type: 'spring', bounce: 0.2, duration: 0.45 }}
+                        />
+                      )}
+                      <Icon className={cn('relative size-4', isActive && 'text-primary')} aria-hidden />
+                      <span className="relative">{label}</span>
+                      {to === '/vocabulary' && dueWords.length > 0 && (
+                        <span className="relative rounded-full bg-clay px-1.5 py-px text-[10px] font-semibold text-white" aria-label={`${dueWords.length} words to review`}>
+                          {dueWords.length}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center gap-1">
+            <Link
+              to="/path"
+              title={`${xpToday}/${dailyGoal} XP today`}
+              aria-label={`${streak}-day streak, ${xpToday} of ${dailyGoal} XP today`}
+              className="inline-flex h-10 items-center gap-1 rounded-full px-3 text-[13px] font-semibold transition-colors hover:bg-bg-alt"
+            >
+              <Flame className={cn('size-[18px]', streak ? 'fill-clay text-clay' : 'text-fg-subtle')} />
+              <span className={streak ? 'text-clay' : 'text-fg-muted'}>{streak}</span>
+            </Link>
+            <button
+              onClick={() => setShowArabic(!showArabic)}
+              aria-pressed={showArabic}
+              title={showArabic ? 'Hide Arabic translations' : 'Show Arabic translations'}
+              aria-label={showArabic ? 'Hide Arabic translations' : 'Show Arabic translations'}
+              className={cn(
+                'grid size-10 cursor-pointer place-items-center rounded-full font-arabic text-base transition-colors',
+                showArabic ? 'bg-fg text-bg' : 'text-fg-muted hover:bg-bg-alt hover:text-fg',
+              )}
+            >
+              ع
+            </button>
+            <button
+              onClick={() => setTheme(isDark ? 'light' : 'dark')}
+              className="grid size-10 cursor-pointer place-items-center rounded-full text-fg-muted transition-colors hover:bg-bg-alt hover:text-fg"
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {isDark ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
+            </button>
+          </div>
+
+          <motion.span
+            aria-hidden
+            style={{ scaleX: progress }}
+            className="bg-brand absolute inset-x-8 bottom-0 h-[2px] origin-left rounded-full"
+          />
+        </nav>
+      </motion.header>
+
+      {/* Mobile tab bar */}
+      <nav
+        aria-label="Sections"
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-border-soft bg-[var(--nav-bg)] pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 lg:hidden"
+      >
+        <ul className="mx-auto grid h-16 max-w-lg grid-cols-5">
+          {links.map(({ to, label, ar, icon: Icon }) => (
+            <li key={to}>
               <NavLink
-                to={l.to}
+                to={to}
                 className={({ isActive }) =>
                   cn(
-                    'relative rounded-full px-3.5 py-1.5 text-[13px] transition-colors',
-                    isActive ? 'text-fg' : 'text-fg-muted hover:text-fg',
+                    'relative flex h-full flex-col items-center justify-center gap-0.5 text-[10.5px] font-medium transition-colors',
+                    isActive ? 'text-primary' : 'text-fg-muted',
                   )
                 }
               >
                 {({ isActive }) => (
                   <>
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-pill"
-                        className="absolute inset-0 rounded-full bg-bg-alt"
-                        transition={{ type: 'spring', bounce: 0.2, duration: 0.45 }}
-                      />
-                    )}
+                    {isActive && <motion.span layoutId="tab-dot" className="absolute top-1 h-1 w-6 rounded-full bg-primary" />}
                     <span className="relative">
-                      {l.label}
-                      {l.to === '/vocabulary' && dueWords.length > 0 && (
-                        <span className="ml-1.5 rounded-full bg-clay px-1.5 py-px text-[10px] font-semibold text-white" aria-label={`${dueWords.length} words to review`}>
-                          {dueWords.length}
-                        </span>
+                      <Icon className="size-[22px]" aria-hidden />
+                      {to === '/vocabulary' && dueWords.length > 0 && (
+                        <span className="absolute -right-2 -top-1 size-2.5 rounded-full border-2 border-bg bg-clay" aria-hidden />
                       )}
+                    </span>
+                    <span>{label}</span>
+                    <span className="sr-only" lang="ar">
+                      {ar}
                     </span>
                   </>
                 )}
@@ -71,75 +160,7 @@ export function Navbar() {
             </li>
           ))}
         </ul>
-
-        <div className="flex items-center gap-1">
-          <Link
-            to="/path"
-            title={`${xpToday}/${dailyGoal} XP today`}
-            aria-label={`${streak}-day streak, ${xpToday} of ${dailyGoal} XP today`}
-            className="inline-flex h-9 items-center gap-1 rounded-full px-2.5 text-[13px] font-semibold transition-colors hover:bg-bg-alt"
-          >
-            <Flame className={cn('size-[18px]', streak ? 'fill-clay text-clay' : 'text-fg-subtle')} />
-            <span className={streak ? 'text-clay' : 'text-fg-muted'}>{streak}</span>
-          </Link>
-          <button
-            onClick={() => setShowArabic(!showArabic)}
-            aria-pressed={showArabic}
-            title={showArabic ? 'Hide Arabic translations' : 'Show Arabic translations'}
-            className={cn(
-              'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[13px] font-medium transition-colors',
-              showArabic ? 'bg-fg text-bg' : 'text-fg-muted hover:bg-bg-alt hover:text-fg',
-            )}
-          >
-            <span className="font-arabic text-[15px] leading-none">ع</span>
-            <span className="hidden xl:inline">{showArabic ? 'Arabic on' : 'Arabic'}</span>
-          </button>
-          <button
-            onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className="grid size-9 cursor-pointer place-items-center rounded-full text-fg-muted transition-colors hover:bg-bg-alt hover:text-fg"
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {isDark ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
-          </button>
-          <button
-            onClick={() => setOpen(!open)}
-            className="grid size-9 cursor-pointer place-items-center rounded-full text-fg transition-colors hover:bg-bg-alt lg:hidden"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            aria-expanded={open}
-          >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
-        </div>
       </nav>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'calc(100dvh - 52px)' }}
-            exit={{ opacity: 0, height: 0, transition: { duration: 0.2 } }}
-            className="overflow-hidden bg-bg lg:hidden"
-          >
-            <ul className="flex flex-col gap-1 px-8 pt-6">
-              {links.map((l, i) => (
-                <motion.li
-                  key={l.to}
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 + i * 0.05 }}
-                >
-                  <NavLink to={l.to} className="flex items-baseline justify-between py-3 text-3xl font-semibold tracking-tight">
-                    {l.label}
-                    <span lang="ar" className="text-base font-normal text-fg-muted">
-                      {l.ar}
-                    </span>
-                  </NavLink>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+    </>
   )
 }

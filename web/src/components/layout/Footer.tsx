@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Logo } from './Logo'
+import { Wordmark } from './Logo'
 
 export function Footer() {
   return (
@@ -7,8 +7,7 @@ export function Footer() {
       <div className="mx-auto max-w-[1024px] px-4 py-10 text-xs text-fg-muted sm:px-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-2">
-            <Logo className="size-6" />
-            <span className="text-sm font-semibold text-fg">Prompt English</span>
+            <Wordmark />
           </div>
           <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2">
             <Link to="/path" className="hover:text-fg hover:underline">Path</Link>

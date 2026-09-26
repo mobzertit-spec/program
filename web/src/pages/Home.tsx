@@ -1,8 +1,9 @@
-import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react'
+import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'motion/react'
 import { ArrowRight, Award, BookmarkCheck, Check, ChevronRight, Flame, GraduationCap, Languages, LifeBuoy, Lock, MousePointerClick, PlayCircle, TextSelect, Volume2, Wand2 } from 'lucide-react'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { LessonIcon, levelTone } from '@/components/LessonIcon'
+import { Parallax, TrackArt } from '@/components/art/TrackArt'
 import { TranslatableText } from '@/components/translate/TranslatableText'
 import { Badge } from '@/components/ui/badge'
 import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
@@ -12,7 +13,7 @@ import { Marquee } from '@/components/ui/marquee'
 import { WordReveal } from '@/components/ui/word-reveal'
 import { useTranslator } from '@/context/TranslatorContext'
 import { wordBank } from '@/data/dictionary'
-import { lessons, tracks } from '@/data/lessons'
+import { lessons, lessonsByTrack, tracks } from '@/data/lessons'
 
 const demoPrompt =
   'You are a patient English teacher. Correct my paragraph below and explain each mistake in one simple sentence.'
@@ -32,15 +33,14 @@ export default function Home() {
     <>
       {/* ---------------- Hero ---------------- */}
       <section ref={heroRef} className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-[-18rem] h-[36rem] w-[64rem] -translate-x-1/2 rounded-full opacity-40 blur-3xl dark:opacity-25"
-          style={{ background: 'radial-gradient(closest-side, #f3c3ad, transparent), radial-gradient(closest-side at 70% 60%, #c7d7fe, transparent)' }}
-        />
+        <FloatingChips progress={scrollYProgress} />
         <div className="relative mx-auto max-w-[1024px] px-4 pb-12 pt-16 text-center sm:px-6 sm:pt-24">
           <BlurFade>
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/70 px-3 py-1 text-[13px] font-medium text-fg-muted backdrop-blur">
               <span className="size-1.5 rounded-full bg-clay" />
+              <span className="font-bold text-fg">
+                C<span className="text-brand">E</span>
+              </span>
               Learn Claude · Learn English
               <span lang="ar" className="text-fg-subtle">· تعلّم الاثنين معًا</span>
             </p>
@@ -122,6 +122,42 @@ export default function Home() {
               <p className="text-4xl font-bold tracking-tight sm:text-5xl">{s.n}</p>
               <p className="mt-1 text-sm text-fg-muted">{s.l}</p>
               <p lang="ar" className="text-center text-xs text-fg-subtle">{s.ar}</p>
+            </BlurFade>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------------- Tracks ---------------- */}
+      <section className="mx-auto max-w-[1024px] px-4 pt-24 sm:px-6">
+        <BlurFade>
+          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Four tracks</p>
+          <h2 className="mt-2 max-w-3xl text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">
+            From your first message to <span className="text-brand">Claude Code</span>.
+          </h2>
+          <p lang="ar" className="mt-3 text-fg-muted">أربعة مسارات: من رسالتك الأولى حتى Claude Code.</p>
+        </BlurFade>
+        <div className="mt-12 grid gap-5 sm:grid-cols-2">
+          {tracks.map((t, i) => (
+            <BlurFade key={t.id} delay={i * 0.06}>
+              <Link
+                to="/path"
+                className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-border-soft bg-surface p-5 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-pop"
+              >
+                <Parallax distance={10} tilt={false}>
+                  <TrackArt track={t.id} className="transition-transform duration-500 group-hover:scale-[1.03]" />
+                </Parallax>
+                <div className="mt-5 flex items-start justify-between gap-3 px-1">
+                  <div>
+                    <p className="text-xs font-semibold text-fg-subtle">
+                      Track {i + 1} · {lessonsByTrack(t.id).length} lessons
+                    </p>
+                    <h3 className="mt-1 text-2xl font-semibold tracking-tight">{t.title}</h3>
+                    <p lang="ar" className="text-sm text-fg-muted">{t.titleAr}</p>
+                    <p className="mt-2 text-[15px] text-fg-muted">{t.description}</p>
+                  </div>
+                  <ArrowRight className="mt-6 size-5 shrink-0 text-link transition-transform group-hover:translate-x-1" />
+                </div>
+              </Link>
             </BlurFade>
           ))}
         </div>
@@ -224,7 +260,7 @@ export default function Home() {
                     <span className="w-16 text-xs text-fg-muted">{f}</span>
                     <div className="h-2 flex-1 overflow-hidden rounded-full bg-bg-alt">
                       <motion.div
-                        className="h-full rounded-full bg-gradient-to-r from-clay to-primary"
+                        className="h-full rounded-full bg-brand"
                         initial={{ width: '0%' }}
                         whileInView={{ width: `${[70, 100, 85, 60][i]}%` }}
                         viewport={{ once: true }}
@@ -422,11 +458,11 @@ export default function Home() {
       {/* ---------------- CTA ---------------- */}
       <section className="px-4 pb-28 sm:px-6">
         <BlurFade>
-          <div className="relative mx-auto max-w-[1024px] overflow-hidden rounded-[36px] bg-[#1d1d1f] px-6 py-20 text-center text-white dark:bg-surface">
+          <div className="relative mx-auto max-w-[1024px] overflow-hidden rounded-[36px] bg-ink px-6 py-20 text-center text-white dark:bg-surface">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 opacity-60"
-              style={{ background: 'radial-gradient(600px circle at 20% 0%, rgba(201,100,66,.45), transparent 60%), radial-gradient(500px circle at 90% 100%, rgba(0,113,227,.4), transparent 60%)' }}
+              style={{ background: 'radial-gradient(600px circle at 20% 0%, rgba(240,122,69,.5), transparent 60%), radial-gradient(500px circle at 90% 100%, rgba(109,93,252,.5), transparent 60%)' }}
             />
             <div className="relative">
               <h2 className="text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">Your first prompt is waiting.</h2>
@@ -447,5 +483,44 @@ export default function Home() {
         </BlurFade>
       </section>
     </>
+  )
+}
+
+const CHIPS = [
+  { en: 'prompt', ar: 'طلب', cls: 'left-[3%] top-[18%]', speed: 1.4, rot: -6 },
+  { en: 'context', ar: 'سياق', cls: 'right-[3%] top-[14%]', speed: 0.9, rot: 5 },
+  { en: 'fluent', ar: 'طليق', cls: 'left-[7%] top-[52%]', speed: 0.6, rot: 4 },
+  { en: 'clear', ar: 'واضح', cls: 'right-[6%] top-[48%]', speed: 1.2, rot: -4 },
+]
+
+/** Translation chips that float around the hero and drift at different speeds as you scroll. */
+function FloatingChips({ progress }: { progress: MotionValue<number> }) {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
+      {CHIPS.map((c, i) => (
+        <Chip key={c.en} chip={c} progress={progress} delay={i * 0.8} />
+      ))}
+    </div>
+  )
+}
+
+function Chip({ chip, progress, delay }: { chip: (typeof CHIPS)[number]; progress: MotionValue<number>; delay: number }) {
+  const reduce = useReducedMotion()
+  const y = useTransform(progress, [0, 1], [0, reduce ? 0 : -260 * chip.speed])
+  const rotate = useTransform(progress, [0, 1], [chip.rot, reduce ? chip.rot : chip.rot * -2])
+  return (
+    <motion.div style={{ y, rotate }} className={`absolute ${chip.cls}`}>
+      <motion.div
+        animate={reduce ? undefined : { y: [0, -10, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay }}
+        className="flex items-center gap-2 rounded-2xl border border-border-soft bg-surface/80 px-4 py-2.5 shadow-pop backdrop-blur"
+      >
+        <span className="font-semibold">{chip.en}</span>
+        <span className="text-fg-subtle">→</span>
+        <span lang="ar" className="text-clay">
+          {chip.ar}
+        </span>
+      </motion.div>
+    </motion.div>
   )
 }
