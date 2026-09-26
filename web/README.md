@@ -6,14 +6,18 @@ Learn how to use **Claude** while improving your **English** — every word on t
 
 ## Features
 
-- **10 lessons** on using Claude (clear prompts, context, examples, roles & tone, XML tags, step-by-step thinking, iteration, English practice, files & code) — each with bilingual paragraphs, a weak-vs-strong prompt comparison, key vocabulary and a mini quiz.
+- **Learning path**: 26 lessons in 4 tracks (Foundations · Prompting craft · Claude’s toolbox · English for work), shown as a visual map. Each lesson unlocks the next one in its track.
+- **Motivation**: XP, levels, a daily goal, a daily streak with a 7-day activity chart, and 17 badges.
+- **Lessons** — each with bilingual paragraphs, a weak-vs-strong prompt, a pro tip, 5 key words, a quiz, an optional official video and **“Go deeper”** links to Claude Academy, Claude Docs and the Help Center.
+- **Library**: official Claude Academy courses, Anthropic videos (click-to-load, privacy-friendly embeds), docs and Help Center guides.
 - **Translation system**
   - Click / tap any word → popover with Arabic meaning, part of speech, pronunciation and "Save word".
   - Select any sentence → floating **Translate** pill for the whole phrase.
   - Quick translator panel (button bottom-right or press `/`).
   - Offline dictionary + lemmatizer (plurals, -ed, -ing …), with the free MyMemory API as an online fallback.
   - Per-paragraph `ع` toggle or a global "Arabic" switch in the navbar.
-- **Vocabulary**: saved words, all lesson words, search (English or Arabic) and 3D flip **flashcards**.
+- **Vocabulary**: a 3,000-word bank by CEFR level (A1–C1), saved words, **spaced-repetition reviews** (Leitner boxes), word of the day, and **pronunciation practice** with the microphone (browser speech recognition).
+- **No account needed**: progress lives in the browser; download / restore a backup file from the Path page.
 - **Prompt Lab**: build a prompt from Role / Task / Context / Examples / Format / Tone with a live quality score, optional XML tags, copy, and "Try it in Claude".
 - Apple-inspired design (large type, generous whitespace, glass navbar, bento grid), 21st.dev-style components (BlurFade, WordReveal, Spotlight card, Bento grid, Marquee, animated segmented control), light/dark mode, `prefers-reduced-motion`, keyboard focus states.
 
@@ -26,10 +30,22 @@ React 19 · TypeScript · Vite · Tailwind CSS v4 · Motion · Lucide icons · R
 ```bash
 cd web
 npm install
-npm run dev      # http://localhost:5173
-npm run build    # static output in dist/
+npm run dev             # http://localhost:5173
+npm run build           # static output in dist/
+npm run check:content   # validate lessons: translations, vocab, quizzes, official links
 ```
+
+## Add lessons
+
+Ask Claude Code to use the **lesson-writer** skill (`.claude/skills/lesson-writer/SKILL.md`), e.g.
+“Add a lesson about Claude’s memory feature to the features track.” The skill explains the lesson format,
+the writing rules and the official sources to link.
+
+## Deploy (free, GitHub Pages)
+
+The workflow in `.github/workflows/deploy-pages.yml` builds and publishes `web/` on every push to `main`.
+One-time setup: GitHub repository → **Settings → Pages → Source: GitHub Actions**.
 
 Progress, saved words and theme are stored in the browser's localStorage.
 
-_Independent learning project — not affiliated with Anthropic._
+_Independent learning project — not affiliated with Anthropic. All course, docs and video links point to official Anthropic websites._

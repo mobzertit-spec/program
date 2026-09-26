@@ -20,6 +20,9 @@ import {
 import { useMemo, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { LessonIcon, levelTone } from '@/components/LessonIcon'
+import { ResourceCard } from '@/components/learn/ResourceCard'
+import { SpeakCheck } from '@/components/learn/SpeakCheck'
+import { VideoEmbed } from '@/components/learn/VideoEmbed'
 import { TranslatableText } from '@/components/translate/TranslatableText'
 import { Badge } from '@/components/ui/badge'
 import { BlurFade } from '@/components/ui/blur-fade'
@@ -27,7 +30,8 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
 import { useApp } from '@/context/AppContext'
 import { POS_AR } from '@/data/dictionary'
-import { getLesson, lessons, type Bilingual, type Lesson, type QuizQuestion, type VocabItem } from '@/data/lessons'
+import { getLesson, lessons, lessonsByTrack, trackOf, type Bilingual, type Lesson, type QuizQuestion, type VocabItem } from '@/data/lessons'
+import { isUnlocked } from '@/lib/progress'
 import { canSpeak, speak } from '@/lib/speech'
 import { cn } from '@/lib/utils'
 
@@ -40,7 +44,6 @@ export default function LessonPage() {
 
 function LessonView({ lesson }: { lesson: Lesson }) {
   const { completed, markComplete } = useApp()
-  const toast = useToast()
   const { scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 })
   const highlight = useMemo(() => new Set(lesson.vocab.map((v) => v.word)), [lesson])
@@ -48,6 +51,10 @@ function LessonView({ lesson }: { lesson: Lesson }) {
   const prev = lessons[idx - 1]
   const next = lessons[idx + 1]
   const isDone = completed.includes(lesson.id)
+  const track = trackOf(lesson.track)
+  const locked = !isUnlocked(lesson, completed)
+  const trackLessons = lessonsByTrack(lesson.track)
+  const prevInTrack = trackLessons[trackLessons.findIndex((l) => l.id === lesson.id) - 1]
 
   return (
     <article>
@@ -56,15 +63,17 @@ function LessonView({ lesson }: { lesson: Lesson }) {
       {/* Header */}
       <header className="border-b border-border-soft bg-bg-alt">
         <div className="mx-auto max-w-[760px] px-4 pb-12 pt-8 sm:px-6 sm:pt-10">
-          <Link to="/lessons" className="inline-flex items-center gap-1 text-sm text-link hover:underline">
-            <ChevronLeft className="size-4" /> All lessons
+          <Link to="/path" className="inline-flex items-center gap-1 text-sm text-link hover:underline">
+            <ChevronLeft className="size-4" /> Learning path
           </Link>
           <BlurFade>
             <div className="mt-8 flex items-center gap-3">
               <span className="grid size-12 place-items-center rounded-2xl bg-surface shadow-card">
                 <LessonIcon name={lesson.icon} className="size-6 text-clay" />
               </span>
-              <span className="text-sm font-medium text-fg-muted">Lesson {lesson.number} of {lessons.length}</span>
+              <span className="text-sm font-medium text-fg-muted">
+                Lesson {lesson.number} of {lessons.length} · {track.title} <span lang="ar" className="text-fg-subtle">{track.titleAr}</span>
+              </span>
             </div>
             <h1 className="mt-5 text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">{lesson.title}</h1>
             <p lang="ar" className="mt-2 text-xl text-fg-muted">{lesson.titleAr}</p>
@@ -85,6 +94,15 @@ function LessonView({ lesson }: { lesson: Lesson }) {
       </header>
 
       <div className="mx-auto max-w-[760px] px-4 py-12 sm:px-6">
+        {locked && prevInTrack && (
+          <p className="mb-4 rounded-2xl bg-clay-soft px-4 py-3 text-sm text-fg">
+            On your path, this lesson comes after{' '}
+            <Link to={`/lessons/${prevInTrack.id}`} className="font-medium text-link hover:underline">
+              {prevInTrack.title}
+            </Link>
+            . You can still read it now.
+          </p>
+        )}
         <div className="mb-12 flex items-start gap-3 rounded-2xl border border-border-soft bg-surface p-4 text-sm text-fg-muted shadow-card">
           <MousePointerClick className="mt-0.5 size-5 shrink-0 text-primary" />
           <p>
@@ -110,6 +128,14 @@ function LessonView({ lesson }: { lesson: Lesson }) {
             </div>
           </section>
         ))}
+
+        {lesson.video && (
+          <section className="my-14" aria-labelledby="watch-title">
+            <h2 id="watch-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">Watch</h2>
+            <p lang="ar" className="mt-1 text-sm text-fg-subtle">شاهد — فيديو رسمي من Anthropic (فعّل الترجمة الإنجليزية)</p>
+            <VideoEmbed video={lesson.video} className="mt-6" />
+          </section>
+        )}
 
         {lesson.example && <PromptCompare example={lesson.example} highlight={highlight} />}
 
@@ -140,6 +166,17 @@ function LessonView({ lesson }: { lesson: Lesson }) {
         {/* Quiz */}
         <Quiz lesson={lesson} />
 
+        {/* Go deeper */}
+        <section className="my-16" aria-labelledby="deeper-title">
+          <h2 id="deeper-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">Go deeper</h2>
+          <p lang="ar" className="mt-1 text-sm text-fg-subtle">تعمّق أكثر — مصادر رسمية من Anthropic</p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {lesson.resources.map((r) => (
+              <ResourceCard key={r.url} r={r} />
+            ))}
+          </div>
+        </section>
+
         {/* Complete + nav */}
         <div className="mt-16 flex flex-col items-center gap-4 border-t border-border-soft pt-10 text-center">
           {isDone ? (
@@ -149,10 +186,7 @@ function LessonView({ lesson }: { lesson: Lesson }) {
           ) : (
             <Button
               size="lg"
-              onClick={() => {
-                markComplete(lesson.id)
-                toast('Lesson completed — great job!')
-              }}
+              onClick={() => markComplete(lesson.id)}
             >
               <Check className="size-5" /> Mark lesson as complete
             </Button>
@@ -310,7 +344,10 @@ function VocabCard({ v }: { v: VocabItem }) {
         </div>
       </div>
       <p lang="ar" dir="rtl" className="mt-3 text-right text-xl font-semibold">{v.ar}</p>
-      <p className="mt-auto pt-3 text-sm italic text-fg-muted">“{v.example}”</p>
+      <p className="pt-3 text-sm italic text-fg-muted">“{v.example}”</p>
+      <div className="mt-auto pt-2">
+        <SpeakCheck word={v.word} showLabel />
+      </div>
     </div>
   )
 }

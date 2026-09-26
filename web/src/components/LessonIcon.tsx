@@ -1,5 +1,9 @@
-import { Brain, Code2, FileText, GraduationCap, Layers, Quote, RefreshCw, Sparkles, Target, UserRound, type LucideProps } from 'lucide-react'
-import type { Lesson } from '@/data/lessons'
+import {
+  AppWindow, BookOpenText, Brain, Briefcase, Bug, Code2, FileText, FolderKanban, Globe, GraduationCap, Layers,
+  LayoutTemplate, Link2, ListChecks, Mail, Mic, Plug, Presentation, Puzzle, Quote, RefreshCw, ShieldCheck, Sparkles,
+  Target, Terminal, UserRound, type LucideProps,
+} from 'lucide-react'
+import type { Lesson, LessonIconName } from '@/data/lessons'
 
 const map = {
   sparkles: Sparkles,
@@ -12,9 +16,25 @@ const map = {
   refresh: RefreshCw,
   graduation: GraduationCap,
   file: FileText,
-} satisfies Record<Lesson['icon'], unknown>
+  app: AppWindow,
+  shield: ShieldCheck,
+  list: ListChecks,
+  book: BookOpenText,
+  link: Link2,
+  folder: FolderKanban,
+  layout: LayoutTemplate,
+  globe: Globe,
+  plug: Plug,
+  puzzle: Puzzle,
+  terminal: Terminal,
+  mail: Mail,
+  briefcase: Briefcase,
+  presentation: Presentation,
+  mic: Mic,
+  bug: Bug,
+} satisfies Record<LessonIconName, unknown>
 
-export function LessonIcon({ name, ...props }: { name: Lesson['icon'] } & LucideProps) {
+export function LessonIcon({ name, ...props }: { name: LessonIconName } & LucideProps) {
   const Icon = map[name]
   return <Icon aria-hidden {...props} />
 }

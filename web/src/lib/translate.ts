@@ -45,7 +45,16 @@ export function lemmatize(word: string): string {
     add(w.slice(0, -3) + 'e')
     if (w.at(-4) === w.at(-5)) add(w.slice(0, -4))
   }
-  if (w.endsWith('er')) add(w.slice(0, -2))
+  for (const suf of ['er', 'est']) {
+    if (!w.endsWith(suf)) continue
+    const stem = w.slice(0, -suf.length)
+    add(stem)
+    add(stem + 'e')
+    if (stem.at(-1) === stem.at(-2)) add(stem.slice(0, -1))
+    if (stem.endsWith('i')) add(stem.slice(0, -1) + 'y')
+  }
+  if (w.endsWith('ily')) add(w.slice(0, -3) + 'y')
+  if (w.endsWith('bly')) add(w.slice(0, -1) + 'e')
   if (w.endsWith('ly')) add(w.slice(0, -2))
   return candidates.find(known) ?? w
 }

@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react'
-import { ArrowRight, BookmarkCheck, ChevronRight, Languages, MousePointerClick, TextSelect, Volume2, Wand2 } from 'lucide-react'
+import { ArrowRight, Award, BookmarkCheck, Check, ChevronRight, Flame, GraduationCap, Languages, LifeBuoy, Lock, MousePointerClick, PlayCircle, TextSelect, Volume2, Wand2 } from 'lucide-react'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { LessonIcon, levelTone } from '@/components/LessonIcon'
@@ -11,7 +11,8 @@ import { ButtonLink } from '@/components/ui/button'
 import { Marquee } from '@/components/ui/marquee'
 import { WordReveal } from '@/components/ui/word-reveal'
 import { useTranslator } from '@/context/TranslatorContext'
-import { lessons } from '@/data/lessons'
+import { wordBank } from '@/data/dictionary'
+import { lessons, tracks } from '@/data/lessons'
 
 const demoPrompt =
   'You are a patient English teacher. Correct my paragraph below and explain each mistake in one simple sentence.'
@@ -60,8 +61,8 @@ export default function Home() {
           </BlurFade>
           <BlurFade delay={0.6}>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <ButtonLink to="/lessons/meet-claude" size="lg">
-                Start the first lesson <ArrowRight className="size-5" />
+              <ButtonLink to="/path" size="lg">
+                Start your learning path <ArrowRight className="size-5" />
               </ButtonLink>
               <ButtonLink to="/lessons" size="lg" variant="link" className="text-[17px]">
                 Browse all lessons <ChevronRight className="size-4" />
@@ -112,8 +113,8 @@ export default function Home() {
       <section className="border-y border-border-soft bg-bg-alt">
         <div className="mx-auto grid max-w-[1024px] grid-cols-2 gap-y-8 px-4 py-12 text-center sm:px-6 md:grid-cols-4">
           {[
-            { n: `${lessons.length}`, l: 'bite-sized lessons', ar: 'دروس قصيرة' },
-            { n: `${allVocab.length}`, l: 'key words to master', ar: 'كلمة أساسية' },
+            { n: `${lessons.length}`, l: `lessons in ${tracks.length} tracks`, ar: 'درسًا في أربعة مسارات' },
+            { n: `${(Math.floor(wordBank.length / 100) * 100).toLocaleString()}+`, l: 'words from A1 to C1', ar: 'كلمة من المبتدئ للمتقدم' },
             { n: '1 tap', l: 'to translate any word', ar: 'لترجمة أي كلمة' },
             { n: '100%', l: 'free, no sign-up', ar: 'مجاني بلا تسجيل' },
           ].map((s, i) => (
@@ -238,6 +239,90 @@ export default function Home() {
         </BlurFade>
       </section>
 
+      {/* ---------------- Path teaser ---------------- */}
+      <section className="mx-auto max-w-[1024px] px-4 pb-24 sm:px-6">
+        <div className="grid items-center gap-10 overflow-hidden rounded-[36px] border border-border-soft bg-bg-alt p-8 sm:p-12 md:grid-cols-2">
+          <BlurFade>
+            <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Learning path</p>
+            <h2 className="mt-2 text-balance text-4xl font-bold tracking-[-0.03em] sm:text-5xl">A path that keeps you going.</h2>
+            <p className="mt-4 text-lg text-fg-muted">
+              Unlock lessons one by one, earn XP, keep your daily streak, and collect badges. Smart reviews bring every word back
+              right before you forget it.
+            </p>
+            <p lang="ar" className="mt-2 text-fg-subtle">مسار يحفّزك كل يوم: نقاط، وسلسلة أيام، وشارات، ومراجعة ذكية.</p>
+            <ButtonLink to="/path" className="mt-7">
+              See your path <ArrowRight className="size-4" />
+            </ButtonLink>
+          </BlurFade>
+          <BlurFade delay={0.1}>
+            <div className="relative mx-auto h-[340px] w-[260px]" aria-hidden>
+              <svg className="absolute inset-0" width="260" height="340">
+                <path d="M130 36 C130 80, 200 70, 200 116 C200 160, 130 150, 130 196 C130 240, 60 230, 60 276" fill="none" stroke="var(--primary)" strokeWidth="5" strokeLinecap="round" />
+                <path d="M60 276 C60 300, 90 310, 110 330" fill="none" stroke="var(--border)" strokeWidth="4" strokeDasharray="2 10" strokeLinecap="round" />
+              </svg>
+              {[
+                { x: 130, y: 36, s: 'done' },
+                { x: 200, y: 116, s: 'done' },
+                { x: 130, y: 196, s: 'done' },
+                { x: 60, y: 276, s: 'current' },
+              ].map((n, i) => (
+                <span
+                  key={i}
+                  className={
+                    'absolute grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full ' +
+                    (n.s === 'done' ? 'bg-success text-white dark:text-black' : 'bg-primary text-on-primary ring-8 ring-primary/20')
+                  }
+                  style={{ left: n.x, top: n.y }}
+                >
+                  {n.s === 'done' ? <Check className="size-7" strokeWidth={3} /> : <GraduationCap className="size-7" />}
+                </span>
+              ))}
+              <span className="absolute bottom-0 right-2 grid size-12 place-items-center rounded-full bg-surface text-fg-subtle shadow-card">
+                <Lock className="size-5" />
+              </span>
+              <div className="absolute -right-6 top-4 flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-sm font-semibold shadow-pop">
+                <Flame className="size-4 fill-clay text-clay" /> 7 days
+              </div>
+              <div className="absolute -left-8 top-40 flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-sm font-semibold shadow-pop">
+                <Award className="size-4 text-primary" /> +50 XP
+              </div>
+            </div>
+          </BlurFade>
+        </div>
+      </section>
+
+      {/* ---------------- Official sources ---------------- */}
+      <section className="mx-auto max-w-[1024px] px-4 pb-24 sm:px-6">
+        <BlurFade>
+          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Straight from the source</p>
+          <h2 className="mt-2 max-w-3xl text-balance text-4xl font-bold tracking-[-0.03em] sm:text-5xl">
+            Built on Anthropic’s own guides.
+          </h2>
+          <p className="mt-3 max-w-2xl text-lg text-fg-muted">
+            Every lesson links to official material, so you can go deeper when you are ready.
+          </p>
+        </BlurFade>
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {[
+            { icon: GraduationCap, t: 'Claude Academy', d: 'Free courses with certificates — Claude 101, AI Fluency, Claude Code and more.', ar: 'دورات مجانية بشهادات' },
+            { icon: PlayCircle, t: 'Official videos', d: 'Talks and course videos from the Anthropic team, embedded in the lessons.', ar: 'فيديوهات رسمية من فريق Anthropic' },
+            { icon: LifeBuoy, t: 'Docs & Help Center', d: 'Prompting best practices and a short guide for every Claude feature.', ar: 'الوثائق ومركز المساعدة' },
+          ].map((c, i) => (
+            <BlurFade key={c.t} delay={i * 0.06}>
+              <Link to="/library" className="group flex h-full flex-col rounded-3xl border border-border-soft bg-surface p-7 shadow-card transition-all hover:-translate-y-1 hover:shadow-pop">
+                <c.icon className="size-8 text-clay" aria-hidden />
+                <h3 className="mt-5 text-xl font-semibold tracking-tight">{c.t}</h3>
+                <p className="mt-2 text-[15px] text-fg-muted">{c.d}</p>
+                <p lang="ar" className="mt-1 text-sm text-fg-subtle">{c.ar}</p>
+                <span className="mt-auto inline-flex items-center gap-1 pt-5 text-sm font-medium text-link">
+                  Open the library <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </Link>
+            </BlurFade>
+          ))}
+        </div>
+      </section>
+
       {/* ---------------- Vocabulary marquee ---------------- */}
       <section className="overflow-hidden bg-bg-alt py-20">
         <BlurFade className="mx-auto mb-10 max-w-[1024px] px-4 sm:px-6">
@@ -347,7 +432,7 @@ export default function Home() {
               <h2 className="text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">Your first prompt is waiting.</h2>
               <p lang="ar" className="mt-3 text-center text-lg text-white/70">طلبك الأول بانتظارك.</p>
               <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <ButtonLink to="/lessons/meet-claude" size="lg" className="bg-white text-black hover:bg-white/90">
+                <ButtonLink to="/path" size="lg" className="bg-white text-black hover:bg-white/90">
                   Start learning — it’s free
                 </ButtonLink>
                 <button

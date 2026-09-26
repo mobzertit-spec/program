@@ -629,9 +629,97 @@ you're|phr|أنت
 i'll|phr|سوف (أنا)
 of course|phr|بالطبع
 course|n|دورة / مساق
+claude|n|Claude (مساعد ذكاء اصطناعي من Anthropic)
+anthropic|n|Anthropic (الشركة المطوّرة لـ Claude)
+mac|n|حاسوب Mac من Apple
+iphone|n|هاتف iPhone
+android|n|نظام Android
+plus|n|زائد / علامة +
+toolbox|n|صندوق أدوات
+delegation|n|تفويض
+plain|adj|بسيط / عادي
+tense|n|زمن (في القواعد)
+verb|n|فعل
+noun|n|اسم
+adjective|n|صفة
+adverb|n|ظرف
+such|det|مثل / كهذا
+wrap|v|يغلّف / يحيط
+employment|n|توظيف / عمل
+self|n|الذات
+ad|n|إعلان
+txt|n|ملف نصي (txt)
+shuffle|v|يخلط (الترتيب)
+trick|n|حيلة
+expense|n|مصروف
+timetable|n|جدول مواعيد
+cutoff|n|حدّ / تاريخ توقف
+base|v|يبني على
+angle|n|زاوية
+uk|n|المملكة المتحدة
+morocco|n|المغرب
+mcp|n|بروتوكول سياق النموذج (MCP)
+google|n|Google (شركة)
+slack|n|Slack (تطبيق مراسلة للعمل)
+thread|n|سلسلة رسائل / خيط
+universal|adj|عالمي / شامل
+plug|n|قابس
+alpha|n|ألفا (نسخة أولى)
+even|adv|حتى
+md|n|ملف Markdown (md)
+excel|n|برنامج Excel
+powerpoint|n|برنامج PowerPoint
+word|n|كلمة
+progressive|adj|تدريجي
+disclosure|n|إفصاح / كشف
+index|n|فهرس
+html|n|لغة HTML لصفحات الويب
+jpg|n|صورة بصيغة JPG
+teammate|n|زميل في الفريق
+ide|n|بيئة تطوير متكاملة (محرر أكواد)
+forth|adv|إلى الأمام (back and forth = ذهابًا وإيابًا)
+navbar|n|شريط التنقل
+rehearsal|n|بروفة / تدريب
+loud|adj|عالٍ (صوت)
+quarterly|adj|ربع سنوي
+photography|n|التصوير الفوتوغرافي
+photographic|adj|فوتوغرافي
+syllable|n|مقطع لفظي
+bark|v|ينبح
+fairy|n|جنية
+fool|n|أحمق
+minimal|adj|أدنى / متقارب
+differ|v|يختلف
+icon|n|أيقونة
+microphone|n|ميكروفون
+tongue|n|لسان
+twister|n|عبارة صعبة النطق (tongue twister)
+enemy|n|عدو
+pls|adv|من فضلك (اختصار please)
+reload|v|يعيد التحميل
+unauthorized|adj|غير مصرّح به
+emoji|n|رمز تعبيري
+commit|n|حفظ تغييرات في Git (commit)
+stuff|n|أشياء (عامية)
 `
 
-export type DictEntry = { word: string; pos: string; ar: string }
+import a1 from './wordbank/a1'
+import a2 from './wordbank/a2'
+import b1 from './wordbank/b1'
+import b2 from './wordbank/b2'
+import c1 from './wordbank/c1'
+
+export type CefrLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1'
+export const LEVELS: CefrLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1']
+export const LEVEL_INFO: Record<CefrLevel, { en: string; ar: string }> = {
+  A1: { en: 'Beginner', ar: 'مبتدئ' },
+  A2: { en: 'Elementary', ar: 'أساسي' },
+  B1: { en: 'Intermediate', ar: 'متوسط' },
+  B2: { en: 'Upper-intermediate', ar: 'فوق المتوسط' },
+  C1: { en: 'Advanced', ar: 'متقدم' },
+}
+
+export type DictEntry = { word: string; pos: string; ar: string; level?: CefrLevel }
 
 const POS_LABEL: Record<string, string> = {
   n: 'noun',
@@ -660,11 +748,29 @@ export const POS_AR: Record<string, string> = {
 }
 
 export const dictionary: Map<string, DictEntry> = new Map()
-for (const line of RAW.split('\n')) {
-  const [word, pos, ar] = line.split('|')
-  if (!word || !ar || dictionary.has(word)) continue
-  dictionary.set(word, { word, pos: POS_LABEL[pos] ?? pos, ar })
+
+function load(raw: string, level?: CefrLevel) {
+  for (const line of raw.split('\n')) {
+    const [word, pos, ar] = line.split('|')
+    if (!word || !ar) continue
+    const existing = dictionary.get(word)
+    if (existing) {
+      // curated entries keep their meaning; the word bank only adds the level
+      if (level && !existing.level) existing.level = level
+      continue
+    }
+    dictionary.set(word, { word, pos: POS_LABEL[pos] ?? pos, ar, level })
+  }
 }
+
+load(RAW)
+const banks: [string, CefrLevel][] = [[a1, 'A1'], [a2, 'A2'], [b1, 'B1'], [b2, 'B2'], [c1, 'C1']]
+for (const [raw, level] of banks) load(raw, level)
+
+/** Browsable word bank: every entry that has a CEFR level, in level then alphabetical order. */
+export const wordBank: DictEntry[] = [...dictionary.values()]
+  .filter((e) => e.level && !e.word.includes(' '))
+  .sort((a, b) => LEVELS.indexOf(a.level!) - LEVELS.indexOf(b.level!) || a.word.localeCompare(b.word))
 
 /** Irregular forms → base form */
 export const IRREGULAR: Record<string, string> = {
@@ -678,6 +784,11 @@ export const IRREGULAR: Record<string, string> = {
   children: 'kid', men: 'man', women: 'woman', easier: 'easy', easiest: 'easy',
   smarter: 'smart', faster: 'fast', fastest: 'fast', shorter: 'short', clearer: 'clear',
   larger: 'large', better: 'better', best: 'best', ups: 'up', nword: 'word', nnow: 'now', nrewrite: 'rewrite',
+  felt: 'feel', paid: 'pay', ran: 'run', sent: 'send', spent: 'spend', left: 'leave', met: 'meet',
+  heard: 'hear', held: 'hold', brought: 'bring', caught: 'catch', chose: 'choose', chosen: 'choose', drove: 'drive',
+  ate: 'eat', fell: 'fall', flew: 'fly', forgot: 'forget', grew: 'grow', hid: 'hide', rode: 'ride', rose: 'rise',
+  sang: 'sing', sat: 'sit', slept: 'sleep', stood: 'stand', stole: 'steal', swam: 'swim', threw: 'throw', woke: 'wake',
+  wore: 'wear', won: 'win', bigger: 'big', biggest: 'big', worse: 'worse', people: 'people', data: 'data',
   s: 'is', t: 'not', n: 'and',
 }
 

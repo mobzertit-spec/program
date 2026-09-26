@@ -18,8 +18,11 @@ export function writeStorage<T>(key: string, value: T) {
   }
 }
 
-export function usePersistentState<T>(key: string, initial: T) {
-  const [value, setValue] = useState<T>(() => readStorage(key, initial))
+/** `initial` may be a function that builds the first value itself (e.g. to migrate old data). */
+export function usePersistentState<T>(key: string, initial: T | (() => T)) {
+  const [value, setValue] = useState<T>(() =>
+    typeof initial === 'function' ? (initial as () => T)() : readStorage(key, initial),
+  )
   useEffect(() => writeStorage(key, value), [key, value])
   return [value, setValue] as const
 }

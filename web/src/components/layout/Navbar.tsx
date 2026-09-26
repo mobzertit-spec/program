@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { Menu, Moon, Sun, X } from 'lucide-react'
+import { Flame, Menu, Moon, Sun, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useApp } from '@/context/AppContext'
@@ -7,13 +7,15 @@ import { cn } from '@/lib/utils'
 import { Logo } from './Logo'
 
 const links = [
+  { to: '/path', label: 'Path', ar: 'المسار' },
   { to: '/lessons', label: 'Lessons', ar: 'الدروس' },
   { to: '/vocabulary', label: 'Vocabulary', ar: 'المفردات' },
   { to: '/lab', label: 'Prompt Lab', ar: 'مختبر الطلبات' },
+  { to: '/library', label: 'Library', ar: 'المكتبة' },
 ]
 
 export function Navbar() {
-  const { theme, setTheme, showArabic, setShowArabic, saved } = useApp()
+  const { theme, setTheme, showArabic, setShowArabic, dueWords, streak, xpToday, dailyGoal } = useApp()
   const location = useLocation()
   // menu is tied to the path it was opened on, so navigating closes it without an effect
   const [openPath, setOpenPath] = useState<string | null>(null)
@@ -34,7 +36,7 @@ export function Navbar() {
           <span className="text-[15px] font-semibold tracking-tight">Prompt English</span>
         </Link>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-0.5 lg:flex">
           {links.map((l) => (
             <li key={l.to}>
               <NavLink
@@ -57,8 +59,10 @@ export function Navbar() {
                     )}
                     <span className="relative">
                       {l.label}
-                      {l.to === '/vocabulary' && saved.length > 0 && (
-                        <span className="ml-1.5 rounded-full bg-clay px-1.5 py-px text-[10px] font-semibold text-white">{saved.length}</span>
+                      {l.to === '/vocabulary' && dueWords.length > 0 && (
+                        <span className="ml-1.5 rounded-full bg-clay px-1.5 py-px text-[10px] font-semibold text-white" aria-label={`${dueWords.length} words to review`}>
+                          {dueWords.length}
+                        </span>
                       )}
                     </span>
                   </>
@@ -69,6 +73,15 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-1">
+          <Link
+            to="/path"
+            title={`${xpToday}/${dailyGoal} XP today`}
+            aria-label={`${streak}-day streak, ${xpToday} of ${dailyGoal} XP today`}
+            className="inline-flex h-9 items-center gap-1 rounded-full px-2.5 text-[13px] font-semibold transition-colors hover:bg-bg-alt"
+          >
+            <Flame className={cn('size-[18px]', streak ? 'fill-clay text-clay' : 'text-fg-subtle')} />
+            <span className={streak ? 'text-clay' : 'text-fg-muted'}>{streak}</span>
+          </Link>
           <button
             onClick={() => setShowArabic(!showArabic)}
             aria-pressed={showArabic}
@@ -79,7 +92,7 @@ export function Navbar() {
             )}
           >
             <span className="font-arabic text-[15px] leading-none">ع</span>
-            <span className="hidden sm:inline">{showArabic ? 'Arabic on' : 'Arabic'}</span>
+            <span className="hidden xl:inline">{showArabic ? 'Arabic on' : 'Arabic'}</span>
           </button>
           <button
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
@@ -90,7 +103,7 @@ export function Navbar() {
           </button>
           <button
             onClick={() => setOpen(!open)}
-            className="grid size-9 cursor-pointer place-items-center rounded-full text-fg transition-colors hover:bg-bg-alt md:hidden"
+            className="grid size-9 cursor-pointer place-items-center rounded-full text-fg transition-colors hover:bg-bg-alt lg:hidden"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
           >
@@ -105,7 +118,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'calc(100dvh - 52px)' }}
             exit={{ opacity: 0, height: 0, transition: { duration: 0.2 } }}
-            className="overflow-hidden bg-bg md:hidden"
+            className="overflow-hidden bg-bg lg:hidden"
           >
             <ul className="flex flex-col gap-1 px-8 pt-6">
               {links.map((l, i) => (

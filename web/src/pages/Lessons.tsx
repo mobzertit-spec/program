@@ -9,16 +9,17 @@ import { ProgressRing } from '@/components/ui/progress-ring'
 import { Segmented } from '@/components/ui/segmented'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { useApp } from '@/context/AppContext'
-import { lessons, type Level } from '@/data/lessons'
+import { lessons, tracks, type TrackId } from '@/data/lessons'
+import { nextLesson } from '@/lib/progress'
 
-type Filter = 'all' | Level
+type Filter = 'all' | TrackId
 
 export default function Lessons() {
   const { completed, quizScores } = useApp()
   const [filter, setFilter] = useState<Filter>('all')
-  const shown = lessons.filter((l) => filter === 'all' || l.level === filter)
+  const shown = lessons.filter((l) => filter === 'all' || l.track === filter)
   const done = completed.length
-  const next = lessons.find((l) => !completed.includes(l.id))
+  const next = nextLesson(completed)
 
   return (
     <div className="mx-auto max-w-[1024px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
@@ -26,9 +27,10 @@ export default function Lessons() {
         <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">The course</p>
         <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em] sm:text-7xl">Lessons.</h1>
         <p className="mt-4 max-w-2xl text-lg text-fg-muted sm:text-xl">
-          Ten short lessons, from your very first message to advanced prompting. Every word is translatable.
+          {lessons.length} short lessons in four tracks — from your very first message to Skills and Claude Code. Every word is
+          translatable.
         </p>
-        <p lang="ar" dir="rtl" className="mt-1 text-left text-fg-subtle">عشرة دروس قصيرة، من رسالتك الأولى حتى الاحتراف.</p>
+        <p lang="ar" dir="rtl" className="mt-1 text-left text-fg-subtle">{lessons.length} درسًا قصيرًا في أربعة مسارات، من رسالتك الأولى حتى الاحتراف.</p>
       </BlurFade>
 
       <BlurFade delay={0.1}>
@@ -63,15 +65,10 @@ export default function Lessons() {
 
       <div className="no-scrollbar mt-10 overflow-x-auto">
         <Segmented
-          label="Filter by level"
+          label="Filter by track"
           value={filter}
           onChange={setFilter}
-          options={[
-            { value: 'all', label: 'All' },
-            { value: 'Beginner', label: 'Beginner' },
-            { value: 'Intermediate', label: 'Intermediate' },
-            { value: 'Advanced', label: 'Advanced' },
-          ]}
+          options={[{ value: 'all', label: 'All' }, ...tracks.map((t) => ({ value: t.id, label: t.title }))]}
         />
       </div>
 
