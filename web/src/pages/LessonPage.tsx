@@ -34,6 +34,7 @@ import { POS_AR } from '@/data/dictionary'
 import { getLesson, lessons, lessonsByTrack, trackOf, type Bilingual, type Lesson, type QuizQuestion, type VocabItem } from '@/data/lessons'
 import { isUnlocked } from '@/lib/path'
 import { canSpeak, speak } from '@/lib/speech'
+import { LessonFeedback } from '@/components/learn/LessonFeedback'
 import { useDocumentTitle } from '@/lib/meta'
 import { cn } from '@/lib/utils'
 
@@ -202,6 +203,8 @@ function LessonView({ lesson }: { lesson: Lesson }) {
             </Button>
           )}
         </div>
+
+        <LessonFeedback lessonId={lesson.id} />
 
         <nav aria-label="Lesson navigation" className="mt-10 grid gap-3 sm:grid-cols-2">
           {prev ? (

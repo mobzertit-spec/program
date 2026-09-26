@@ -1,14 +1,19 @@
 import type { User } from '@supabase/supabase-js'
+import { isServer } from '@/lib/boot'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { authEnabled, getSupabase, redirectUrl } from '@/lib/supabase'
+import { authEnabled, authProviders, getSupabase, hasAuthState, redirectUrl, type AuthProviderId } from '@/lib/supabase'
 
 type AuthState = {
   enabled: boolean
+  /** sign-in methods this site offers */
+  providers: AuthProviderId[]
   loading: boolean
   user: User | null
   signInWithGoogle: () => Promise<string | null>
   sendMagicLink: (email: string) => Promise<string | null>
   signOut: () => Promise<void>
+  /** the signed-in user's access token, for database calls made as that user */
+  accessToken: () => Promise<string | null>
 }
 
 const Ctx = createContext<AuthState | null>(null)
@@ -17,6 +22,8 @@ const Ctx = createContext<AuthState | null>(null)
 function friendly(message: string) {
   if (/fetch|network|load failed/i.test(message)) return 'Could not reach the sign-in server. Check your internet connection and try again.'
   if (/rate limit|too many/i.test(message)) return 'Too many attempts. Please wait a minute and try again.'
+  if (/not authori[sz]ed/i.test(message)) return 'Email sign-in is not open to everyone yet. Please try again later.'
+  if (/provider is not enabled|unsupported provider/i.test(message)) return 'This sign-in method is not available yet.'
   return message
 }
 
@@ -35,10 +42,12 @@ function cleanAuthParams() {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(authEnabled)
+  // the auth library loads at start only for a saved session or a sign-in redirect — new visitors never download it
+  const [started, setStarted] = useState(() => !isServer && hasAuthState())
+  const [loading, setLoading] = useState(started)
 
   useEffect(() => {
-    const pending = getSupabase()
+    const pending = started ? getSupabase() : null
     if (!pending) return
     let active = true
     let unsubscribe = () => {}
@@ -61,12 +70,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       active = false
       unsubscribe()
     }
-  }, [])
+  }, [started])
 
   const signInWithGoogle = useCallback(async () => {
     const pending = getSupabase()
     if (!pending) return 'Sign-in is not configured.'
     const supabase = await pending
+    setStarted(true)
     const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: redirectUrl() } })
     return error ? friendly(error.message) : null
   }, [])
@@ -76,6 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!pending) return 'Sign-in is not configured.'
     try {
       const supabase = await pending
+      setStarted(true)
       const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl() } })
       return error ? friendly(error.message) : null
     } catch (e) {
@@ -88,9 +99,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (pending) await (await pending).auth.signOut()
   }, [])
 
+  const accessToken = useCallback(async () => {
+    const pending = user ? getSupabase() : null
+    if (!pending) return null
+    const { data } = await (await pending).auth.getSession()
+    return data.session?.access_token ?? null
+  }, [user])
+
   const value = useMemo(
-    () => ({ enabled: authEnabled, loading, user, signInWithGoogle, sendMagicLink, signOut }),
-    [loading, user, signInWithGoogle, sendMagicLink, signOut],
+    () => ({ enabled: authEnabled, providers: authProviders, loading, user, signInWithGoogle, sendMagicLink, signOut, accessToken }),
+    [loading, user, signInWithGoogle, sendMagicLink, signOut, accessToken],
   )
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
 }

@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { LessonIcon } from '@/components/LessonIcon'
 import { Parallax, TrackArt } from '@/components/art/TrackArt'
 import { Onboarding } from '@/components/learn/Onboarding'
+import { Leaderboard } from '@/components/learn/Leaderboard'
 import { WordOfTheDay } from '@/components/learn/WordOfTheDay'
 import { useProfile } from '@/lib/profile'
 import { trackOf } from '@/data/lessons'
@@ -85,6 +86,7 @@ export default function Path() {
       </div>
 
       <Achievements />
+      <Leaderboard />
       <DataCard />
     </div>
   )

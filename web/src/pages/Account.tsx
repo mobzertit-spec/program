@@ -42,7 +42,9 @@ function GoogleIcon() {
 }
 
 function SignIn() {
-  const { signInWithGoogle, sendMagicLink } = useAuth()
+  const { signInWithGoogle, sendMagicLink, providers } = useAuth()
+  const hasGoogle = providers.includes('google')
+  const hasEmail = providers.includes('email')
   const [email, setEmail] = useState('')
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'google'>('idle')
   const [error, setError] = useState<string | null>(null)
@@ -120,19 +122,29 @@ function SignIn() {
               </motion.div>
             ) : (
               <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
-                <button
-                  onClick={onGoogle}
-                  disabled={state !== 'idle'}
-                  className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-border bg-surface font-medium transition-colors hover:bg-bg-alt disabled:opacity-60"
-                >
-                  {state === 'google' ? <Loader2 className="size-5 animate-spin" /> : <GoogleIcon />}
-                  Continue with Google
-                </button>
+                {hasGoogle && (
+                  <button
+                    onClick={onGoogle}
+                    disabled={state !== 'idle'}
+                    className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-border bg-surface font-medium transition-colors hover:bg-bg-alt disabled:opacity-60"
+                  >
+                    {state === 'google' ? <Loader2 className="size-5 animate-spin" /> : <GoogleIcon />}
+                    Continue with Google
+                  </button>
+                )}
+                {hasGoogle && !hasEmail && error && (
+                  <p role="alert" className="mt-3 flex items-center gap-1.5 text-sm text-danger">
+                    <AlertCircle className="size-4" /> {error}
+                  </p>
+                )}
 
-                <div className="my-6 flex items-center gap-3 text-xs text-fg-subtle" aria-hidden>
-                  <span className="h-px flex-1 bg-border-soft" /> or <span className="h-px flex-1 bg-border-soft" />
-                </div>
+                {hasGoogle && hasEmail && (
+                  <div className="my-6 flex items-center gap-3 text-xs text-fg-subtle" aria-hidden>
+                    <span className="h-px flex-1 bg-border-soft" /> or <span className="h-px flex-1 bg-border-soft" />
+                  </div>
+                )}
 
+                {hasEmail && (
                 <form onSubmit={onEmail} noValidate>
                   <label htmlFor="email" className="text-sm font-medium">
                     Email address <span lang="ar" data-ar-help className="font-normal text-fg-subtle">· البريد الإلكتروني</span>
@@ -166,6 +178,7 @@ function SignIn() {
                     Email me a sign-in link
                   </button>
                 </form>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

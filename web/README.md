@@ -46,22 +46,34 @@ Ask Claude Code to use the **lesson-writer** skill (`.claude/skills/lesson-write
 “Add a lesson about Claude’s memory feature to the features track.” The skill explains the lesson format,
 the writing rules and the official sources to link.
 
-## Sign-in and cloud sync (optional)
+## Supabase: feedback, leaderboard, sign-in and cloud sync
 
-CE works without any server. To let learners sign in with **email (magic link)** or **Google** and sync
-progress across devices, connect a free [Supabase](https://supabase.com) project:
+CE works fully without a server; Supabase adds the community features. The site is connected to the Supabase
+project **ce-learn** through `web/.env` (project URL + publishable key — both public by design; Row Level Security
+protects every table). The database is defined in `supabase/migrations/` (apply them in order in the SQL Editor
+if you use your own project):
 
-1. Create a project, then run `supabase/migrations/001_progress.sql` in **SQL Editor** (creates the `progress`
-   table with Row Level Security — each user can only read and write their own row).
-2. **Authentication → URL Configuration**: set *Site URL* to your site (e.g. `https://USER.github.io/program/`)
-   and add `http://localhost:5173/` to *Redirect URLs*.
-3. **Email**: the magic link works out of the box (Supabase’s built-in email has a low hourly limit —
-   add your own SMTP under Authentication → Emails for real traffic).
-4. **Google**: in Google Cloud Console create an OAuth client (type *Web application*) and add the redirect URI
-   shown in Supabase → Authentication → Providers → Google, then paste the client ID and secret there.
-5. Copy `web/.env.example` to `web/.env.local` and fill in the project URL and anon key
-   (Project Settings → API). For GitHub Pages, add the same two values as **repository variables**
-   (Settings → Secrets and variables → Actions → Variables).
+| Migration | What it does |
+|---|---|
+| `001_progress.sql` | `progress`: one row per learner, readable and writable only by that learner (cloud sync) |
+| `002_leaderboard_feedback.sql` | `profiles` + `leaderboard` + `weekly_leaderboard` view (opt-in, name + weekly XP only, written by triggers) and `lesson_feedback` + `lesson_stats` (anyone can answer “Was this helpful?”, nobody can read answers through the API) |
+| `003_tighten_grants.sql` | removes every API privilege the site does not need |
+
+**Working now, without sign-in:** “Was this lesson helpful?” on every lesson (answers appear in
+Table Editor → `lesson_feedback`) and the public weekly leaderboard on the Path page.
+
+**Turning on sign-in** (email magic link and/or Google) — these settings live only in the Supabase dashboard:
+
+1. **Authentication → URL Configuration**: *Site URL* = your site (e.g. `https://USER.github.io/program/`);
+   *Redirect URLs*: add the same URL and `http://localhost:5173/`.
+2. **Email**: Supabase’s built-in email only sends to members of your Supabase team. For everyone else add your own
+   SMTP (e.g. a free Resend or Brevo account) under **Authentication → Emails → SMTP Settings**.
+3. **Google** (optional): in Google Cloud Console create an OAuth client (type *Web application*), add the redirect
+   URI shown in Supabase → Authentication → Providers → Google, and paste the client ID and secret there.
+4. Switch the buttons on: set `VITE_AUTH_PROVIDERS=email,google` (or just `email`) — locally in `web/.env.local`,
+   and for GitHub Pages as a **repository variable** (Settings → Secrets and variables → Actions → Variables).
+
+New visitors never download the Supabase library: it loads only when someone signs in or has a saved session.
 
 ## Deploy (free, GitHub Pages)
 
