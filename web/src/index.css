@@ -1,0 +1,272 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- CE design tokens ----------
+   Brand: "Ink" (deep navy) · "Ember" (warm orange, the voice of Claude) · "Iris" (indigo, the voice of learning).
+   Semantic tokens only — components never use raw hex. */
+:root {
+  --bg: #ffffff;
+  --bg-alt: rgb(244 244 250 / 0.72);
+  --surface: #ffffff;
+  --surface-2: #fafaff;
+  --fg: #12142b;
+  --fg-muted: #5c6079;
+  --fg-subtle: #686c86;
+  --border: #d4d6e4;
+  --border-soft: #e7e8f1;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --on-primary: #ffffff;
+  --link: #4f46e5;
+  --clay: #b34a1a;
+  --clay-soft: #fdf0e8;
+  --ember: #f07a45;
+  --iris: #6d5dfc;
+  --ink: #12142b;
+  --success: #15803d;
+  --success-soft: #e8f7ee;
+  --danger: #d7263d;
+  --danger-soft: #fdecef;
+  --nav-bg: rgb(255 255 255 / 0.7);
+  --shadow-card: 0 1px 2px rgb(18 20 43 / 0.04), 0 10px 32px rgb(18 20 43 / 0.06);
+  --shadow-pop: 0 18px 50px rgb(18 20 43 / 0.16), 0 2px 8px rgb(18 20 43 / 0.08);
+  --orb-opacity: 0.55;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #07080f;
+  --bg-alt: rgb(22 24 40 / 0.6);
+  --surface: #11131f;
+  --surface-2: #171a2a;
+  --fg: #f3f4fb;
+  --fg-muted: #a6aac4;
+  --fg-subtle: #80849f;
+  --border: #33374f;
+  --border-soft: #1f2236;
+  --primary: #8b8dff;
+  --primary-hover: #a3a5ff;
+  --on-primary: #0b0c1a;
+  --link: #9fa1ff;
+  --clay: #f5925f;
+  --clay-soft: #2a1710;
+  --ember: #f5925f;
+  --iris: #8b8dff;
+  --ink: #0b0c1a;
+  --success: #3ddc84;
+  --success-soft: #0e2a1b;
+  --danger: #ff5a6e;
+  --danger-soft: #2e0e14;
+  --nav-bg: rgb(17 19 31 / 0.66);
+  --shadow-card: 0 0 0 1px rgb(255 255 255 / 0.05), 0 10px 30px rgb(0 0 0 / 0.35);
+  --shadow-pop: 0 18px 50px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.08);
+  --orb-opacity: 0.35;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-alt: var(--bg-alt);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-link: var(--link);
+  --color-clay: var(--clay);
+  --color-clay-soft: var(--clay-soft);
+  --color-ember: var(--ember);
+  --color-iris: var(--iris);
+  --color-ink: var(--ink);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --font-arabic: "Alexandria Variable", "Alexandria", "Inter Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - var(--gap, 1rem) / 2)); }
+}
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  letter-spacing: -0.011em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[lang="ar"], .font-arabic {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+/* Arabic runs are isolated RTL so mixed lines ("أعطِ Claude السياق") keep the right word order.
+   They sit left-aligned under the English text by default; text-center / text-right utilities override. */
+/* "Arabic help" off: hide secondary Arabic subtitles (real translations always stay) */
+/* prerendered HTML for another URL (see src/prerender-guard.ts) stays hidden until the app renders */
+html[data-stale] #root { visibility: hidden; }
+
+.ar-help-off [data-ar-help] { display: none !important; }
+
+@layer base {
+  [lang="ar"]:not([dir]) {
+    direction: rtl;
+    unicode-bidi: isolate;
+    text-align: left;
+  }
+}
+
+::selection { background: color-mix(in srgb, var(--primary) 25%, transparent); }
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.text-balance { text-wrap: balance; }
+.text-pretty { text-wrap: pretty; }
+
+/* Apple-style headline gradient */
+.headline-gradient {
+  background: linear-gradient(95deg, var(--ember) 0%, #e8704f 30%, var(--iris) 70%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Translatable word */
+.tw {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: color-mix(in srgb, var(--fg-subtle) 55%, transparent);
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+}
+.tw-plain { text-decoration-line: none; }
+.tw:hover, .tw[data-active="true"] {
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--fg);
+}
+.tw[data-saved="true"] {
+  text-decoration-style: solid;
+  text-decoration-color: var(--clay);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* brand gradient helpers */
+.bg-brand { background-image: linear-gradient(135deg, var(--ember), var(--iris)); }
+.text-brand {
+  background-image: linear-gradient(95deg, var(--ember), var(--iris));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(4%, -3%, 0) scale(1.06); }
+  66% { transform: translate3d(-3%, 4%, 0) scale(0.96); }
+}
+
+/* ---------- Micro-interactions ---------- */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes float-y-sm {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-2deg); }
+}
+/* gentle idle float for decorative elements (use style="animation-delay" to stagger) */
+.float-soft { animation: float-y 6s ease-in-out infinite; will-change: transform; }
+.float-slow { animation: float-y 9s ease-in-out infinite; will-change: transform; }
+.float-icon { animation: float-y-sm 4.5s ease-in-out infinite; }
+
+/* hover lift for cards and buttons — only where a real mouse exists */
+@media (hover: hover) and (pointer: fine) {
+  .lift {
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
+  }
+  .lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-pop);
+  }
+  /* icons inside a hovered element pop slightly */
+  .group:hover .icon-pop,
+  .icon-pop:hover {
+    transform: translateY(-2px) scale(1.12) rotate(-6deg);
+  }
+}
+.icon-pop { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .float-soft, .float-slow, .float-icon { animation: none !important; }
+  .lift:hover { transform: none; }
+}
+
+/* ---------- Cee, the mascot (src/components/mascot/Mascot.tsx) ---------- */
+@keyframes cee-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes cee-shadow { 0%, 100% { transform: scaleX(1); opacity: 0.12; } 50% { transform: scaleX(0.86); opacity: 0.08; } }
+@keyframes cee-blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+@keyframes cee-wave { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-16deg); } 60% { transform: rotate(10deg); } }
+@keyframes cee-cheer { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes cee-twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+@keyframes cee-dot { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+@keyframes cee-z { 0% { opacity: 0; transform: translate(-3px, 5px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(4px, -7px); } }
+.cee-anim .cee-figure { animation: cee-bob 3.2s ease-in-out infinite; }
+.cee-anim .cee-shadow { animation: cee-shadow 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.cee-anim .cee-eyes { animation: cee-blink 4.6s infinite; transform-box: fill-box; transform-origin: center; }
+.cee-anim .cee-wave { animation: cee-wave 1.8s ease-in-out infinite; transform-box: view-box; transform-origin: 133px 80px; }
+.cee-anim .cee-cheer-l { animation: cee-cheer 0.9s ease-in-out infinite; }
+.cee-anim .cee-cheer-r { animation: cee-cheer 0.9s ease-in-out infinite 0.45s; }
+.cee-anim .cee-sparkles, .cee-anim .cee-spark { animation: cee-twinkle 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.cee-anim .cee-dot { animation: cee-dot 1.5s ease-in-out infinite; }
+.cee-anim .cee-dot-2 { animation-delay: 0.25s; }
+.cee-anim .cee-dot-3 { animation-delay: 0.5s; }
+.cee-anim .cee-z { animation: cee-z 2.4s ease-in-out infinite; transform-box: fill-box; }
+.cee-anim .cee-z-2 { animation-delay: 1.2s; }
+@media (prefers-reduced-motion: reduce) {
+  .cee-anim * { animation: none !important; }
+}

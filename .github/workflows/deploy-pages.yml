@@ -1,0 +1,67 @@
+name: Deploy website to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths: ['web/**', '.github/workflows/deploy-pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - id: pages
+        uses: actions/configure-pages@v5
+      - run: npm ci
+      - run: npm run check:content
+      - run: npm run lint
+      - run: npm run test:sync
+      - run: npm run test:coach
+      # Supabase project settings come from web/.env. Optional repository variables (Settings → Secrets and
+      # variables → Actions → Variables) override them only when set:
+      #   VITE_AUTH_PROVIDERS = email,google (after setting up Supabase Auth), VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
+      - name: Optional overrides from repository variables
+        env:
+          AUTH_PROVIDERS: ${{ vars.VITE_AUTH_PROVIDERS }}
+          SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          SUPABASE_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          [ -n "$AUTH_PROVIDERS" ] && echo "VITE_AUTH_PROVIDERS=$AUTH_PROVIDERS" >> "$GITHUB_ENV"
+          [ -n "$SUPABASE_URL" ] && echo "VITE_SUPABASE_URL=$SUPABASE_URL" >> "$GITHUB_ENV"
+          [ -n "$SUPABASE_KEY" ] && echo "VITE_SUPABASE_ANON_KEY=$SUPABASE_KEY" >> "$GITHUB_ENV"
+          true
+      - run: npm run build
+        env:
+          VITE_BASE: ${{ steps.pages.outputs.base_path }}/
+          VITE_SITE_URL: ${{ steps.pages.outputs.base_url }}/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
