@@ -245,3 +245,28 @@ html[data-stale] #root { visibility: hidden; }
   .float-soft, .float-slow, .float-icon { animation: none !important; }
   .lift:hover { transform: none; }
 }
+
+/* ---------- Cee, the mascot (src/components/mascot/Mascot.tsx) ---------- */
+@keyframes cee-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes cee-shadow { 0%, 100% { transform: scaleX(1); opacity: 0.12; } 50% { transform: scaleX(0.86); opacity: 0.08; } }
+@keyframes cee-blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+@keyframes cee-wave { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-16deg); } 60% { transform: rotate(10deg); } }
+@keyframes cee-cheer { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes cee-twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+@keyframes cee-dot { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+@keyframes cee-z { 0% { opacity: 0; transform: translate(-3px, 5px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(4px, -7px); } }
+.cee-anim .cee-figure { animation: cee-bob 3.2s ease-in-out infinite; }
+.cee-anim .cee-shadow { animation: cee-shadow 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.cee-anim .cee-eyes { animation: cee-blink 4.6s infinite; transform-box: fill-box; transform-origin: center; }
+.cee-anim .cee-wave { animation: cee-wave 1.8s ease-in-out infinite; transform-box: view-box; transform-origin: 133px 80px; }
+.cee-anim .cee-cheer-l { animation: cee-cheer 0.9s ease-in-out infinite; }
+.cee-anim .cee-cheer-r { animation: cee-cheer 0.9s ease-in-out infinite 0.45s; }
+.cee-anim .cee-sparkles, .cee-anim .cee-spark { animation: cee-twinkle 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.cee-anim .cee-dot { animation: cee-dot 1.5s ease-in-out infinite; }
+.cee-anim .cee-dot-2 { animation-delay: 0.25s; }
+.cee-anim .cee-dot-3 { animation-delay: 0.5s; }
+.cee-anim .cee-z { animation: cee-z 2.4s ease-in-out infinite; transform-box: fill-box; }
+.cee-anim .cee-z-2 { animation-delay: 1.2s; }
+@media (prefers-reduced-motion: reduce) {
+  .cee-anim * { animation: none !important; }
+}

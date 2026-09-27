@@ -34,6 +34,7 @@ jobs:
       - run: npm run check:content
       - run: npm run lint
       - run: npm run test:sync
+      - run: npm run test:coach
       # Supabase project settings come from web/.env. Optional repository variables (Settings → Secrets and
       # variables → Actions → Variables) override them only when set:
       #   VITE_AUTH_PROVIDERS = email,google (after setting up Supabase Auth), VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY

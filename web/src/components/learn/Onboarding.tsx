@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { isServer } from '@/lib/boot'
 import { useNavigate } from 'react-router-dom'
-import { Logo } from '@/components/layout/Logo'
+import { Mascot } from '@/components/mascot/Mascot'
 import { useApp } from '@/context/AppContext'
 import { nextLesson } from '@/lib/path'
 import { GOAL_TRACK, useProfile, type EnglishLevel, type Goal } from '@/lib/profile'
@@ -81,12 +81,20 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
             <button onClick={skip} aria-label="Skip" className="absolute right-4 top-4 grid size-10 cursor-pointer place-items-center rounded-full text-fg-muted hover:bg-bg-alt">
               <X className="size-5" />
             </button>
-            <div className="flex items-center gap-3">
-              <Logo className="size-10" />
-              <div className="flex gap-1.5" role="img" aria-label={`Step ${step + 1} of 2`}>
-                {[0, 1].map((i) => (
-                  <span key={i} className={cn('h-1.5 w-8 rounded-full', i <= step ? 'bg-primary' : 'bg-border-soft')} />
-                ))}
+            <div className="flex items-center gap-3 pr-10">
+              <Mascot pose={step === 0 ? 'wave' : 'think'} size={76} />
+              <div className="min-w-0">
+                <p className="rounded-2xl rounded-bl-md bg-bg-alt px-4 py-2 text-sm font-medium leading-snug">
+                  {step === 0 ? 'Hi, I’m Cee! Two quick questions and I’ll pick your first lesson.' : 'Nice! One more question.'}
+                </p>
+                <p lang="ar" data-ar-help className="mt-1 text-xs text-fg-muted">
+                  {step === 0 ? 'مرحبًا، أنا «سي»! سؤالان سريعان وأختار لك أول درس.' : 'رائع! سؤال واحد بعد.'}
+                </p>
+                <div className="mt-2 flex gap-1.5" role="img" aria-label={`Step ${step + 1} of 2`}>
+                  {[0, 1].map((i) => (
+                    <span key={i} className={cn('h-1.5 w-8 rounded-full', i <= step ? 'bg-primary' : 'bg-border-soft')} />
+                  ))}
+                </div>
               </div>
             </div>
 

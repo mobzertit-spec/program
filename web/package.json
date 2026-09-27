@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "check:content": "tsx --tsconfig tsconfig.app.json scripts/check-content.ts",
-    "test:sync": "tsx --tsconfig tsconfig.app.json scripts/test-sync.ts"
+    "test:sync": "tsx --tsconfig tsconfig.app.json scripts/test-sync.ts",
+    "test:coach": "tsx scripts/test-coach.ts"
   },
   "dependencies": {
     "@fontsource-variable/alexandria": "^5.3.0",

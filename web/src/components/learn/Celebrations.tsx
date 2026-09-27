@@ -3,6 +3,7 @@ import { Award, Flame, PartyPopper, Trophy } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
+import { Mascot } from '@/components/mascot/Mascot'
 import { useApp } from '@/context/AppContext'
 import { lessons } from '@/data/lessons'
 import { achievements } from '@/lib/achievements'
@@ -99,9 +100,8 @@ export function Celebrations() {
             exit={{ opacity: 0, y: -24 }}
             className="fixed inset-x-0 top-20 z-[90] mx-auto flex w-fit items-center gap-3 rounded-full bg-fg px-5 py-3 text-bg shadow-pop"
           >
-            <motion.span animate={{ scale: [1, 1.25, 1] }} transition={{ duration: 0.8, repeat: 3 }}>
-              <Flame className="size-5 fill-clay text-clay" aria-hidden />
-            </motion.span>
+            <Mascot pose="cheer" size={36} className="-my-2" />
+            <Flame className="size-5 fill-clay text-clay" aria-hidden />
             <span className="font-semibold">Daily goal reached!</span>
             <span lang="ar" data-ar-help className="text-sm opacity-70">حققت هدفك اليومي</span>
           </motion.div>
@@ -131,17 +131,21 @@ export function Celebrations() {
             >
               <div aria-hidden className="absolute inset-x-0 top-0 h-32 bg-brand opacity-15" />
               <motion.div
-                initial={{ rotate: -20, scale: 0.4 }}
-                animate={{ rotate: 0, scale: 1 }}
-                transition={{ type: 'spring', bounce: 0.6, delay: 0.1 }}
-                className="relative mx-auto grid size-24 place-items-center rounded-full bg-brand text-white shadow-pop"
+                initial={{ y: 30, scale: 0.5 }}
+                animate={{ y: 0, scale: 1 }}
+                transition={{ type: 'spring', bounce: 0.55, delay: 0.1 }}
+                className="relative mx-auto w-fit"
               >
-                {current.kind === 'level' ? <Trophy className="size-11" aria-hidden /> : <Award className="size-11" aria-hidden />}
+                <Mascot pose="cheer" size={132} />
+                {/* the reward, held up by Cee */}
+                <span className="absolute -bottom-1 -right-3 grid size-12 place-items-center rounded-full bg-brand text-white shadow-pop ring-4 ring-surface">
+                  {current.kind === 'level' ? <Trophy className="size-6" aria-hidden /> : <Award className="size-6" aria-hidden />}
+                </span>
               </motion.div>
 
               {current.kind === 'level' ? (
                 <>
-                  <p className="relative mt-6 text-sm font-semibold uppercase tracking-[0.08em] text-clay">Level up</p>
+                  <p className="relative mt-4 text-sm font-semibold uppercase tracking-[0.08em] text-clay">Level up</p>
                   <h2 id="celebration-title" className="text-5xl font-bold tracking-tight">
                     Level <CountUp to={current.level} />
                   </h2>
@@ -150,7 +154,7 @@ export function Celebrations() {
                 </>
               ) : (
                 <>
-                  <p className="relative mt-6 text-sm font-semibold uppercase tracking-[0.08em] text-clay">New badge</p>
+                  <p className="relative mt-4 text-sm font-semibold uppercase tracking-[0.08em] text-clay">New badge</p>
                   <h2 id="celebration-title" className="text-3xl font-bold tracking-tight">{current.title}</h2>
                   <p lang="ar" className="mt-1 text-center text-fg-muted">{current.titleAr}</p>
                   <p className="mt-3 text-fg-muted">{current.description}.</p>

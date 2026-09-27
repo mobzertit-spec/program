@@ -21,6 +21,7 @@ const MODULES: Record<string, string> = {
   '/lab': 'src/pages/PromptLab.tsx',
   '/library': 'src/pages/Library.tsx',
   '/account': 'src/pages/Account.tsx',
+  '/privacy': 'src/pages/Privacy.tsx',
 }
 
 /** Every URL that gets its own HTML file. Private or progress-based pages (account, certificates) are left out of the sitemap. */

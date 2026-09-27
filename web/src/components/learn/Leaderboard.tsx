@@ -2,10 +2,14 @@ import { useInView } from 'motion/react'
 import { Loader2, Trophy } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { Mascot } from '@/components/mascot/Mascot'
 import { displayName, useAuth } from '@/context/AuthContext'
 import { fetchMyBoardProfile, fetchWeeklyBoard, saveMyBoardProfile, type BoardProfile, type BoardRow } from '@/lib/community'
 import { supabaseEnabled } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
+
+/** Rankings are shown once this many learners are on the board. */
+const MIN_LEARNERS = 3
 
 /**
  * This week's top learners. Opt-in only: a learner appears after they sign in and switch it on,
@@ -32,6 +36,7 @@ export function Leaderboard() {
   }, [inView, load])
 
   if (!supabaseEnabled) return null
+  const sparse = rows !== null && rows.length < MIN_LEARNERS
 
   return (
     <section ref={ref} className="mt-24" aria-labelledby="board-title">
@@ -46,18 +51,21 @@ export function Leaderboard() {
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-[1.4fr_1fr]">
-        <div className={cn('rounded-3xl border border-border-soft bg-surface p-3 shadow-card sm:p-4', (rows === null || rows.length === 0) && 'min-h-64')}>
+        <div className={cn('rounded-3xl border border-border-soft bg-surface p-3 shadow-card sm:p-4', (rows === null || sparse) && 'min-h-64')}>
           {error ? (
             <p className="p-4 text-sm text-fg-muted">The leaderboard could not load. Check your connection.</p>
           ) : rows === null ? (
             <div className="grid h-56 place-items-center text-fg-subtle" aria-busy="true">
               <Loader2 className="size-6 animate-spin" aria-label="Loading leaderboard" />
             </div>
-          ) : rows.length === 0 ? (
-            <div className="grid h-56 place-items-center p-4 text-center">
-              <p className="text-fg-muted">
-                No one is on the board yet this week.
-                <span className="block font-medium text-fg">Be the first!</span>
+          ) : sparse ? (
+            // an almost empty board looks deserted — invite people instead until a few have joined
+            <div className="flex h-full min-h-56 flex-col items-center justify-center gap-2 p-4 text-center">
+              <Mascot pose="think" size={88} />
+              <p className="text-lg font-semibold tracking-tight">The board opens when {MIN_LEARNERS} learners join.</p>
+              <p lang="ar" data-ar-help className="text-sm text-fg-muted">تُفتح اللوحة عندما ينضم {MIN_LEARNERS} متعلّمين.</p>
+              <p className="text-sm text-fg-muted">
+                {rows.length === 0 ? 'Be one of the first.' : `${rows.length} of ${MIN_LEARNERS} so far${rows.some((r) => r.is_me) ? ' — including you!' : '.'}`}
               </p>
             </div>
           ) : (

@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { ArrowRight, Bookmark, BookmarkCheck, Brain, Check, CheckCircle2, Layers, RotateCcw, Search, Trash2, Volume2, X } from 'lucide-react'
+import { ArrowRight, Bookmark, BookmarkCheck, Brain, Check, Layers, RotateCcw, Search, Trash2, Volume2, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { SpeakCheck } from '@/components/learn/SpeakCheck'
@@ -15,6 +15,7 @@ import { canSpeak, speak } from '@/lib/speech'
 import { formatDue, isMastered, MAX_BOX } from '@/lib/srs'
 import { cn } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/page-header'
+import { Mascot } from '@/components/mascot/Mascot'
 
 type Tab = 'review' | 'mine' | 'bank' | 'lessons'
 const TABS: Tab[] = ['review', 'mine', 'bank', 'lessons']
@@ -96,8 +97,8 @@ function Review() {
   return (
     <div className="grid gap-4 md:grid-cols-[1.4fr_1fr]">
       <div className="flex flex-col items-center justify-center rounded-[28px] bg-success-soft px-6 py-14 text-center">
-        <CheckCircle2 className="size-12 text-success" />
-        <h2 className="mt-4 text-2xl font-semibold tracking-tight">All caught up!</h2>
+        <Mascot pose="cheer" size={104} title="Cee is cheering" />
+        <h2 className="mt-3 text-2xl font-semibold tracking-tight">All caught up!</h2>
         <p lang="ar" data-ar-help className="text-center text-sm text-fg-muted">راجعت كل كلماتك المستحقة.</p>
         <p className="mt-2 text-fg-muted">Next review {formatDue(nextDue)}.</p>
         <button
@@ -413,10 +414,8 @@ function WordRow({ row, compact }: { row: Row; compact?: boolean }) {
 function EmptyState() {
   return (
     <div className="flex flex-col items-center rounded-[28px] border border-dashed border-border px-6 py-16 text-center">
-      <span className="grid size-16 place-items-center rounded-2xl bg-clay-soft">
-        <Bookmark className="size-7 text-clay" />
-      </span>
-      <h2 className="mt-5 text-2xl font-semibold tracking-tight">No saved words yet</h2>
+      <Mascot pose="think" size={112} />
+      <h2 className="mt-4 text-2xl font-semibold tracking-tight">No saved words yet</h2>
       <p className="mt-2 max-w-sm text-fg-muted">
         Click any word in a lesson and press <strong className="text-fg">Save word</strong>, or pick words from the word bank.
       </p>

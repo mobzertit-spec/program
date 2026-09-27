@@ -23,7 +23,7 @@ export const ROUTE_META: Record<string, PageMeta> = {
   },
   '/practice': {
     title: 'Practice',
-    description: 'Quick games to practise prompting: build a prompt in the right order and fix weak prompts.',
+    description: 'Quick games to practise prompting and English — and a coach powered by Claude that reviews your own prompts and fixes your English.',
   },
   '/lab': {
     title: 'Prompt Lab',
@@ -32,6 +32,10 @@ export const ROUTE_META: Record<string, PageMeta> = {
   '/library': {
     title: 'Library',
     description: 'The best free material about Claude from Anthropic: Claude Academy courses, official videos, docs and Help Center guides.',
+  },
+  '/privacy': {
+    title: 'Privacy',
+    description: 'What CE stores, where and why: progress on your device, an optional account, an opt-in leaderboard and no tracking.',
   },
   '/account': {
     title: 'Account',

@@ -11,6 +11,7 @@ const LINKS = [
   ['/lab', 'Prompt Lab', 'مختبر الطلبات'],
   ['/library', 'Library', 'المكتبة'],
   ['/account', 'Account', 'الحساب'],
+  ['/privacy', 'Privacy', 'الخصوصية'],
 ] as const
 
 export function Footer() {

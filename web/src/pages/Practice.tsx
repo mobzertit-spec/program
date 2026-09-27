@@ -14,9 +14,11 @@ import { fixTasks, orderTasks } from '@/data/practice'
 import { canSpeak, speak } from '@/lib/speech'
 import { cn } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/page-header'
+import { Coach } from '@/components/learn/Coach'
+import { coachAvailable } from '@/lib/coach'
 
-type Game = 'order' | 'fix' | 'dictation'
-const GAMES: Game[] = ['order', 'fix', 'dictation']
+type Game = 'order' | 'fix' | 'dictation' | 'coach'
+const GAMES: Game[] = ['order', 'fix', 'dictation', ...(coachAvailable ? (['coach'] as const) : [])]
 
 function shuffle<T>(a: T[]) {
   const b = [...a]
@@ -46,6 +48,7 @@ export default function Practice() {
               { value: 'order', label: 'Order the prompt' },
               { value: 'fix', label: 'Fix the prompt' },
               { value: 'dictation', label: 'Dictation' },
+              ...(coachAvailable ? [{ value: 'coach' as const, label: 'Coach ✦' }] : []),
             ]}
           />
         </div>
@@ -58,6 +61,7 @@ export default function Practice() {
         {game === 'order' && <OrderGame />}
         {game === 'fix' && <FixGame />}
         {game === 'dictation' && <Dictation />}
+        {game === 'coach' && <Coach />}
       </div>
     </div>
   )

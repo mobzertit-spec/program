@@ -21,6 +21,7 @@ const Account = lazyWithPreload(() => import('@/pages/Account'))
 const Practice = lazyWithPreload(() => import('@/pages/Practice'))
 const Certificate = lazyWithPreload(() => import('@/pages/Certificate'))
 const NotFound = lazyWithPreload(() => import('@/pages/NotFound'))
+const Privacy = lazyWithPreload(() => import('@/pages/Privacy'))
 
 export const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
 
@@ -46,6 +47,7 @@ export const routes: RouteObject[] = [
       route('/account', Account),
       route('/practice', Practice, loadWordBank),
       route('/certificate/:track', Certificate),
+      route('/privacy', Privacy),
       route('*', NotFound),
     ],
   },

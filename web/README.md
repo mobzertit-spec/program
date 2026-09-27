@@ -48,6 +48,10 @@ the writing rules and the official sources to link.
 
 ## Design files
 
+- **Cee, the mascot** — designed in Figma (page *Mascot*, component set *Cee* with the poses Wave, Cheer, Think and
+  Sleep) and built as `src/components/mascot/Mascot.tsx`. Cee greets new learners, celebrates levels and badges, and
+  keeps empty pages and the 404 page friendly.
+
 - **Figma — “CE — Design System”** (in your Figma drafts): *Foundations* page with the logo, all color tokens as
   variables (collections “CE Color · Light” and “CE Color · Dark”, each with its CSS variable as code syntax), size
   tokens, 11 text styles (Inter, Alexandria for Arabic, JetBrains Mono); *Components* page with Button (3 variants),
@@ -69,9 +73,23 @@ if you use your own project):
 | `001_progress.sql` | `progress`: one row per learner, readable and writable only by that learner (cloud sync) |
 | `002_leaderboard_feedback.sql` | `profiles` + `leaderboard` + `weekly_leaderboard` view (opt-in, name + weekly XP only, written by triggers) and `lesson_feedback` + `lesson_stats` (anyone can answer “Was this helpful?”, nobody can read answers through the API) |
 | `003_tighten_grants.sql` | removes every API privilege the site does not need |
+| `004_prompt_coach.sql` | daily usage counters for the prompt coach (hashed visitor key, never an IP) |
 
 **Working now, without sign-in:** “Was this lesson helpful?” on every lesson (answers appear in
 Table Editor → `lesson_feedback`) and the public weekly leaderboard on the Path page.
+
+**Prompt coach (Practice → Coach ✦).** The learner writes a prompt; the `prompt-coach` Edge Function
+(`supabase/functions/prompt-coach`) asks Claude for a score, what works, what to improve, English corrections and a
+stronger version — in English and Arabic. It is deployed already and answers “resting” until you add the key:
+
+1. Get an API key at console.anthropic.com (and set a monthly spend limit there).
+2. Supabase → **Edge Functions → Secrets**: add `ANTHROPIC_API_KEY`.
+3. Optional secrets: `COACH_MODEL` (default `claude-opus-5`; `claude-haiku-4-5` is about 5× cheaper),
+   `COACH_IP_LIMIT` (per visitor per day, default 15), `COACH_DAILY_LIMIT` (whole site per day, default 200),
+   `COACH_ORIGINS` (your site origin if it is not `https://mobzertit-spec.github.io`).
+
+Cost guide: one review is roughly 1,000 input + 700 output tokens — about $0.02 with Claude Opus 5 and about $0.005
+with Claude Haiku 4.5, so the default daily cap keeps the worst case at about $4.50 a day with Opus (about $1 with Haiku). Tests: `npm run test:coach`.
 
 **Turning on sign-in** (email magic link and/or Google) — these settings live only in the Supabase dashboard:
 
