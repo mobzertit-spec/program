@@ -1,7 +1,9 @@
-import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'motion/react'
-import { ArrowRight, Award, BookmarkCheck, Check, ChevronRight, Flame, GraduationCap, Languages, LifeBuoy, Lock, MousePointerClick, PlayCircle, TextSelect, Volume2, Wand2 } from 'lucide-react'
-import { lazy, Suspense, useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
+import { ArrowRight, Award, BookmarkCheck, Check, ChevronRight, Flame, GraduationCap, Languages, LifeBuoy, Lock, PlayCircle, TextSelect, Volume2 } from 'lucide-react'
+import { lazy, Suspense, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { LiveChat } from '@/components/home/LiveChat'
+import { Showcase } from '@/components/home/Showcase'
 import { lazyWithPreload } from '@/lib/boot'
 import { TranslatableText } from '@/components/translate/TranslatableText'
 import { Badge } from '@/components/ui/badge'
@@ -22,110 +24,64 @@ const LessonLineup = lazyWithPreload(() => homeLessons().then((m) => ({ default:
 export const preloadHome = () => Promise.all([TracksSection.preload(), VocabMarquee.preload(), LessonLineup.preload()])
 const Onboarding = lazy(() => import('@/components/learn/Onboarding').then((m) => ({ default: m.Onboarding })))
 
-const demoPrompt =
-  'You are a patient English teacher. Correct my paragraph below and explain each mistake in one simple sentence.'
-const demoHighlight = new Set(['patient', 'correct', 'paragraph', 'explain', 'mistake', 'simple', 'sentence'])
-
 
 export default function Home() {
   const { setPanelOpen } = useTranslator()
   const reduce = useReducedMotion()
-  const heroRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
-  const demoScale = useTransform(scrollYProgress, [0, 1], [1, reduce ? 1 : 0.92])
-  const demoOpacity = useTransform(scrollYProgress, [0, 0.9], [1, reduce ? 1 : 0.4])
 
   return (
     <>
-      {/* ---------------- Hero ---------------- */}
-      <section ref={heroRef} className="relative overflow-hidden">
-        <FloatingChips progress={scrollYProgress} />
-        <div className="relative mx-auto max-w-[1024px] px-4 pb-12 pt-16 text-center sm:px-6 sm:pt-24">
-          <BlurFade>
-            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/70 px-3 py-1 text-[13px] font-medium text-fg-muted backdrop-blur">
-              <span className="size-1.5 rounded-full bg-clay" />
-              <span className="font-bold text-fg">
-                C<span className="text-brand">E</span>
-              </span>
-              Learn Claude · Learn English
-              <span lang="ar" data-ar-help className="text-fg-subtle">· تعلّم الاثنين معًا</span>
-            </p>
-          </BlurFade>
-          <WordReveal
-            text="Talk to AI. Speak better English."
-            className="mx-auto max-w-4xl text-balance text-[40px] font-bold leading-[1.05] tracking-[-0.035em] sm:text-7xl md:text-[84px]"
-            wordClassName={(_, i) => (i >= 3 ? 'headline-gradient' : undefined)}
-          />
-          {/* phones: the magic moment right away — tap a word */}
-          <BlurFade delay={0.35} className="sm:hidden">
-            <div className="mx-auto mt-6 max-w-sm rounded-3xl border border-border-soft bg-surface/90 p-4 text-left shadow-card backdrop-blur">
-              <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-clay">
-                <MousePointerClick className="size-3.5" /> Try it — tap a word
+      {/* ---------------- Hero: one message, one action, one live demo ---------------- */}
+      <section className="relative">
+        <div className="mx-auto grid max-w-[1180px] items-center gap-10 px-4 pb-20 pt-8 sm:px-6 sm:pt-20 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:pt-24">
+          <div className="text-center lg:text-left">
+            <BlurFade>
+              <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/70 px-3 py-1 text-[13px] font-medium text-fg-muted backdrop-blur">
+                <span className="font-bold text-fg">
+                  C<span className="text-brand">E</span>
+                </span>
+                <span className="h-3 w-px bg-border" aria-hidden />
+                Learn Claude · Learn English
               </p>
-              <TranslatableText
-                text="Give Claude clear context and a specific goal."
-                className="mt-2 text-lg leading-relaxed"
-                highlight={new Set(['context', 'specific', 'goal', 'clear'])}
-              />
-            </div>
-          </BlurFade>
-          <BlurFade delay={0.45}>
-            <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-fg-muted sm:text-[21px]">
-              Short, beautiful lessons that teach you how to use Claude — written in simple English, with an instant Arabic
-              translation for every single word.
-            </p>
-            <p lang="ar" data-ar-help dir="rtl" className="mx-auto mt-3 max-w-xl text-center text-base text-fg-subtle">
-              دروس قصيرة تعلّمك استخدام Claude بإنجليزية بسيطة، مع ترجمة عربية فورية لكل كلمة.
-            </p>
-          </BlurFade>
-          <BlurFade delay={0.6}>
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Magnetic>
-                <StartButton />
-              </Magnetic>
-              <ButtonLink to="/lessons" size="lg" variant="link" className="text-[17px]">
-                Browse all lessons <ChevronRight className="size-4" />
-              </ButtonLink>
-            </div>
+            </BlurFade>
+            <WordReveal
+              text="Talk to AI. Speak better English."
+              className="text-balance text-[44px] font-bold leading-[1.02] tracking-[-0.04em] sm:text-7xl lg:text-[76px]"
+              wordClassName={(_, i) => (i >= 3 ? 'headline-gradient' : undefined)}
+            />
+            <BlurFade delay={0.35}>
+              <p className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed text-fg-muted sm:text-xl lg:mx-0">
+                Short lessons on using Claude, in simple English. Tap any word to see its Arabic meaning.
+              </p>
+              <p lang="ar" data-ar-help dir="rtl" className="mx-auto mt-2 max-w-xl text-center text-base text-fg-subtle lg:mx-0 lg:text-left">
+                دروس قصيرة لتعلّم Claude، مع ترجمة فورية لكل كلمة.
+              </p>
+            </BlurFade>
+            <BlurFade delay={0.5}>
+              <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
+                <Magnetic>
+                  <StartButton />
+                </Magnetic>
+                <ButtonLink to="/lessons" size="lg" variant="link" className="text-[17px]">
+                  Browse all lessons <ChevronRight className="size-4" />
+                </ButtonLink>
+              </div>
+              <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fg-muted lg:justify-start">
+                {['Free, no sign-up', `${LESSON_COUNT} lessons`, 'Official Anthropic sources'].map((t) => (
+                  <li key={t} className="inline-flex items-center gap-1.5">
+                    <Check className="size-4 text-success" strokeWidth={3} aria-hidden /> {t}
+                  </li>
+                ))}
+              </ul>
+            </BlurFade>
+          </div>
+
+          <BlurFade delay={0.2} y={24} className="relative">
+            {/* soft brand glow behind the demo */}
+            <div aria-hidden className="absolute -inset-6 -z-10 rounded-[48px] bg-brand opacity-[0.14] blur-3xl" />
+            <LiveChat />
           </BlurFade>
         </div>
-
-        {/* Interactive demo */}
-        <motion.div style={{ scale: demoScale, opacity: demoOpacity }} className="relative mx-auto max-w-3xl px-4 pb-20 sm:px-6">
-          <BlurFade delay={0.75} y={32}>
-            <div className="float-slow overflow-hidden rounded-[28px] border border-border-soft bg-surface shadow-pop">
-              <div className="flex items-center gap-2 border-b border-border-soft bg-surface-2 px-4 py-3">
-                <span className="size-3 rounded-full bg-[#ff5f57]" />
-                <span className="size-3 rounded-full bg-[#febc2e]" />
-                <span className="size-3 rounded-full bg-[#28c840]" />
-                <span className="ml-3 text-xs font-medium text-fg-subtle">Try it — click any word</span>
-              </div>
-              <div className="space-y-5 p-5 text-left sm:p-8">
-                <div className="flex justify-end">
-                  <div className="max-w-[85%] rounded-3xl rounded-br-md bg-primary px-5 py-3.5 text-[17px] leading-relaxed text-on-primary">
-                    <TranslatableText as="span" text={demoPrompt} className="[&_.tw:hover]:bg-white/20 [&_.tw]:decoration-white/60" highlight={demoHighlight} />
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <div className="grid size-8 shrink-0 place-items-center rounded-full bg-clay-soft">
-                    <Wand2 className="size-4 text-clay" />
-                  </div>
-                  <div className="max-w-[85%] rounded-3xl rounded-tl-md bg-bg-alt px-5 py-3.5 text-[17px] leading-relaxed">
-                    <TranslatableText
-                      as="span"
-                      text="Of course! Please share your paragraph. I will be encouraging and keep every explanation short."
-                      highlight={new Set(['share', 'encouraging', 'explanation'])}
-                    />
-                  </div>
-                </div>
-                <p className="flex items-center justify-center gap-2 pt-2 text-sm text-fg-muted">
-                  <MousePointerClick className="size-4" /> Click an underlined word to see its Arabic meaning
-                  <span lang="ar" data-ar-help className="hidden text-fg-subtle sm:inline">· اضغط على أي كلمة</span>
-                </p>
-              </div>
-            </div>
-          </BlurFade>
-        </motion.div>
       </section>
 
       {/* ---------------- Stats ---------------- */}
@@ -145,6 +101,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <Showcase />
 
       <Suspense fallback={<div className="min-h-[60vh]" aria-hidden />}>
         <TracksSection />
@@ -412,45 +370,6 @@ export default function Home() {
         </BlurFade>
       </section>
     </>
-  )
-}
-
-const CHIPS = [
-  { en: 'prompt', ar: 'طلب', cls: 'left-[3%] top-[18%]', speed: 1.4, rot: -6 },
-  { en: 'context', ar: 'سياق', cls: 'right-[3%] top-[14%]', speed: 0.9, rot: 5 },
-  { en: 'fluent', ar: 'طليق', cls: 'left-[7%] top-[52%]', speed: 0.6, rot: 4 },
-  { en: 'clear', ar: 'واضح', cls: 'right-[6%] top-[48%]', speed: 1.2, rot: -4 },
-]
-
-/** Translation chips that float around the hero and drift at different speeds as you scroll. */
-function FloatingChips({ progress }: { progress: MotionValue<number> }) {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
-      {CHIPS.map((c, i) => (
-        <Chip key={c.en} chip={c} progress={progress} delay={i * 0.8} />
-      ))}
-    </div>
-  )
-}
-
-function Chip({ chip, progress, delay }: { chip: (typeof CHIPS)[number]; progress: MotionValue<number>; delay: number }) {
-  const reduce = useReducedMotion()
-  const y = useTransform(progress, [0, 1], [0, reduce ? 0 : -260 * chip.speed])
-  const rotate = useTransform(progress, [0, 1], [chip.rot, reduce ? chip.rot : chip.rot * -2])
-  return (
-    <motion.div style={{ y, rotate }} className={`absolute ${chip.cls}`}>
-      <motion.div
-        animate={reduce ? undefined : { y: [0, -10, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay }}
-        className="flex items-center gap-2 rounded-2xl border border-border-soft bg-surface/80 px-4 py-2.5 shadow-pop backdrop-blur"
-      >
-        <span className="font-semibold">{chip.en}</span>
-        <span className="text-fg-subtle">→</span>
-        <span lang="ar" className="text-clay">
-          {chip.ar}
-        </span>
-      </motion.div>
-    </motion.div>
   )
 }
 

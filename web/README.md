@@ -53,6 +53,8 @@ the writing rules and the official sources to link.
   tokens, 11 text styles (Inter, Alexandria for Arabic, JetBrains Mono); *Components* page with Button (3 variants),
   Word popover, Lesson card, Lesson feedback and Leaderboard, each linked to its React file in the description.
   Keep `web/src/index.css` and the Figma variables in sync when the palette changes.
+- **Product screenshots** (`web/public/shots/*.webp`, light + dark): real captures of the site shown in the home page
+  “See it in action” section. Retake them after big UI changes so they stay true to the product.
 - **Canva — Instagram launch post** (in your Canva account): an editable 1080×1350 post to share CE.
 
 ## Supabase: feedback, leaderboard, sign-in and cloud sync

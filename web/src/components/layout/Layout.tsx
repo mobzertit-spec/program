@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { SelectionTranslator } from '@/components/translate/SelectionTranslator'
@@ -9,6 +9,9 @@ import { AmbientBackground } from '@/components/art/AmbientBackground'
 import { endTakeover, isServer, isTakeover } from '@/lib/boot'
 import { ROUTE_META, pageTitle } from '@/lib/meta'
 import { Footer } from './Footer'
+
+// parties for lessons, levels, badges and the daily goal — loaded once the page is up
+const Celebrations = lazy(() => import('@/components/learn/Celebrations').then((m) => ({ default: m.Celebrations })))
 import { Navbar } from './Navbar'
 
 export function Layout() {
@@ -26,6 +29,8 @@ export function Layout() {
   }, [pathname])
   // the first render has replaced the prerendered HTML — from now on, animate as usual
   useEffect(endTakeover, [])
+  const [ready, setReady] = useState(false)
+  useEffect(() => setReady(true), [])
 
   return (
     <div className="flex min-h-dvh flex-col pb-16 lg:pb-0">
@@ -55,6 +60,11 @@ export function Layout() {
       <TranslatorPanel />
       <WordPopover />
       <SelectionTranslator />
+      {ready && (
+        <Suspense fallback={null}>
+          <Celebrations />
+        </Suspense>
+      )}
     </div>
   )
 }

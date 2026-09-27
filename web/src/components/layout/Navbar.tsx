@@ -162,7 +162,7 @@ export function Navbar() {
       {/* Mobile tab bar */}
       <nav
         aria-label="Sections"
-        className="fixed inset-x-0 bottom-0 z-50 border-t border-border-soft bg-[var(--nav-bg)] pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-border-soft bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 lg:hidden"
       >
         <ul className="mx-auto grid h-16 max-w-lg grid-cols-5" dir={rtl ? 'rtl' : 'ltr'}>
           {links.map(({ to, label, ar, icon: Icon }) => (

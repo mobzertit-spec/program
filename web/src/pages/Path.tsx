@@ -1,9 +1,9 @@
-import { motion } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import {
   ArrowRight, Award, BookOpen, Check, Crown, Download, Flame, Layers, Lock, Medal, Mic, RotateCcw, Rocket, Star,
   Trophy, Upload, Zap,
 } from 'lucide-react'
-import { useRef, useState, type ChangeEvent } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { LessonIcon } from '@/components/LessonIcon'
 import { Parallax, TrackArt } from '@/components/art/TrackArt'
@@ -15,7 +15,7 @@ import { trackOf } from '@/data/lessons'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { ProgressRing } from '@/components/ui/progress-ring'
 import { useToast } from '@/components/ui/toast'
-import { useApp } from '@/context/AppContext'
+import { useApp, XP } from '@/context/AppContext'
 import { lessons, lessonsByTrack, tracks, type Lesson, type Track } from '@/data/lessons'
 import { achievements, type Achievement } from '@/lib/achievements'
 import { exportProgress, importProgress } from '@/lib/backup'
@@ -79,7 +79,7 @@ export default function Path() {
       {/* stats appear once there is something to show */}
       {!isNew && <Dashboard />}
 
-      <div className="mt-16 space-y-20">
+      <div className="mt-16 space-y-24">
         {tracks.map((t, i) => (
           <TrackMap key={t.id} track={t} index={i} currentId={next?.id} />
         ))}
@@ -194,67 +194,87 @@ function Dashboard() {
   )
 }
 
+/** Each unit has its own color, like chapters in a game. Dark enough for white text. */
+const UNIT_COLORS: Record<string, [string, string]> = {
+  foundations: ['#4338ca', '#6d5dfc'],
+  prompting: ['#c2410c', '#ea580c'],
+  features: ['#0369a1', '#0ea5e9'],
+  english: ['#15803d', '#22c55e'],
+  students: ['#a21caf', '#d946ef'],
+}
+
 function TrackMap({ track, index, currentId }: { track: Track; index: number; currentId?: string }) {
-  const { completed } = useApp()
+  const { completed, quizScores } = useApp()
   const toast = useToast()
   const items = lessonsByTrack(track.id)
   const doneCount = items.filter((l) => completed.includes(l.id)).length
-  const height = items.length * ROW
+  const allDone = doneCount === items.length
+  const [c1, c2] = UNIT_COLORS[track.id] ?? UNIT_COLORS.foundations
   const center = WIDTH / 2
-  const points = items.map((_, i) => ({ x: center + OFFSETS[i % OFFSETS.length], y: i * ROW + NODE / 2 }))
+  // lessons, then the certificate chest
+  const points = [...items, null].map((_, i) => ({ x: center + OFFSETS[i % OFFSETS.length], y: i * ROW + NODE / 2 }))
+  const height = points.length * ROW
+  const [open, setOpen] = useState<string | null>(null)
 
   return (
-    <section aria-labelledby={`track-${track.id}`}>
-      <BlurFade>
-        <div className="grid items-center gap-6 md:grid-cols-[1fr_280px]">
-          <div>
-            <p className="text-sm font-semibold text-fg-subtle">Track {index + 1}</p>
-            <h2 id={`track-${track.id}`} className="text-3xl font-bold tracking-tight sm:text-4xl">
-              {track.title}
+    <section aria-labelledby={`track-${track.id}`} style={{ ['--unit' as string]: c1, ['--unit-2' as string]: c2 }}>
+      {/* sticky unit banner */}
+      <div className="sticky top-[76px] z-20">
+        <div
+          className="flex items-center gap-4 rounded-3xl px-5 py-4 text-white shadow-pop sm:px-6"
+          style={{ background: `linear-gradient(120deg, ${c1}, ${c2})` }}
+        >
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-white/85">Unit {index + 1}</p>
+            <h2 id={`track-${track.id}`} className="truncate text-xl font-bold tracking-tight sm:text-2xl">
+              {track.title} <span lang="ar" data-ar-help className="text-base font-medium text-white/85">· {track.titleAr}</span>
             </h2>
-            <p lang="ar" data-ar-help className="text-fg-muted">{track.titleAr}</p>
-            <p className="mt-2 max-w-xl text-fg-muted">{track.description}</p>
-            <div className="mt-4 inline-flex items-center gap-3 rounded-2xl bg-bg-alt px-4 py-3">
-            <ProgressRing value={doneCount / items.length} size={40} stroke={4} label={`${doneCount} of ${items.length} lessons done`} />
-            <p className="text-sm">
-              <span className="font-semibold">
-                {doneCount}/{items.length}
-              </span>{' '}
-              <span className="text-fg-muted">lessons</span>
-            </p>
-            </div>
-            <Link
-              to={`/certificate/${track.id}`}
-              className={cn(
-                'ml-2 mt-4 inline-flex min-h-11 items-center gap-2 rounded-2xl px-4 text-sm font-medium transition-colors',
-                doneCount === items.length ? 'bg-brand text-white shadow-card' : 'text-fg-muted hover:bg-bg-alt',
-              )}
-            >
-              {doneCount === items.length ? <Award className="size-4" /> : <Lock className="size-4" />}
-              Certificate
-            </Link>
           </div>
-          <Parallax className="hidden md:block">
+          <div className="w-24 shrink-0 text-right sm:w-36">
+            <p className="text-sm font-semibold">
+              {doneCount}/{items.length} <span className="font-normal text-white/85">done</span>
+            </p>
+            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/25" aria-hidden>
+              <div className="h-full rounded-full bg-white transition-[width] duration-700" style={{ width: `${(doneCount / items.length) * 100}%` }} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <p className="mx-auto mt-4 max-w-xl text-center text-fg-muted">{track.description}</p>
+
+      <div className="relative mx-auto mt-12" style={{ width: WIDTH, height }}>
+        {/* a friendly illustration beside the path */}
+        <div
+          aria-hidden
+          className={cn('pointer-events-none absolute top-1/3 hidden w-60 lg:block', index % 2 ? 'right-full mr-16' : 'left-full ml-16')}
+        >
+          <Parallax>
             <TrackArt track={track.id} />
           </Parallax>
         </div>
-      </BlurFade>
 
-      <div className="relative mx-auto mt-10" style={{ width: WIDTH, height }}>
         <svg className="absolute inset-0" width={WIDTH} height={height} aria-hidden>
           {points.slice(1).map((p, i) => {
             const a = points[i]
+            const d = `M ${a.x} ${a.y} C ${a.x} ${a.y + ROW / 2}, ${p.x} ${p.y - ROW / 2}, ${p.x} ${p.y}`
             const lit = completed.includes(items[i].id)
             return (
-              <path
-                key={i}
-                d={`M ${a.x} ${a.y} C ${a.x} ${a.y + ROW / 2}, ${p.x} ${p.y - ROW / 2}, ${p.x} ${p.y}`}
-                fill="none"
-                stroke={lit ? 'var(--primary)' : 'var(--border)'}
-                strokeWidth={lit ? 5 : 4}
-                strokeDasharray={lit ? undefined : '2 10'}
-                strokeLinecap="round"
-              />
+              <g key={i}>
+                <path d={d} fill="none" stroke="var(--border)" strokeWidth={4} strokeDasharray="2 10" strokeLinecap="round" />
+                {lit && (
+                  <motion.path
+                    d={d}
+                    fill="none"
+                    stroke="var(--unit)"
+                    strokeWidth={6}
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    whileInView={{ pathLength: 1 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ duration: 0.7, delay: 0.1 * i, ease: 'easeOut' }}
+                  />
+                )}
+              </g>
             )
           })}
         </svg>
@@ -266,15 +286,47 @@ function TrackMap({ track, index, currentId }: { track: Track; index: number; cu
               key={l.id}
               lesson={l}
               state={state}
+              stars={state === 'done' ? Math.min(3, 1 + (quizScores[l.id] ?? 0)) : 0}
+              prevTitle={items[i - 1]?.title}
               x={points[i].x}
               y={i * ROW}
-              onLocked={() => {
-                const prev = items[i - 1]
-                toast(`Finish “${prev.title}” first — or open it from Lessons`)
-              }}
+              open={open === l.id}
+              onToggle={(v) => setOpen(v ? l.id : null)}
             />
           )
         })}
+
+        {/* the treasure at the end of the unit */}
+        <div className="absolute flex w-40 flex-col items-center" style={{ left: points[items.length].x - 80, top: items.length * ROW }}>
+          {allDone ? (
+            <Link
+              to={`/certificate/${track.id}`}
+              aria-label={`${track.title}: get your certificate`}
+              className="relative grid place-items-center rounded-full text-white transition-transform hover:scale-105 active:scale-95"
+              style={{ width: NODE + 8, height: NODE + 8, background: 'linear-gradient(135deg, #f5c542, #f07a45)', boxShadow: '0 6px 0 0 #b45309' }}
+            >
+              <motion.span
+                aria-hidden
+                className="absolute -inset-2 rounded-full border-4 border-[#f5c542]/50"
+                animate={{ scale: [1, 1.15, 1], opacity: [1, 0.3, 1] }}
+                transition={{ duration: 1.8, repeat: Infinity }}
+              />
+              <Trophy className="size-9" />
+            </Link>
+          ) : (
+            <button
+              onClick={() => toast(`Finish all ${items.length} lessons of “${track.title}” to open your certificate`)}
+              aria-label={`${track.title} certificate (locked)`}
+              className="grid cursor-pointer place-items-center rounded-full bg-bg-alt text-fg-subtle shadow-[0_6px_0_0_var(--border-soft)] transition-transform hover:scale-105"
+              style={{ width: NODE + 8, height: NODE + 8 }}
+            >
+              <Trophy className="size-8" />
+            </button>
+          )}
+          <p className="mt-3 rounded-md bg-bg px-1.5 py-0.5 text-center text-xs font-semibold">
+            Certificate <span lang="ar" data-ar-help className="font-normal text-fg-muted">· الشهادة</span>
+          </p>
+        </div>
       </div>
     </section>
   )
@@ -283,61 +335,120 @@ function TrackMap({ track, index, currentId }: { track: Track; index: number; cu
 function PathNode({
   lesson,
   state,
+  stars,
+  prevTitle,
   x,
   y,
-  onLocked,
+  open,
+  onToggle,
 }: {
   lesson: Lesson
   state: 'done' | 'current' | 'open' | 'locked'
+  stars: number
+  prevTitle?: string
   x: number
   y: number
-  onLocked: () => void
+  open: boolean
+  onToggle: (open: boolean) => void
 }) {
+  const ref = useRef<HTMLDivElement>(null)
+  // close on outside click or Escape
+  useEffect(() => {
+    if (!open) return
+    const onDown = (e: PointerEvent) => ref.current && !ref.current.contains(e.target as Node) && onToggle(false)
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onToggle(false)
+    document.addEventListener('pointerdown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open, onToggle])
+
+  const size = state === 'current' ? NODE + 8 : NODE
+  // keep the card inside the path area on small screens; its arrow still points at the node
+  const CARD = 288
+  const cardLeft = Math.min(Math.max(x - CARD / 2, 0), WIDTH - CARD)
   const circle = cn(
-    'relative grid place-items-center rounded-full transition-transform duration-200 hover:scale-105 active:scale-95',
-    state === 'done' && 'bg-success text-white shadow-[0_6px_0_0_color-mix(in_srgb,var(--success)_60%,black)] dark:text-black',
-    state === 'current' && 'bg-primary text-on-primary shadow-[0_6px_0_0_color-mix(in_srgb,var(--primary)_60%,black)]',
-    state === 'open' && 'border-2 border-primary/50 bg-surface text-primary shadow-[0_6px_0_0_var(--border-soft)]',
+    'relative grid cursor-pointer place-items-center rounded-full transition-transform duration-200 hover:scale-105 active:translate-y-1 active:scale-100',
+    (state === 'done' || state === 'current') && 'bg-[var(--unit)] text-white shadow-[0_6px_0_0_color-mix(in_srgb,var(--unit)_55%,black)]',
+    state === 'open' && 'border-[3px] border-[var(--unit)] bg-surface text-[var(--unit)] shadow-[0_6px_0_0_var(--border-soft)]',
     state === 'locked' && 'bg-bg-alt text-fg-subtle shadow-[0_6px_0_0_var(--border-soft)]',
   )
   const label = `Lesson ${lesson.number}: ${lesson.title}${state === 'done' ? ' (completed)' : state === 'locked' ? ' (locked)' : ''}`
-  const inner = (
-    <>
-      {state === 'current' && (
-        <motion.span
-          aria-hidden
-          className="absolute -inset-2 rounded-full border-4 border-primary/30"
-          animate={{ scale: [1, 1.12, 1], opacity: [1, 0.4, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-      )}
-      {state === 'done' ? <Check className="size-8" strokeWidth={3} /> : state === 'locked' ? <Lock className="size-6" /> : <LessonIcon name={lesson.icon} className="size-7" />}
-    </>
-  )
+
   return (
-    <div className="absolute flex w-40 flex-col items-center" style={{ left: x - 80, top: y }}>
-      {state === 'current' && (
-        <span className="float-icon absolute -top-8 z-10 rounded-xl bg-fg px-3 py-1 text-xs font-bold uppercase tracking-wide text-bg shadow-card after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-[6px] after:border-transparent after:border-t-fg">
+    <div ref={ref} className={cn('absolute flex w-40 flex-col items-center', open && 'z-30')} style={{ left: x - 80, top: y - (size - NODE) / 2 }}>
+      {state === 'current' && !open && (
+        <span className="float-icon absolute -top-9 z-10 rounded-xl bg-fg px-3 py-1 text-xs font-bold uppercase tracking-wide text-bg shadow-card after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-[6px] after:border-transparent after:border-t-fg">
           Start
         </span>
       )}
-      {state === 'locked' ? (
-        <button onClick={onLocked} aria-label={label} aria-disabled="true" className={cn(circle, 'cursor-pointer')} style={{ width: NODE, height: NODE }}>
-          {inner}
-        </button>
-      ) : (
-        <Link to={`/lessons/${lesson.id}`} aria-label={label} className={circle} style={{ width: NODE, height: NODE }}>
-          {inner}
-        </Link>
-      )}
-      <p
-        className={cn(
-          'relative mt-3 line-clamp-2 rounded-md bg-bg px-1.5 py-0.5 text-center text-xs font-medium leading-tight',
-          state === 'locked' ? 'text-fg-subtle' : 'text-fg',
+      <button onClick={() => onToggle(!open)} aria-label={label} aria-expanded={open} className={circle} style={{ width: size, height: size }}>
+        {state === 'current' && (
+          <motion.span
+            aria-hidden
+            className="absolute -inset-2 rounded-full border-4 border-[var(--unit)] opacity-30"
+            animate={{ scale: [1, 1.12, 1], opacity: [0.35, 0.1, 0.35] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
         )}
-      >
+        {state === 'done' ? <Check className="size-8" strokeWidth={3} /> : state === 'locked' ? <Lock className="size-6" /> : <LessonIcon name={lesson.icon} className="size-7" />}
+      </button>
+
+      {state === 'done' ? (
+        <span className="mt-2 flex gap-0.5" aria-label={`${stars} of 3 stars`}>
+          {[0, 1, 2].map((i) => (
+            <Star key={i} className={cn('size-4', i < stars ? 'fill-[#f5c542] text-[#f5c542]' : 'text-border')} aria-hidden />
+          ))}
+        </span>
+      ) : null}
+      <p className={cn('relative mt-2 line-clamp-2 rounded-md bg-bg px-1.5 py-0.5 text-center text-xs font-medium leading-tight', state === 'locked' ? 'text-fg-muted' : 'text-fg')}>
         {lesson.title}
       </p>
+
+      {/* lesson card, like a level preview in a game */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            role="dialog"
+            aria-label={lesson.title}
+            initial={{ opacity: 0, y: -6, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.95 }}
+            transition={{ duration: 0.18 }}
+            className="absolute top-[calc(100%+8px)] rounded-3xl p-5 text-left text-white shadow-pop"
+            style={{
+              width: CARD,
+              left: cardLeft - (x - 80),
+              background: state === 'locked' ? 'var(--fg-muted)' : 'linear-gradient(135deg, var(--unit), var(--unit-2))',
+            }}
+          >
+            <span
+              aria-hidden
+              className="absolute -top-2 size-4 -translate-x-1/2 rotate-45 rounded-sm"
+              style={{ left: x - cardLeft, background: state === 'locked' ? 'var(--fg-muted)' : 'var(--unit)' }}
+            />
+            <p className="text-xs font-bold uppercase tracking-[0.1em] text-white/85">
+              Lesson {lesson.number} · {lesson.minutes} min · {lesson.level}
+            </p>
+            <p className="mt-1 text-lg font-bold leading-snug">{lesson.title}</p>
+            <p lang="ar" data-ar-help className="text-sm text-white/85">{lesson.titleAr}</p>
+            {state === 'locked' ? (
+              <p className="mt-2 text-sm text-white/90">Finish “{prevTitle}” to unlock this lesson.</p>
+            ) : (
+              <p className="mt-2 line-clamp-2 text-sm text-white/90">{lesson.summary.en}</p>
+            )}
+            <Link
+              to={`/lessons/${lesson.id}`}
+              className="mt-4 flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-white font-semibold shadow-[0_4px_0_0_rgb(0_0_0/0.15)] transition-transform active:translate-y-0.5"
+              style={{ color: state === 'locked' ? 'var(--fg)' : 'var(--unit)' }}
+            >
+              {state === 'done' ? 'Review lesson' : state === 'locked' ? 'Preview anyway' : `Start · +${XP.lesson} XP`}
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
