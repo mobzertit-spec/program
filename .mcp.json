@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "refero": {
+      "type": "http",
+      "url": "https://api.refero.design/mcp"
+    },
+    "21st": {
+      "type": "http",
+      "url": "https://21st.dev/api/mcp",
+      "headers": {
+        "x-api-key": "${TWENTYFIRST_API_KEY}"
+      }
+    }
+  }
+}
