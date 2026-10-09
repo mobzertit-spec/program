@@ -22,9 +22,12 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, PngImagePlugin
 
 os.environ.setdefault('TF_CPP_MIN_LOG_LEVEL', '2')
+# Phone photos saved as PNG can carry megabytes of EXIF text (upstream's own
+# sample photos do); only pixels are used, so lift Pillow's 1 MB text guard.
+PngImagePlugin.MAX_TEXT_CHUNK = 64 * 1024 * 1024
 
 FILM_HOME = Path(os.environ.get('FILM_HOME',
                                 Path.home() / '.cache' / 'frame-interpolation'))

@@ -66,7 +66,7 @@ fast motion across a tile edge can leave a seam; use the fewest tiles that fit i
 **Double a video's frame rate** (audio is not kept):
 
 ```bash
-ffmpeg -i in.mp4 out/src/%05d.png
+mkdir -p out/src && ffmpeg -i in.mp4 out/src/%05d.png
 $PY scripts/interpolate.py out/src --times 1 --out out/dbl --video out/smooth.mp4 --fps <2 × original fps>
 ```
 
