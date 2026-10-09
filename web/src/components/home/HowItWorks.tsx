@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useInView, useReducedMotion, useScroll } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { TranslatableText } from '@/components/translate/TranslatableText'
+import { ClipReveal, Glide } from '@/components/ui/glide'
 import { Mark } from '@/components/ui/mark'
 import { cn } from '@/lib/utils'
 
@@ -88,7 +89,10 @@ export function HowItWorks() {
       <div className="max-w-2xl">
         <p className="kicker">How it works</p>
         <h2 id="how-title" className="mt-3 text-balance text-[clamp(2.4rem,6vw,4.4rem)] font-[560] leading-[1.02]">
-          Small steps. <span className="text-fg-subtle">Every day.</span>
+          <Glide>Small steps.</Glide>
+          <Glide delay={0.08} className="text-fg-subtle">
+            Every day.
+          </Glide>
         </h2>
         <p lang="ar" data-ar-help className="font-ruqaa mt-2 text-3xl text-fg-muted">
           خطوات صغيرة، كل يوم.
@@ -112,9 +116,9 @@ export function HowItWorks() {
                   <p className="font-display text-[15px] font-semibold text-clay">{s.n}</p>
                   <h3 className="mt-2 font-display text-[clamp(2rem,4.6vw,3.4rem)] font-[560] leading-[1.04] tracking-[-0.02em]">
                     {s.title.map((t, j) => (
-                      <span key={j} className="block">
-                        {j === s.mark ? <Mark>{t}</Mark> : t}
-                      </span>
+                      <Glide key={j} delay={j * 0.08}>
+                        {j === s.mark ? <Mark delay={0.45}>{t}</Mark> : t}
+                      </Glide>
                     ))}
                   </h3>
                   <TranslatableText text={s.text} className="mt-5 text-pretty text-lg leading-relaxed text-fg-muted" />
@@ -122,9 +126,11 @@ export function HowItWorks() {
                     {s.ar}
                   </p>
                   {/* phones: the screenshot sits under its step */}
-                  <Phone className="mx-auto mt-10 w-[248px] -rotate-1 lg:hidden">
-                    <Shot name={s.shot} alt={s.alt} />
-                  </Phone>
+                  <ClipReveal className="mx-auto mt-10 w-[248px] lg:hidden">
+                    <Phone className="-rotate-1">
+                      <Shot name={s.shot} alt={s.alt} />
+                    </Phone>
+                  </ClipReveal>
                 </div>
               </div>
             </Step>

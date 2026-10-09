@@ -7,6 +7,7 @@ import { WordPopover } from '@/components/translate/WordPopover'
 import { useTranslator } from '@/context/TranslatorContext'
 import { endTakeover, isServer, isTakeover } from '@/lib/boot'
 import { ROUTE_META, pageTitle } from '@/lib/meta'
+import { scrollToTop, startSmoothScroll } from '@/lib/smooth-scroll'
 import { Footer } from './Footer'
 
 // parties for lessons, levels, badges and the daily goal — loaded once the page is up
@@ -18,7 +19,7 @@ export function Layout() {
   const { close } = useTranslator()
   const reduce = useReducedMotion()
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+    scrollToTop()
     close()
   }, [pathname, close])
   // static pages name the tab here; lesson pages set their own title
@@ -30,6 +31,13 @@ export function Layout() {
   useEffect(endTakeover, [])
   const [ready, setReady] = useState(false)
   useEffect(() => setReady(true), [])
+  // gliding scroll for mouse wheels and trackpads, once the page is up and idle
+  useEffect(() => {
+    const go = () => void startSmoothScroll()
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }
+    if (w.requestIdleCallback) w.requestIdleCallback(go, { timeout: 2500 })
+    else window.setTimeout(go, 1200)
+  }, [])
 
   return (
     <div className="flex min-h-dvh flex-col pb-16 lg:pb-0">

@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Art, type ArtName } from '@/components/art/Art'
+import { ClipReveal, Glide } from '@/components/ui/glide'
 import { Mark } from '@/components/ui/mark'
 import { Marquee } from '@/components/ui/marquee'
 import { lessons, lessonsByTrack, tracks } from '@/data/lessons'
@@ -22,7 +23,9 @@ function TrackCard({ index }: { index: number }) {
       aria-label={`Track ${index + 1}: ${t.title} — ${count} lessons`}
     >
       <div className="rounded-[6px] bg-surface p-2 shadow-card transition-transform duration-500 ease-[cubic-bezier(.2,.7,.3,1)] group-hover:-translate-y-1.5 group-hover:rotate-[-0.6deg]">
-        <Art name={t.id as ArtName} sizes="(min-width: 1024px) 360px, 78vw" className="rounded-[3px]" />
+        <ClipReveal delay={Math.min(index, 3) * 0.09}>
+          <Art name={t.id as ArtName} sizes="(min-width: 1024px) 360px, 78vw" className="rounded-[3px]" />
+        </ClipReveal>
       </div>
       <div className="mt-5 px-1">
         <p className="kicker !text-fg-subtle">
@@ -73,7 +76,10 @@ export function TracksSection() {
     <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6">
       <p className="kicker">Five tracks</p>
       <h2 className="mt-3 max-w-3xl text-balance text-[clamp(2.4rem,6vw,4.4rem)] font-[560] leading-[1.02]">
-        From your first message to <Mark>Claude Code</Mark>.
+        <Glide>From your first message</Glide>
+        <Glide delay={0.08}>
+          to <Mark delay={0.5}>Claude Code</Mark>.
+        </Glide>
       </h2>
       <p lang="ar" data-ar-help className="mt-3 text-fg-muted">
         خمسة مسارات: من رسالتك الأولى حتى Claude Code والدراسة.
@@ -119,7 +125,9 @@ export function VocabMarquee() {
       <div className="mx-auto mb-12 max-w-[1180px] px-4 sm:px-6">
         <p className="kicker">Vocabulary</p>
         <h2 id="words-title" className="mt-3 text-[clamp(2.2rem,5vw,3.8rem)] font-[560] leading-[1.04]">
-          Words you will <Mark>actually use</Mark>.
+          <Glide>
+            Words you will <Mark delay={0.45}>actually use</Mark>.
+          </Glide>
         </h2>
         <p className="mt-4 max-w-xl text-lg text-fg-muted">
           Every lesson teaches five practical words — the same words you need to write great prompts. Over 3,000 more wait in the word bank.

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useLocale } from '@/context/LocaleContext'
 import { BlurFade } from './blur-fade'
+import { Glide } from './glide'
 
 type Text = { en: string; ar: string }
 
@@ -14,7 +15,7 @@ export function PageHeader({ eyebrow, title, intro, children }: { eyebrow: Text;
           {rtl ? eyebrow.ar : eyebrow.en}
         </p>
         <h1 lang={rtl ? 'ar' : 'en'} dir={rtl ? 'rtl' : undefined} className="mt-3 text-[clamp(2.8rem,8vw,5.2rem)] font-[560] leading-[1] tracking-[-0.03em]" style={rtl ? { letterSpacing: 0, lineHeight: 1.25 } : undefined}>
-          {rtl ? title.ar : title.en}
+          <Glide>{rtl ? title.ar : title.en}</Glide>
         </h1>
         {rtl && <p className="mt-1 text-xl font-semibold text-fg-subtle" lang="en" dir="ltr" style={{ textAlign: 'right' }}>{title.en}</p>}
         <p lang={rtl ? 'ar' : 'en'} dir={rtl ? 'rtl' : undefined} className="mt-4 max-w-2xl text-lg text-fg-muted sm:text-xl">

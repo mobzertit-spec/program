@@ -9,6 +9,7 @@ import { Hero } from '@/components/home/Hero'
 import { HowItWorks } from '@/components/home/HowItWorks'
 import { Mascot } from '@/components/mascot/Mascot'
 import { buttonClass } from '@/components/ui/button'
+import { Glide } from '@/components/ui/glide'
 import { Mark } from '@/components/ui/mark'
 import { lazyWithPreload } from '@/lib/boot'
 import { useProfile } from '@/lib/profile'
@@ -65,7 +66,10 @@ function Sources() {
         <div>
           <p className="kicker">Straight from the source</p>
           <h2 id="sources-title" className="mt-3 text-balance text-[clamp(2.2rem,5vw,3.8rem)] font-[560] leading-[1.04]">
-            Built on Anthropic’s <Mark>own guides</Mark>.
+            <Glide>Built on Anthropic’s</Glide>
+            <Glide delay={0.08}>
+              <Mark delay={0.5}>own guides</Mark>.
+            </Glide>
           </h2>
           <p lang="ar" data-ar-help className="mt-3 text-fg-muted">
             كل درس يرتبط بمصادر Anthropic الرسمية لتتعمّق متى شئت.
@@ -113,7 +117,10 @@ function FinalCta() {
           <ZelligePattern className="text-border opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent_55%)]" cell={44} />
           <Mascot pose="wave" size={92} className="relative mx-auto -mt-2" />
           <h2 id="cta-title" className="relative mt-4 text-balance text-[clamp(2.2rem,6vw,3.8rem)] font-[560] leading-[1.04]">
-            Every word is a <Mark>small bridge</Mark>.
+            <Glide>Every word is a</Glide>
+            <Glide delay={0.08}>
+              <Mark delay={0.5}>small bridge</Mark>.
+            </Glide>
           </h2>
           <p lang="ar" dir="rtl" className="font-ruqaa relative mt-2 text-[clamp(1.8rem,5vw,2.6rem)] text-fg-muted" style={{ textAlign: 'center' }}>
             كلُّ كلمةٍ جسرٌ صغير.
