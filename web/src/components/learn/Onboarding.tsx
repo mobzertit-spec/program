@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { isServer } from '@/lib/boot'
 import { useNavigate } from 'react-router-dom'
+import { LanguageSwitch } from '@/components/layout/LanguageSwitch'
 import { Mascot } from '@/components/mascot/Mascot'
 import { useApp } from '@/context/AppContext'
 import { nextLesson } from '@/lib/path'
@@ -26,7 +27,7 @@ const GOALS: { id: Goal; en: string; ar: string; icon: typeof MessageCircle }[] 
 /** Two quick questions on the first visit — they pick your track and whether Arabic help is on. */
 export function Onboarding({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { profile, setProfile } = useProfile()
-  const { setArabicHelp, completed } = useApp()
+  const { setArabicHelp, setShowArabic, completed } = useApp()
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [level, setLevel] = useState<EnglishLevel | null>(profile.level)
@@ -49,8 +50,9 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
   const finish = () => {
     if (!level || !goal) return
     setProfile({ level, goal, onboarded: true })
-    // beginners keep the Arabic subtitles; others get a cleaner, English-first page
+    // beginners get every paragraph with its Arabic translation open; others get a cleaner, English-first page
     setArabicHelp(level === 'beginner')
+    setShowArabic(level === 'beginner')
     onClose()
     const first = nextLesson(completed, GOAL_TRACK[goal])
     navigate(first ? `/lessons/${first.id}` : '/path')
@@ -90,9 +92,10 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
                 <p lang="ar" data-ar-help className="mt-1 text-xs text-fg-muted">
                   {step === 0 ? 'مرحبًا، أنا «سي»! سؤالان سريعان وأختار لك أول درس.' : 'رائع! سؤال واحد بعد.'}
                 </p>
+                {step === 0 && <LanguageSwitch className="mt-3" />}
                 <div className="mt-2 flex gap-1.5" role="img" aria-label={`Step ${step + 1} of 2`}>
                   {[0, 1].map((i) => (
-                    <span key={i} className={cn('h-1.5 w-8 rounded-full', i <= step ? 'bg-primary' : 'bg-border-soft')} />
+                    <span key={i} className={cn('h-1.5 w-8 rounded-full', i <= step ? 'bg-saffron' : 'bg-border-soft')} />
                   ))}
                 </div>
               </div>
@@ -100,7 +103,7 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
 
             {step === 0 ? (
               <>
-                <h2 id="onb-title" className="mt-6 text-2xl font-bold tracking-tight">How is your English?</h2>
+                <h2 id="onb-title" className="mt-6 text-2xl font-[560] tracking-[-0.02em]">How is your English?</h2>
                 <p lang="ar" className="text-fg-muted">ما مستواك في الإنجليزية؟</p>
                 <div className="mt-5 space-y-2.5">
                   {LEVELS.map((l) => (
@@ -131,7 +134,7 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
               </>
             ) : (
               <>
-                <h2 id="onb-title" className="mt-6 text-2xl font-bold tracking-tight">What do you want to do with Claude?</h2>
+                <h2 id="onb-title" className="mt-6 text-2xl font-[560] tracking-[-0.02em]">What do you want to do with Claude?</h2>
                 <p lang="ar" className="text-fg-muted">ماذا تريد أن تفعل مع Claude؟</p>
                 <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
                   {GOALS.map((g) => (

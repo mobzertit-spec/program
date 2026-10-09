@@ -3,13 +3,14 @@ import { cn } from '@/lib/utils'
 
 export type MascotPose = 'wave' | 'cheer' | 'think' | 'sleep'
 
-const INK = '#12142b'
-const LEFT = '#f58a55'
-const RIGHT = '#7466fb'
+const INK = '#17161b'
+const ARM = '#2b3fd6'
+const LEFT = ARM
+const RIGHT = ARM
 
 /**
  * Cee — the CE mascot (designed in Figma: “CE — Design System” → Mascot page, component set “Cee”).
- * A friendly speech bubble in the brand gradient with the logo spark as an antenna.
+ * A friendly saffron speech bubble — the colour of the highlighter in the CE mark — with ultramarine arms.
  * Poses: wave (welcome), cheer (celebrations), think (coach, empty lists), sleep (404, nothing due).
  * Decorative by default; pass `title` when the mascot carries meaning.
  */
@@ -37,17 +38,16 @@ export function Mascot({
     >
       <defs>
         <linearGradient id={gid} x1="0.1" y1="0" x2="0.9" y2="1">
-          <stop offset="0" stopColor="#ff9a62" />
-          <stop offset="0.55" stopColor="#e9708a" />
-          <stop offset="1" stopColor="#6d5dfc" />
+          <stop offset="0" stopColor="#f8bd45" />
+          <stop offset="1" stopColor="#ec9a12" />
         </linearGradient>
       </defs>
       <ellipse className="cee-shadow" cx="80" cy="152" rx="36" ry="5" fill={INK} opacity="0.12" />
       <g className="cee-figure">
         <Arms pose={pose} />
         <g>
-          <path d="M 96 27 Q 100 18 106 14" fill="none" stroke="#7b6cff" strokeWidth="3.5" strokeLinecap="round" />
-          <path className="cee-spark" d="M 108 3 l 1.6 4.2 4.2 1.6 -4.2 1.6 -1.6 4.2 -1.6 -4.2 -4.2 -1.6 4.2 -1.6 z" fill="#aaa6ff" />
+          <path d="M 96 27 Q 100 18 106 14" fill="none" stroke={INK} strokeWidth="3.5" strokeLinecap="round" />
+          <circle className="cee-spark" cx="108" cy="11" r="5" fill={ARM} />
         </g>
         <path
           d="M 68 26 H 92 A 44 44 0 0 1 136 70 V 82 A 44 44 0 0 1 92 126 H 68 L 44 146 L 46 120.1 A 44 44 0 0 1 24 82 V 70 A 44 44 0 0 1 68 26 Z"
@@ -55,7 +55,7 @@ export function Mascot({
         />
         <ellipse cx="56" cy="46" rx="15" ry="8" transform="rotate(-24 56 46)" fill="#fff" opacity="0.28" />
         <Face pose={pose} />
-        <g fill="#ff6f9f" opacity="0.5">
+        <g fill="#e2683c" opacity="0.35">
           <ellipse cx="48" cy="92" rx="7" ry="4.5" />
           <ellipse cx="112" cy="92" rx="7" ry="4.5" />
         </g>
@@ -105,7 +105,7 @@ function Face({ pose }: { pose: MascotPose }) {
           <path d="M 90 77 Q 98 67 106 77" />
         </g>
         <path d="M 69 90 Q 80 108 91 90 Z" fill={INK} />
-        <path d="M 74 99 Q 80 104 86 99 Q 80 96 74 99 Z" fill="#ff7a8a" />
+        <path d="M 74 99 Q 80 104 86 99 Q 80 96 74 99 Z" fill="#e2683c" />
       </>
     )
   if (pose === 'sleep')
@@ -142,7 +142,7 @@ function Extras({ pose }: { pose: MascotPose }) {
       <>
         <path d="M 133 98 Q 124 118 104 108" fill="none" stroke="#fff" strokeWidth="13" strokeLinecap="round" />
         <path d="M 133 98 Q 124 118 104 108" fill="none" stroke={RIGHT} strokeWidth="9" strokeLinecap="round" />
-        <g fill="#aaa6ff">
+        <g fill={ARM} opacity="0.7">
           <circle className="cee-dot cee-dot-1" cx="30" cy="30" r="3" />
           <circle className="cee-dot cee-dot-2" cx="20" cy="20" r="4.5" />
           <circle className="cee-dot cee-dot-3" cx="8" cy="7" r="6" />
@@ -151,7 +151,7 @@ function Extras({ pose }: { pose: MascotPose }) {
     )
   if (pose === 'sleep')
     return (
-      <g fill="none" stroke="#7b6cff" strokeLinecap="round" strokeLinejoin="round">
+      <g fill="none" stroke={ARM} strokeLinecap="round" strokeLinejoin="round">
         <path className="cee-z cee-z-1" d="M 118 18 H 128 L 118 29 H 128" strokeWidth="3.2" />
         <path className="cee-z cee-z-2" d="M 133 4 H 140 L 133 12 H 140" strokeWidth="2.6" />
       </g>
@@ -159,10 +159,10 @@ function Extras({ pose }: { pose: MascotPose }) {
   if (pose === 'cheer')
     return (
       <g className="cee-sparkles">
-        <path d="M 20 22 l 1.4 3.6 3.6 1.4 -3.6 1.4 -1.4 3.6 -1.4 -3.6 -3.6 -1.4 3.6 -1.4 z" fill="#f5c542" />
-        <path d="M 144 20 l 1.2 3 3 1.2 -3 1.2 -1.2 3 -1.2 -3 -3 -1.2 3 -1.2 z" fill="#3ddc84" />
-        <circle cx="34" cy="10" r="2.5" fill="#f07a45" />
-        <circle cx="128" cy="6" r="2.5" fill="#6d5dfc" />
+        <path d="M 20 22 l 1.4 3.6 3.6 1.4 -3.6 1.4 -1.4 3.6 -1.4 -3.6 -3.6 -1.4 3.6 -1.4 z" fill={ARM} />
+        <path d="M 144 20 l 1.2 3 3 1.2 -3 1.2 -1.2 3 -1.2 -3 -3 -1.2 3 -1.2 z" fill="#e2683c" />
+        <circle cx="34" cy="10" r="2.5" fill="#f2a71b" />
+        <circle cx="128" cy="6" r="2.5" fill={ARM} />
       </g>
     )
   return null

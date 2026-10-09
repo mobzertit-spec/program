@@ -6,7 +6,8 @@ import {
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { LessonIcon } from '@/components/LessonIcon'
-import { Parallax, TrackArt } from '@/components/art/TrackArt'
+import { Art, type ArtName } from '@/components/art/Art'
+import { Parallax } from '@/components/art/Parallax'
 import { Onboarding } from '@/components/learn/Onboarding'
 import { Leaderboard } from '@/components/learn/Leaderboard'
 import { WordOfTheDay } from '@/components/learn/WordOfTheDay'
@@ -106,7 +107,7 @@ function Dashboard() {
             <p className="text-sm font-medium text-fg-muted">Streak</p>
             <Flame className={cn('size-5', streak ? 'fill-clay text-clay' : 'text-fg-subtle')} aria-hidden />
           </div>
-          <p className="mt-2 text-4xl font-bold tracking-tight">
+          <p className="mt-2 text-4xl font-display font-[560] tracking-[-0.02em]">
             {streak} <span className="text-lg font-medium text-fg-muted">{streak === 1 ? 'day' : 'days'}</span>
           </p>
           <p className="text-xs text-fg-subtle">Best: {bestStreak} · <span lang="ar">سلسلة الأيام</span></p>
@@ -173,7 +174,7 @@ function Dashboard() {
             <p className="text-sm font-medium text-fg-muted">Level</p>
             <Award className="size-5 text-primary" aria-hidden />
           </div>
-          <p className="mt-2 text-4xl font-bold tracking-tight">{level.level}</p>
+          <p className="mt-2 text-4xl font-display font-[560] tracking-[-0.02em]">{level.level}</p>
           <p className="text-xs text-fg-subtle">{xp.toLocaleString()} XP total</p>
           <div className="mt-3 h-2 overflow-hidden rounded-full bg-bg-alt" role="progressbar" aria-valuenow={level.into} aria-valuemin={0} aria-valuemax={level.span} aria-label="Progress to next level">
             <motion.div className="h-full rounded-full bg-brand" animate={{ width: `${(level.into / level.span) * 100}%` }} />
@@ -194,13 +195,14 @@ function Dashboard() {
   )
 }
 
-/** Each unit has its own color, like chapters in a game. Dark enough for white text. */
+/** Each unit has its own colour, like chapters in a book. Dark enough for white text. */
 const UNIT_COLORS: Record<string, [string, string]> = {
-  foundations: ['#4338ca', '#6d5dfc'],
-  prompting: ['#c2410c', '#ea580c'],
-  features: ['#0369a1', '#0ea5e9'],
-  english: ['#15803d', '#22c55e'],
-  students: ['#a21caf', '#d946ef'],
+  // the zellige palette: cobalt, terracotta, green, ochre, ink — one solid colour per unit
+  foundations: ['#2b3fd6', '#4a5ce0'],
+  prompting: ['#a3410f', '#c0571f'],
+  features: ['#1f6b5a', '#2d8570'],
+  english: ['#8a5a00', '#a66f08'],
+  students: ['#17161b', '#3a3942'],
 }
 
 function TrackMap({ track, index, currentId }: { track: Track; index: number; currentId?: string }) {
@@ -222,11 +224,11 @@ function TrackMap({ track, index, currentId }: { track: Track; index: number; cu
       <div className="sticky top-[76px] z-20">
         <div
           className="flex items-center gap-4 rounded-3xl px-5 py-4 text-white shadow-pop sm:px-6"
-          style={{ background: `linear-gradient(120deg, ${c1}, ${c2})` }}
+          style={{ background: c1 }}
         >
           <div className="min-w-0 flex-1">
             <p className="text-xs font-bold uppercase tracking-[0.12em] text-white/85">Unit {index + 1}</p>
-            <h2 id={`track-${track.id}`} className="truncate text-xl font-bold tracking-tight sm:text-2xl">
+            <h2 id={`track-${track.id}`} className="truncate text-xl font-[560] tracking-[-0.02em] sm:text-2xl">
               {track.title} <span lang="ar" data-ar-help className="text-base font-medium text-white/85">· {track.titleAr}</span>
             </h2>
           </div>
@@ -249,7 +251,9 @@ function TrackMap({ track, index, currentId }: { track: Track; index: number; cu
           className={cn('pointer-events-none absolute top-1/3 hidden w-60 lg:block', index % 2 ? 'right-full mr-16' : 'left-full ml-16')}
         >
           <Parallax>
-            <TrackArt track={track.id} />
+            <div className="rounded-[6px] bg-surface p-2 shadow-card">
+              <Art name={track.id as ArtName} sizes="240px" className="rounded-[3px]" />
+            </div>
           </Parallax>
         </div>
 
@@ -483,7 +487,7 @@ function Achievements() {
     <section className="mt-24" aria-labelledby="badges-title">
       <div className="flex items-end justify-between">
         <div>
-          <h2 id="badges-title" className="text-3xl font-bold tracking-tight sm:text-4xl">Badges</h2>
+          <h2 id="badges-title" className="text-3xl font-[560] tracking-[-0.02em] sm:text-4xl">Badges</h2>
           <p lang="ar" data-ar-help className="text-fg-muted">الشارات</p>
         </div>
         <p className="text-sm text-fg-muted">

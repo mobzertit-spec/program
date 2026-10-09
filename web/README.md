@@ -48,17 +48,30 @@ the writing rules and the official sources to link.
 
 ## Design files
 
+- **Identity v2 — “ink & paper”**: warm paper and ink, one signature blue (`--primary`) for actions, saffron as the
+  highlighter (the brand device: a highlighted word is a word you are learning — `.hl` / `<Mark>`), terracotta for
+  small labels. Fraunces for English headlines, Aref Ruqaa (Ruq’ah) for large Arabic lines, Inter and Alexandria for
+  reading. Zellige geometry (`src/components/art/Zellige.tsx`) is the graphic language. No gradient text, no glass,
+  no glow. The logo is the outlined word “ce” on a saffron highlighter stroke (`src/components/layout/Logo.tsx`;
+  favicon, app icons and `public/og.png` are generated from the same paths).
+- **Motion on scroll**: the hero print drifts slower than the page; “the bridge” pins a sentence and marks it word by
+  word until it reads in Arabic; “How it works” keeps the phone in place while its screen follows the step you read;
+  the tracks slide sideways while you scroll down (large screens). All of it is off with reduced motion.
+- **Illustrations** (`public/art/<name>-<width>.webp`, see `src/components/art/Art.tsx`): two-ink risograph prints
+  (ultramarine + saffron on paper) — a hero desk, one cover per track and a bridge for the closing section. Until the
+  files are added, `ART_READY = false` keeps a quiet zellige pattern in their place; add the files and flip it to `true`.
 - **Cee, the mascot** — designed in Figma (page *Mascot*, component set *Cee* with the poses Wave, Cheer, Think and
   Sleep) and built as `src/components/mascot/Mascot.tsx`. Cee greets new learners, celebrates levels and badges, and
   keeps empty pages and the 404 page friendly.
 
-- **Figma — “CE — Design System”** (in your Figma drafts): *Foundations* page with the logo, all color tokens as
+- **Figma — “CE — Design System”** (in your Figma drafts): *Foundations* page with the *Brand v2* sheet (logo, palette,
+  type, ornament) and the logo, all color tokens as
   variables (collections “CE Color · Light” and “CE Color · Dark”, each with its CSS variable as code syntax), size
   tokens, 11 text styles (Inter, Alexandria for Arabic, JetBrains Mono); *Components* page with Button (3 variants),
   Word popover, Lesson card, Lesson feedback and Leaderboard, each linked to its React file in the description.
   Keep `web/src/index.css` and the Figma variables in sync when the palette changes.
 - **Product screenshots** (`web/public/shots/*.webp`, light + dark): real captures of the site shown in the home page
-  “See it in action” section. Retake them after big UI changes so they stay true to the product.
+  “How it works” section. Retake them after big UI changes so they stay true to the product.
 - **Canva — Instagram launch post** (in your Canva account): an editable 1080×1350 post to share CE.
 
 ## Supabase: feedback, leaderboard, sign-in and cloud sync

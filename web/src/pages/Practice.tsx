@@ -3,7 +3,7 @@ import {
   ArrowDown, ArrowRight, ArrowUp, Check, CheckCircle2, FlaskConical, GripVertical, Headphones, Lightbulb, RotateCcw,
   Turtle, Volume2, Wrench, X, XCircle,
 } from 'lucide-react'
-import { useMemo, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { TranslatableText } from '@/components/translate/TranslatableText'
 import { Segmented } from '@/components/ui/segmented'
@@ -15,10 +15,10 @@ import { canSpeak, speak } from '@/lib/speech'
 import { cn } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/page-header'
 import { Coach } from '@/components/learn/Coach'
-import { coachAvailable } from '@/lib/coach'
+import { coachReady } from '@/lib/coach'
 
 type Game = 'order' | 'fix' | 'dictation' | 'coach'
-const GAMES: Game[] = ['order', 'fix', 'dictation', ...(coachAvailable ? (['coach'] as const) : [])]
+const GAMES: Game[] = ['order', 'fix', 'dictation', 'coach']
 
 function shuffle<T>(a: T[]) {
   const b = [...a]
@@ -33,6 +33,11 @@ export default function Practice() {
   const [params, setParams] = useSearchParams()
   const g = params.get('game') as Game | null
   const game: Game = g && GAMES.includes(g) ? g : 'order'
+  // the coach tab appears only once the coach is switched on (a link straight to it still works and explains)
+  const [coachOn, setCoachOn] = useState(false)
+  useEffect(() => {
+    coachReady().then(setCoachOn)
+  }, [])
 
   return (
     <div className="mx-auto max-w-[1024px] px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
@@ -48,7 +53,7 @@ export default function Practice() {
               { value: 'order', label: 'Order the prompt' },
               { value: 'fix', label: 'Fix the prompt' },
               { value: 'dictation', label: 'Dictation' },
-              ...(coachAvailable ? [{ value: 'coach' as const, label: 'Coach ✦' }] : []),
+              ...(coachOn || game === 'coach' ? [{ value: 'coach' as const, label: 'Coach' }] : []),
             ]}
           />
         </div>
@@ -171,7 +176,7 @@ function OrderGame() {
       </div>
 
       <aside className="h-fit rounded-[28px] bg-clay-soft p-6">
-        <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-clay">
+        <p className="flex items-center gap-2 kicker">
           <Lightbulb className="size-4" /> A good order
         </p>
         <ol className="mt-4 space-y-2 text-[15px]">
@@ -352,7 +357,7 @@ function Dictation() {
           <p className="py-16 text-center text-fg-muted" role="status">Loading words…</p>
         ) : i >= deck.length ? (
           <div className="py-10 text-center">
-            <p className="text-6xl font-bold tracking-tight">
+            <p className="text-6xl font-display font-[560] tracking-[-0.02em]">
               {score}/{deck.length}
             </p>
             <p className="mt-2 text-fg-muted">words spelled correctly</p>

@@ -1,150 +1,146 @@
-import { ArrowRight, ChevronRight } from 'lucide-react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
+import { ArrowRight } from 'lucide-react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { LessonIcon, levelTone } from '@/components/LessonIcon'
-import { Parallax, TrackArt } from '@/components/art/TrackArt'
-import { Badge } from '@/components/ui/badge'
-import { BlurFade } from '@/components/ui/blur-fade'
+import { Art, type ArtName } from '@/components/art/Art'
+import { Mark } from '@/components/ui/mark'
 import { Marquee } from '@/components/ui/marquee'
-import { Tilt } from '@/components/ui/tilt'
 import { lessons, lessonsByTrack, tracks } from '@/data/lessons'
+import { isServer } from '@/lib/boot'
 
 /* Home sections that need the lesson data — code-split so the first screen loads faster. */
 
+const useIsoLayoutEffect = isServer ? () => {} : useLayoutEffect
+
+function TrackCard({ index }: { index: number }) {
+  const t = tracks[index]
+  const count = lessonsByTrack(t.id).length
+  return (
+    <Link
+      to="/path"
+      className="group flex w-[78vw] max-w-[340px] shrink-0 snap-start flex-col sm:w-[340px] lg:w-[360px] lg:max-w-none"
+      aria-label={`Track ${index + 1}: ${t.title} — ${count} lessons`}
+    >
+      <div className="rounded-[6px] bg-surface p-2 shadow-card transition-transform duration-500 ease-[cubic-bezier(.2,.7,.3,1)] group-hover:-translate-y-1.5 group-hover:rotate-[-0.6deg]">
+        <Art name={t.id as ArtName} sizes="(min-width: 1024px) 360px, 78vw" className="rounded-[3px]" />
+      </div>
+      <div className="mt-5 px-1">
+        <p className="kicker !text-fg-subtle">
+          Track {String(index + 1).padStart(2, '0')} · {count} lessons
+        </p>
+        <h3 className="mt-2 font-display text-[1.9rem] font-[560] leading-[1.05] tracking-[-0.02em]">{t.title}</h3>
+        <p lang="ar" className="font-ruqaa mt-1 text-2xl text-fg-muted">
+          {t.titleAr}
+        </p>
+        <p className="mt-3 text-[15px] leading-relaxed text-fg-muted">{t.description}</p>
+        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-link">
+          Open the path <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+        </span>
+      </div>
+    </Link>
+  )
+}
+
+/**
+ * The five tracks as printed covers. On large screens the row is pinned and scrolling the page slides it
+ * sideways (vertical scroll → horizontal travel); on phones it is a normal swipeable row.
+ */
+export function TracksSection() {
+  const section = useRef<HTMLElement>(null)
+  const row = useRef<HTMLDivElement>(null)
+  const reduce = useReducedMotion()
+  const [travel, setTravel] = useState(0)
+  const [wide, setWide] = useState(false)
+  useIsoLayoutEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const measure = () => {
+      setWide(mq.matches && !reduce)
+      if (row.current) setTravel(Math.max(0, row.current.scrollWidth - window.innerWidth + 48))
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    if (row.current) ro.observe(row.current)
+    mq.addEventListener('change', measure)
+    return () => {
+      ro.disconnect()
+      mq.removeEventListener('change', measure)
+    }
+  }, [reduce])
+  const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end end'] })
+  const x = useTransform(scrollYProgress, [0.04, 0.96], [0, -travel])
+
+  const header = (
+    <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6">
+      <p className="kicker">Five tracks</p>
+      <h2 className="mt-3 max-w-3xl text-balance text-[clamp(2.4rem,6vw,4.4rem)] font-[560] leading-[1.02]">
+        From your first message to <Mark>Claude Code</Mark>.
+      </h2>
+      <p lang="ar" data-ar-help className="mt-3 text-fg-muted">
+        خمسة مسارات: من رسالتك الأولى حتى Claude Code والدراسة.
+      </p>
+    </div>
+  )
+
+  if (wide)
+    return (
+      <section ref={section} aria-label="Tracks" className="relative" style={{ height: `calc(100vh + ${travel}px)` }}>
+        <div className="sticky top-0 flex h-dvh flex-col justify-center gap-12 overflow-hidden pt-16">
+          {header}
+          <motion.div ref={row} style={{ x }} className="flex w-max gap-10 pl-[max(1.5rem,calc((100vw-1180px)/2+1.5rem))] pr-24">
+            {tracks.map((t, i) => (
+              <TrackCard key={t.id} index={i} />
+            ))}
+          </motion.div>
+        </div>
+      </section>
+    )
+
+  return (
+    <section ref={section} aria-label="Tracks" className="py-24">
+      {header}
+      <div
+        ref={row}
+        className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-px-4 px-4 pb-4 sm:scroll-px-6 sm:px-6 lg:px-[max(1.5rem,calc((100vw-1180px)/2+1.5rem))]"
+      >
+        {tracks.map((t, i) => (
+          <TrackCard key={t.id} index={i} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
 const allVocab = lessons.flatMap((l) => l.vocab)
 
-export function TracksSection() {
-  return (
-    <>
-      {/* ---------------- Tracks ---------------- */}
-      <section className="mx-auto max-w-[1024px] px-4 pt-24 sm:px-6">
-        <BlurFade>
-          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Five tracks</p>
-          <h2 className="mt-2 max-w-3xl text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">
-            From your first message to <span className="text-brand">Claude Code</span>.
-          </h2>
-          <p lang="ar" data-ar-help className="mt-3 text-fg-muted">
-            خمسة مسارات: من رسالتك الأولى حتى Claude Code والدراسة.
-          </p>
-        </BlurFade>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {tracks.map((t, i) => (
-            <BlurFade key={t.id} delay={i * 0.06}>
-              <Tilt className="h-full" max={4}>
-                <Link
-                  to="/path"
-                  className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-border-soft bg-surface p-5 shadow-card transition-shadow duration-300 hover:shadow-pop"
-                >
-                  <Parallax distance={10} tilt={false}>
-                    <TrackArt track={t.id} className="transition-transform duration-500 group-hover:scale-[1.03]" />
-                  </Parallax>
-                  <div className="mt-5 flex items-start justify-between gap-3 px-1">
-                    <div>
-                      <p className="text-xs font-semibold text-fg-subtle">
-                        Track {i + 1} · {lessonsByTrack(t.id).length} lessons
-                      </p>
-                      <h3 className="mt-1 text-2xl font-semibold tracking-tight">{t.title}</h3>
-                      <p lang="ar" data-ar-help className="text-sm text-fg-muted">
-                        {t.titleAr}
-                      </p>
-                      <p className="mt-2 text-[15px] text-fg-muted">{t.description}</p>
-                    </div>
-                    <ArrowRight className="mt-6 size-5 shrink-0 text-link transition-transform group-hover:translate-x-1" />
-                  </div>
-                </Link>
-              </Tilt>
-            </BlurFade>
-          ))}
-        </div>
-      </section>
-    </>
-  )
-}
-
+/** Words you will actually use — two lines of type drifting in opposite directions, English over Arabic. */
 export function VocabMarquee() {
   return (
-    <>
-      {/* ---------------- Vocabulary marquee ---------------- */}
-      <section className="overflow-hidden bg-bg-alt py-20">
-        <BlurFade className="mx-auto mb-10 max-w-[1024px] px-4 sm:px-6">
-          <h2 className="text-4xl font-bold tracking-[-0.03em] sm:text-5xl">Words you will actually use.</h2>
-          <p className="mt-3 max-w-xl text-lg text-fg-muted">
-            Every lesson teaches five practical English words — the same words you need to write great prompts.
-          </p>
-        </BlurFade>
-        <div className="space-y-4">
-          {[0, 1].map((row) => (
-            <Marquee key={row} reverse={row === 1} duration={row ? 55 : 45}>
-              {allVocab
-                .filter((_, i) => i % 2 === row)
-                .map((v) => (
-                  <div
-                    key={v.word}
-                    className="flex items-center gap-3 rounded-full border border-border-soft bg-surface px-5 py-3 shadow-card"
-                  >
-                    <span className="font-semibold">{v.word}</span>
-                    <span className="h-4 w-px bg-border" />
-                    <span lang="ar" data-ar-help className="text-fg-muted">
-                      {v.ar}
-                    </span>
-                  </div>
-                ))}
-            </Marquee>
-          ))}
-        </div>
-      </section>
-    </>
-  )
-}
-
-export function LessonLineup() {
-  return (
-    <>
-      {/* ---------------- Lesson lineup ---------------- */}
-      <section className="py-24">
-        <div className="mx-auto flex max-w-[1024px] items-end justify-between gap-4 px-4 sm:px-6">
-          <BlurFade>
-            <h2 className="text-4xl font-bold tracking-[-0.03em] sm:text-5xl">Explore the lessons.</h2>
-            <p lang="ar" data-ar-help className="mt-2 text-fg-muted">
-              اكتشف الدروس
-            </p>
-          </BlurFade>
-          <Link to="/lessons" className="hidden shrink-0 items-center gap-1 text-link hover:underline sm:inline-flex">
-            View all <ChevronRight className="size-4" />
-          </Link>
-        </div>
-        <div className="no-scrollbar mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-4 px-4 pb-6 sm:scroll-px-6 sm:px-6 lg:px-[max(1.5rem,calc((100vw-1024px)/2+1.5rem))]">
-          {lessons.map((l, i) => (
-            <BlurFade key={l.id} delay={Math.min(i, 4) * 0.06} className="snap-start">
-              <Tilt max={7}>
-                <Link
-                  to={`/lessons/${l.id}`}
-                  className="group flex h-[360px] w-[280px] flex-col justify-between rounded-[28px] border border-border-soft bg-surface p-7 shadow-card transition-shadow duration-300 hover:shadow-pop"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="grid size-12 place-items-center rounded-2xl bg-bg-alt">
-                        <LessonIcon name={l.icon} className="icon-pop size-6 text-clay" />
-                      </span>
-                      <span className="text-sm font-medium text-fg-subtle">{String(l.number).padStart(2, '0')}</span>
-                    </div>
-                    <h3 className="mt-6 text-2xl font-semibold tracking-tight">{l.title}</h3>
-                    <p lang="ar" data-ar-help className="mt-1 text-sm text-fg-muted">
-                      {l.titleAr}
-                    </p>
-                    <p className="mt-3 line-clamp-3 text-[15px] leading-relaxed text-fg-muted">{l.summary.en}</p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Badge tone={levelTone(l.level)}>{l.level}</Badge>
-                    <span className="inline-flex items-center gap-1 text-sm font-medium text-link">
-                      {l.minutes} min <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-                    </span>
-                  </div>
-                </Link>
-              </Tilt>
-            </BlurFade>
-          ))}
-        </div>
-      </section>
-    </>
+    <section aria-labelledby="words-title" className="overflow-hidden border-y border-border-soft py-20">
+      <div className="mx-auto mb-12 max-w-[1180px] px-4 sm:px-6">
+        <p className="kicker">Vocabulary</p>
+        <h2 id="words-title" className="mt-3 text-[clamp(2.2rem,5vw,3.8rem)] font-[560] leading-[1.04]">
+          Words you will <Mark>actually use</Mark>.
+        </h2>
+        <p className="mt-4 max-w-xl text-lg text-fg-muted">
+          Every lesson teaches five practical words — the same words you need to write great prompts. Over 3,000 more wait in the word bank.
+        </p>
+      </div>
+      <Marquee duration={70} gap="2.5rem">
+        {allVocab.slice(0, 60).map((v) => (
+          <span key={v.word} className="flex items-center gap-10 font-display text-[clamp(2rem,5vw,3.6rem)] font-[480] tracking-[-0.02em]">
+            {v.word}
+            <span aria-hidden className="size-2.5 rotate-45 bg-saffron" />
+          </span>
+        ))}
+      </Marquee>
+      <Marquee reverse duration={80} gap="2.5rem" className="mt-4">
+        {allVocab.slice(0, 60).map((v) => (
+          <span key={v.word} lang="ar" className="font-ruqaa flex items-center gap-10 text-[clamp(1.8rem,4.4vw,3rem)] text-fg-muted">
+            {v.ar}
+            <span aria-hidden className="size-2 rotate-45 bg-primary/60" />
+          </span>
+        ))}
+      </Marquee>
+    </section>
   )
 }

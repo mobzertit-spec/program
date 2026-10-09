@@ -54,7 +54,7 @@ export function Coach() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
       <form onSubmit={submit} className="rounded-[28px] border border-border-soft bg-surface p-5 shadow-card sm:p-6">
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">1 · Choose a task</p>
+        <p className="kicker">1 · Choose a task</p>
         <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Practice task">
           {COACH_TASKS.map((t) => (
             <button
@@ -72,7 +72,7 @@ export function Coach() {
           ))}
         </div>
 
-        <label htmlFor="coach-prompt" className="mt-6 block text-sm font-semibold uppercase tracking-[0.08em] text-clay">
+        <label htmlFor="coach-prompt" className="mt-6 block kicker">
           2 · Write your prompt in English
         </label>
         <textarea

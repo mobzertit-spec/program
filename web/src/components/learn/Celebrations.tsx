@@ -145,8 +145,8 @@ export function Celebrations() {
 
               {current.kind === 'level' ? (
                 <>
-                  <p className="relative mt-4 text-sm font-semibold uppercase tracking-[0.08em] text-clay">Level up</p>
-                  <h2 id="celebration-title" className="text-5xl font-bold tracking-tight">
+                  <p className="relative mt-4 kicker">Level up</p>
+                  <h2 id="celebration-title" className="text-5xl font-[560] tracking-[-0.02em]">
                     Level <CountUp to={current.level} />
                   </h2>
                   <p lang="ar" className="mt-1 text-center text-fg-muted">وصلت إلى المستوى {current.level}!</p>
@@ -154,8 +154,8 @@ export function Celebrations() {
                 </>
               ) : (
                 <>
-                  <p className="relative mt-4 text-sm font-semibold uppercase tracking-[0.08em] text-clay">New badge</p>
-                  <h2 id="celebration-title" className="text-3xl font-bold tracking-tight">{current.title}</h2>
+                  <p className="relative mt-4 kicker">New badge</p>
+                  <h2 id="celebration-title" className="text-3xl font-[560] tracking-[-0.02em]">{current.title}</h2>
                   <p lang="ar" className="mt-1 text-center text-fg-muted">{current.titleAr}</p>
                   <p className="mt-3 text-fg-muted">{current.description}.</p>
                 </>

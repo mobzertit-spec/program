@@ -29,6 +29,23 @@ const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
 export const coachAvailable = !!(url && key)
 
+let ready: Promise<boolean> | undefined
+/**
+ * Is the coach switched on (API key set on the server)? The function answers "not configured" before it reads the
+ * request and rejects an empty request before counting it, so this check is free and never uses anyone's quota.
+ */
+export function coachReady(): Promise<boolean> {
+  if (!coachAvailable) return Promise.resolve(false)
+  return (ready ??= fetch(`${url}/functions/v1/prompt-coach`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: key! },
+    body: '{}',
+  }).then(
+    (r) => r.status === 400,
+    () => false,
+  ))
+}
+
 const KNOWN: CoachError[] = ['not_configured', 'rate_limited', 'refused', 'invalid']
 
 export async function askCoach(task: CoachTaskId, prompt: string): Promise<CoachResult> {

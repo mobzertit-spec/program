@@ -40,14 +40,16 @@ function chunksFor(src: string | undefined, seen = new Set<string>()): string[] 
   return [entry.file, ...(entry.imports ?? []).filter((i) => !manifest[i]?.isEntry).flatMap((i) => chunksFor(i, seen))]
 }
 
-// the main text font: preloaded so it is ready before the app takes over (stable text size, no second LCP paint)
-const fontFile = Object.values(manifest)
-  .flatMap((e) => (e as { assets?: string[] }).assets ?? [])
-  .find((a) => /inter-latin-wght-normal.*\.woff2$/.test(a))
+// the text font and the headline serif: preloaded so they are ready before the app takes over
+// (stable text size, no second LCP paint — headlines are the largest text on every page)
+const assets = Object.values(manifest).flatMap((e) => (e as { assets?: string[] }).assets ?? [])
+const fontFiles = [/inter-latin-wght-normal.*\.woff2$/, /fraunces-latin-opsz-normal.*\.woff2$/]
+  .map((re) => assets.find((a) => re.test(a)))
+  .filter((f): f is string => !!f)
 
 function headFor(page: Page) {
   const tags: string[] = []
-  if (fontFile) tags.push(`<link rel="preload" href="${base}${fontFile}" as="font" type="font/woff2" crossorigin />`)
+  for (const f of fontFiles) tags.push(`<link rel="preload" href="${base}${f}" as="font" type="font/woff2" crossorigin />`)
   // which URL this HTML is for; hide it at once if the host served it for another URL (see src/prerender-guard.ts)
   const own = base + (page.path === '/' ? '' : page.path.slice(1))
   tags.push(

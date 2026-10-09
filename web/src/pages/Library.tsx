@@ -118,7 +118,7 @@ function Section({
 }) {
   return (
     <section id={id} className="mt-16 scroll-mt-20" aria-labelledby={`${id}-title`}>
-      <h2 id={`${id}-title`} className="text-3xl font-bold tracking-tight sm:text-4xl">
+      <h2 id={`${id}-title`} className="text-3xl font-[560] tracking-[-0.02em] sm:text-4xl">
         {title}
       </h2>
       <p lang="ar" data-ar-help className="text-fg-muted">{titleAr}</p>

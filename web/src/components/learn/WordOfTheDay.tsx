@@ -29,12 +29,12 @@ export function WordOfTheDay() {
   const saved = isSaved(w.word)
   return (
     <div className="flex h-full flex-col rounded-3xl border border-border-soft bg-surface p-5 shadow-card">
-      <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-clay">
+      <p className="flex items-center gap-1.5 kicker">
         <CalendarDays className="float-icon size-3.5" /> Word of the day
       </p>
       <div className="mt-3 flex items-start justify-between gap-2">
         <div>
-          <p className="text-3xl font-bold tracking-tight">{w.word}</p>
+          <p className="text-3xl font-display font-[560] tracking-[-0.02em]">{w.word}</p>
           <p className="text-xs text-fg-muted">
             {w.pos} <span className="font-arabic">· {POS_AR[w.pos]}</span> · {w.level} {w.level && LEVEL_INFO[w.level].en}
           </p>

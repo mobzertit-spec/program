@@ -5,7 +5,6 @@ import { SelectionTranslator } from '@/components/translate/SelectionTranslator'
 import { TranslatorPanel } from '@/components/translate/TranslatorPanel'
 import { WordPopover } from '@/components/translate/WordPopover'
 import { useTranslator } from '@/context/TranslatorContext'
-import { AmbientBackground } from '@/components/art/AmbientBackground'
 import { endTakeover, isServer, isTakeover } from '@/lib/boot'
 import { ROUTE_META, pageTitle } from '@/lib/meta'
 import { Footer } from './Footer'
@@ -34,7 +33,6 @@ export function Layout() {
 
   return (
     <div className="flex min-h-dvh flex-col pb-16 lg:pb-0">
-      <AmbientBackground />
       <button
         onClick={() => document.getElementById('main')?.focus()}
         className="sr-only cursor-pointer focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[80] focus:rounded-full focus:bg-fg focus:px-4 focus:py-2 focus:text-bg"
@@ -43,7 +41,7 @@ export function Layout() {
       </button>
       <Navbar />
       {/* min height keeps the footer below the fold while a page loads (no layout shift) */}
-      <main id="main" tabIndex={-1} className="min-h-dvh flex-1 pt-[72px] outline-none">
+      <main id="main" tabIndex={-1} className="min-h-dvh flex-1 pt-16 outline-none">
         {/* soft page transition: each route fades and rises in (not on the very first, prerendered paint) */}
         <motion.div
           key={pathname}

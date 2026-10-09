@@ -6,11 +6,12 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'link'
 type Size = 'sm' | 'md' | 'lg'
 
 const base =
-  'inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50'
+  'inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 disabled:pointer-events-none disabled:opacity-50'
 const variants: Record<Variant, string> = {
+  // a printed-key feel: a solid edge underneath instead of a coloured glow
   primary:
-    'bg-primary text-on-primary hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-6px_color-mix(in_srgb,var(--primary)_60%,transparent)]',
-  secondary: 'border border-border bg-transparent text-fg hover:-translate-y-0.5 hover:bg-bg-alt',
+    'bg-primary text-on-primary shadow-[0_3px_0_0_color-mix(in_srgb,var(--primary)_55%,black)] hover:bg-primary-hover hover:-translate-y-px active:translate-y-[2px] active:shadow-none',
+  secondary: 'border border-fg/60 bg-transparent text-fg hover:border-fg hover:bg-fg hover:text-bg',
   ghost: 'text-fg hover:bg-bg-alt',
   link: 'text-link hover:underline underline-offset-4 px-0!',
 }

@@ -12,15 +12,17 @@ import {
   Lightbulb,
   MousePointerClick,
   RotateCcw,
+  Square,
   ThumbsDown,
   ThumbsUp,
   Volume2,
   X,
 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { LessonIcon, levelTone } from '@/components/LessonIcon'
-import { Parallax, TrackArt } from '@/components/art/TrackArt'
+import { Art, type ArtName } from '@/components/art/Art'
+import { Parallax } from '@/components/art/Parallax'
 import { ResourceCard } from '@/components/learn/ResourceCard'
 import { SpeakCheck } from '@/components/learn/SpeakCheck'
 import { VideoEmbed } from '@/components/learn/VideoEmbed'
@@ -33,7 +35,7 @@ import { useApp } from '@/context/AppContext'
 import { POS_AR } from '@/data/dictionary'
 import { getLesson, lessons, lessonsByTrack, trackOf, type Bilingual, type Lesson, type QuizQuestion, type VocabItem } from '@/data/lessons'
 import { isUnlocked } from '@/lib/path'
-import { canSpeak, speak } from '@/lib/speech'
+import { canSpeak, speak, stopSpeaking } from '@/lib/speech'
 import { LessonFeedback } from '@/components/learn/LessonFeedback'
 import { useDocumentTitle } from '@/lib/meta'
 import { cn } from '@/lib/utils'
@@ -63,8 +65,10 @@ function LessonView({ lesson }: { lesson: Lesson }) {
 
       {/* Header */}
       <header className="relative overflow-hidden border-b border-border-soft bg-bg-alt">
-        <Parallax className="absolute right-[max(1.5rem,calc((100vw-1180px)/2))] top-20 hidden w-[230px] xl:block" distance={24}>
-          <TrackArt track={lesson.track} />
+        <Parallax className="absolute right-[max(1.5rem,calc((100vw-1180px)/2))] top-16 hidden w-[220px] xl:block" distance={24}>
+          <div className="rotate-2 rounded-[6px] bg-surface p-2 shadow-card">
+            <Art name={lesson.track as ArtName} sizes="220px" className="rounded-[3px]" />
+          </div>
         </Parallax>
         <div className="mx-auto max-w-[760px] px-4 pb-12 pt-8 sm:px-6 sm:pt-10">
           <Link to="/path" className="inline-flex items-center gap-1 text-sm text-link hover:underline">
@@ -79,7 +83,7 @@ function LessonView({ lesson }: { lesson: Lesson }) {
                 Lesson {lesson.number} of {lessons.length} · {track.title} <span lang="ar" data-ar-help className="text-fg-subtle">{track.titleAr}</span>
               </span>
             </div>
-            <h1 className="mt-5 text-balance text-4xl font-bold tracking-[-0.03em] sm:text-6xl">{lesson.title}</h1>
+            <h1 className="mt-5 text-balance text-4xl font-[560] tracking-[-0.025em] sm:text-6xl">{lesson.title}</h1>
             <p lang="ar" className="mt-2 text-xl text-fg-muted">{lesson.titleAr}</p>
             <TranslatableText text={lesson.summary.en} className="mt-5 text-lg leading-relaxed text-fg-muted sm:text-xl" highlight={highlight} />
             <div className="mt-6 flex flex-wrap gap-2">
@@ -153,7 +157,7 @@ function LessonView({ lesson }: { lesson: Lesson }) {
         {/* Tip */}
         <BlurFade>
           <aside className="my-14 rounded-3xl bg-clay-soft p-6 sm:p-8">
-            <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-clay">
+            <p className="flex items-center gap-2 kicker">
               <Lightbulb className="size-4" /> Pro tip
             </p>
             <TranslatableText text={lesson.tip.en} className="mt-3 text-lg leading-relaxed text-fg" highlight={highlight} />
@@ -234,22 +238,56 @@ function LessonView({ lesson }: { lesson: Lesson }) {
 function Paragraph({ p, highlight }: { p: Bilingual; highlight: Set<string> }) {
   const { showArabic } = useApp()
   const [local, setLocal] = useState(false)
+  const [playing, setPlaying] = useState(false)
+  const playingRef = useRef(false)
   const visible = showArabic || local
+  const setPlay = (v: boolean) => {
+    playingRef.current = v
+    setPlaying(v)
+  }
+  // leaving the lesson stops the voice
+  useEffect(() => () => {
+    if (playingRef.current) stopSpeaking()
+  }, [])
+  const listen = () => {
+    if (playing) {
+      stopSpeaking()
+      setPlay(false)
+      return
+    }
+    setPlay(true)
+    speak(p.en, 0.88, () => setPlay(false))
+  }
   return (
     <BlurFade>
       <div className="group relative">
-        <TranslatableText text={p.en} className="pr-10 text-[19px] leading-[1.75] text-fg" highlight={highlight} />
-        <button
-          onClick={() => setLocal(!local)}
-          aria-pressed={visible}
-          aria-label={visible ? 'Hide Arabic translation' : 'Show Arabic translation'}
-          className={cn(
-            'absolute right-0 top-0.5 grid size-9 cursor-pointer place-items-center rounded-full font-arabic text-base transition-all',
-            visible ? 'bg-fg text-bg' : 'text-fg-subtle opacity-70 hover:bg-bg-alt hover:text-fg group-hover:opacity-100',
+        <TranslatableText text={p.en} className="pr-11 text-[19px] leading-[1.75] text-fg" highlight={highlight} />
+        <div className="absolute right-0 top-0.5 flex flex-col gap-1">
+          <button
+            onClick={() => setLocal(!local)}
+            aria-pressed={visible}
+            aria-label={visible ? 'Hide Arabic translation' : 'Show Arabic translation'}
+            className={cn(
+              'grid size-9 cursor-pointer place-items-center rounded-full font-arabic text-base transition-all',
+              visible ? 'bg-saffron text-ink' : 'text-fg-subtle hover:bg-bg-alt hover:text-fg',
+            )}
+          >
+            ع
+          </button>
+          {canSpeak() && (
+            <button
+              onClick={listen}
+              aria-pressed={playing}
+              aria-label={playing ? 'Stop reading aloud' : 'Listen to this paragraph'}
+              className={cn(
+                'grid size-9 cursor-pointer place-items-center rounded-full transition-all',
+                playing ? 'bg-primary text-on-primary' : 'text-fg-subtle hover:bg-bg-alt hover:text-fg',
+              )}
+            >
+              {playing ? <Square className="size-3.5 fill-current" /> : <Volume2 className="size-[18px]" />}
+            </button>
           )}
-        >
-          ع
-        </button>
+        </div>
         <AnimatePresence initial={false}>
           {visible && (
             <motion.p
@@ -261,7 +299,7 @@ function Paragraph({ p, highlight }: { p: Bilingual; highlight: Set<string> }) {
               transition={{ duration: 0.25 }}
               className="overflow-hidden text-right text-[17px] leading-loose text-fg-muted"
             >
-              <span className="mt-2 block border-r-2 border-clay pr-4">{p.ar}</span>
+              <span className="mt-2 block border-r-2 border-saffron pr-4">{p.ar}</span>
             </motion.p>
           )}
         </AnimatePresence>

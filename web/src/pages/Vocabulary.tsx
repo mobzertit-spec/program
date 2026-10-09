@@ -146,7 +146,7 @@ function Flashcards({ deck, scheduled, onDone }: { deck: Row[]; scheduled: boole
   if (i >= deck.length) {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center rounded-[28px] bg-bg-alt px-6 py-14 text-center">
-        <p className="text-6xl font-bold tracking-tight">
+        <p className="text-6xl font-display font-[560] tracking-[-0.02em]">
           {known}/{deck.length}
         </p>
         <p className="mt-2 text-lg text-fg-muted">words you remembered</p>
@@ -188,7 +188,7 @@ function Flashcards({ deck, scheduled, onDone }: { deck: Row[]; scheduled: boole
           className="relative block h-72 w-full cursor-pointer rounded-[32px]"
         >
           <span className="absolute inset-0 flex flex-col items-center justify-center rounded-[32px] border border-border-soft bg-surface p-8 shadow-pop [backface-visibility:hidden]">
-            <span className="text-4xl font-bold tracking-tight">{card.word}</span>
+            <span className="text-4xl font-display font-[560] tracking-[-0.02em]">{card.word}</span>
             {card.pos && <span className="mt-2 text-sm text-fg-muted">{card.pos}</span>}
             <span className="absolute bottom-5 text-xs text-fg-subtle">Tap to flip · اضغط للقلب</span>
           </span>

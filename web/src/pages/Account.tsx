@@ -74,7 +74,7 @@ function SignIn() {
   return (
     <div className="grid items-center gap-10 md:grid-cols-2">
       <BlurFade>
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Your account</p>
+        <p className="kicker">Your account</p>
         <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em] sm:text-6xl">Keep your progress everywhere.</h1>
         <p lang="ar" data-ar-help className="mt-3 text-lg text-fg-muted">احفظ تقدّمك على كل أجهزتك.</p>
         <ul className="mt-8 space-y-4 text-fg-muted">
@@ -211,8 +211,8 @@ function Profile() {
           </span>
         )}
         <div className="flex-1">
-          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Signed in</p>
-          <h1 className="text-4xl font-bold tracking-[-0.03em] sm:text-5xl">Hi, {name}.</h1>
+          <p className="kicker">Signed in</p>
+          <h1 className="text-4xl font-[560] tracking-[-0.025em] sm:text-5xl">Hi, {name}.</h1>
           <p className="text-fg-muted">{user.email}</p>
         </div>
         <button
@@ -231,7 +231,7 @@ function Profile() {
           { v: `${completed.length}/${lessons.length}`, l: 'Lessons' },
         ].map((s) => (
           <div key={s.l} className="rounded-3xl border border-border-soft bg-surface p-5 shadow-card">
-            <p className="text-3xl font-bold tracking-tight">{s.v}</p>
+            <p className="text-3xl font-display font-[560] tracking-[-0.02em]">{s.v}</p>
             <p className="text-sm text-fg-muted">{s.l}</p>
           </div>
         ))}
@@ -286,7 +286,7 @@ function Profile() {
 function NotConfigured() {
   return (
     <BlurFade>
-      <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay">Your account</p>
+      <p className="kicker">Your account</p>
       <h1 className="mt-2 text-5xl font-bold tracking-[-0.035em]">Sign-in is coming soon.</h1>
       <p lang="ar" data-ar-help className="mt-2 text-fg-muted">تسجيل الدخول غير مفعّل بعد على هذه النسخة من الموقع.</p>
       <p className="mt-4 max-w-2xl text-lg text-fg-muted">

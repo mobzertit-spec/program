@@ -42,7 +42,7 @@ export function Leaderboard() {
     <section ref={ref} className="mt-24" aria-labelledby="board-title">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h2 id="board-title" className="flex items-center gap-2 text-3xl font-bold tracking-tight">
+          <h2 id="board-title" className="flex items-center gap-2 text-3xl font-[560] tracking-[-0.02em]">
             <Trophy className="float-icon size-7 text-clay" aria-hidden /> This week’s top learners
           </h2>
           <p lang="ar" data-ar-help className="text-fg-muted">أكثر المتعلّمين نشاطًا هذا الأسبوع</p>

@@ -14,15 +14,20 @@ function pickVoice(): SpeechSynthesisVoice | null {
 
 export const canSpeak = () => typeof window !== 'undefined' && 'speechSynthesis' in window
 
-export function speak(text: string, rate = 0.92) {
+export function speak(text: string, rate = 0.92, onEnd?: () => void) {
   if (!canSpeak()) return
   window.speechSynthesis.cancel()
   const u = new SpeechSynthesisUtterance(text)
+  if (onEnd) u.onend = u.onerror = () => onEnd()
   u.lang = 'en-US'
   u.rate = rate
   const voice = pickVoice()
   if (voice) u.voice = voice
   window.speechSynthesis.speak(u)
+}
+
+export function stopSpeaking() {
+  if (canSpeak()) window.speechSynthesis.cancel()
 }
 
 // ---------- Speech recognition (pronunciation practice) ----------

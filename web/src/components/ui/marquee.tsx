@@ -7,11 +7,14 @@ export function Marquee({
   className,
   reverse,
   duration = 40,
+  gap,
 }: {
   children: ReactNode
   className?: string
   reverse?: boolean
   duration?: number
+  /** space between items (CSS length) */
+  gap?: string
 }) {
   return (
     <div
@@ -19,7 +22,7 @@ export function Marquee({
         'group relative flex overflow-hidden [--gap:1rem] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]',
         className,
       )}
-      style={{ ['--duration' as string]: `${duration}s` }}
+      style={{ ['--duration' as string]: `${duration}s`, ...(gap ? { ['--gap' as string]: gap } : {}) }}
     >
       <div
         className={cn(

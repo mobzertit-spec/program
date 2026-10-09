@@ -10,10 +10,10 @@ export function PageHeader({ eyebrow, title, intro, children }: { eyebrow: Text;
   return (
     <BlurFade>
       <div dir={rtl ? 'rtl' : 'ltr'}>
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-clay" lang={rtl ? 'ar' : 'en'} dir={rtl ? 'rtl' : undefined}>
+        <p className="kicker" lang={rtl ? 'ar' : 'en'} dir={rtl ? 'rtl' : undefined}>
           {rtl ? eyebrow.ar : eyebrow.en}
         </p>
-        <h1 lang={rtl ? 'ar' : 'en'} dir={rtl ? 'rtl' : undefined} className="mt-2 text-5xl font-bold tracking-[-0.035em] sm:text-7xl" style={rtl ? { letterSpacing: 0, lineHeight: 1.25 } : undefined}>
+        <h1 lang={rtl ? 'ar' : 'en'} dir={rtl ? 'rtl' : undefined} className="mt-3 text-[clamp(2.8rem,8vw,5.2rem)] font-[560] leading-[1] tracking-[-0.03em]" style={rtl ? { letterSpacing: 0, lineHeight: 1.25 } : undefined}>
           {rtl ? title.ar : title.en}
         </h1>
         {rtl && <p className="mt-1 text-xl font-semibold text-fg-subtle" lang="en" dir="ltr" style={{ textAlign: 'right' }}>{title.en}</p>}

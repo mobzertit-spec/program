@@ -82,7 +82,7 @@ function CertificateView({ track }: { track: Track }) {
           <ProgressRing value={done / items.length} size={120} stroke={9} label={`${done} of ${items.length} lessons done`} />
           <Lock className="absolute inset-0 m-auto size-8 text-fg-subtle" />
         </div>
-        <h1 className="mt-6 text-3xl font-bold tracking-tight">Certificate locked</h1>
+        <h1 className="mt-6 text-3xl font-[560] tracking-[-0.02em]">Certificate locked</h1>
         <p lang="ar" data-ar-help className="text-center text-fg-muted">الشهادة مقفلة</p>
         <p className="mt-3 text-fg-muted">
           Finish all {items.length} lessons of “{track.title}” to unlock it. You have done {done}.
@@ -100,7 +100,7 @@ function CertificateView({ track }: { track: Track }) {
         <Link to="/path" className="inline-flex items-center gap-1 text-sm text-link hover:underline">
           <ArrowLeft className="size-4" /> Learning path
         </Link>
-        <h1 className="mt-4 text-4xl font-bold tracking-[-0.03em] sm:text-5xl">Congratulations!</h1>
+        <h1 className="mt-4 text-4xl font-[560] tracking-[-0.025em] sm:text-5xl">Congratulations!</h1>
         <p lang="ar" data-ar-help className="mt-1 text-lg text-fg-muted">مبروك! أنهيت مسار {track.titleAr}.</p>
       </BlurFade>
 
