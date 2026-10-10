@@ -7,13 +7,22 @@ const SWASH_T = 'rotate(-3 32 32.25)'
 const GLYPHS = 'M849 -657Q849 -592 812 -553Q775 -514 709 -514Q642 -514 604 -554Q566 -595 566 -672V-760Q566 -821 540 -854Q514 -887 470 -887Q424 -887 390 -849Q356 -811 338 -740Q319 -668 319 -568Q319 -438 355 -349Q390 -260 452 -214Q515 -169 595 -169Q685 -169 747 -204Q809 -240 829 -318Q830 -323 832 -324Q834 -326 837 -325Q839 -325 841 -322Q842 -319 841 -315Q823 -209 769 -135Q715 -60 632 -20Q548 19 440 19Q321 19 228 -30Q135 -80 82 -178Q28 -276 28 -421Q28 -562 87 -672Q147 -781 251 -845Q356 -908 492 -908Q610 -908 689 -875Q768 -842 809 -785Q849 -729 849 -657Z M1764 -505Q1764 -496 1758 -490Q1752 -484 1739 -484H1116V-505H1443Q1460 -505 1460 -525Q1460 -716 1419 -802Q1377 -889 1326 -889Q1285 -889 1254 -856Q1223 -823 1205 -748Q1187 -674 1187 -552Q1187 -345 1271 -247Q1356 -149 1495 -149Q1602 -149 1672 -205Q1743 -261 1747 -357Q1747 -361 1749 -363Q1751 -364 1752 -364Q1755 -364 1757 -362Q1760 -360 1760 -355Q1757 -248 1702 -163Q1647 -78 1555 -29Q1462 20 1346 20Q1216 20 1116 -37Q1016 -93 959 -195Q902 -296 902 -430Q902 -576 959 -683Q1015 -791 1119 -849Q1223 -908 1363 -908Q1486 -908 1576 -856Q1666 -803 1715 -712Q1764 -621 1764 -505Z'
 const GLYPHS_T = 'translate(11.358 41.6) scale(0.023)'
 
+/** The mark's shapes in its 64×64 box, for use inside other drawings (certificate, share image). */
+export function MarkShapes({ highlight = '#f2a71b', ink = '#17161b' }: { highlight?: string; ink?: string }) {
+  return (
+    <>
+      <path d={SWASH} transform={SWASH_T} fill={highlight} />
+      <path d={GLYPHS} transform={GLYPHS_T} fill={ink} />
+    </>
+  )
+}
+
 /** The mark alone. `tile` puts it on an ink tile (app icon style). */
 export function Logo({ className = 'size-8', tile = false }: { className?: string; tile?: boolean }) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden>
       {tile && <rect width="64" height="64" rx="14" fill="#17161b" />}
-      <path d={SWASH} transform={SWASH_T} fill="var(--saffron, #f2a71b)" />
-      <path d={GLYPHS} transform={GLYPHS_T} fill="#17161b" />
+      <MarkShapes highlight="var(--saffron, #f2a71b)" />
     </svg>
   )
 }

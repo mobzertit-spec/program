@@ -117,7 +117,7 @@ export function Navbar() {
               aria-label={arabicHelp ? 'Hide Arabic help' : 'Show Arabic help'}
               className={cn(
                 'grid size-10 cursor-pointer place-items-center rounded-full border font-arabic text-base transition-colors',
-                arabicHelp ? 'border-saffron bg-saffron text-ink' : 'border-border text-fg-muted hover:text-fg',
+                arabicHelp ? 'border-saffron/70 bg-saffron-soft text-fg' : 'border-border text-fg-muted hover:text-fg',
               )}
             >
               ع

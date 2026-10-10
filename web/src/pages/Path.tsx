@@ -48,9 +48,9 @@ export default function Path() {
         <BlurFade delay={0.05}>
           <Link
             to={`/lessons/${next.id}`}
-            className="group mt-8 flex items-center gap-4 rounded-3xl bg-fg p-5 text-bg shadow-pop transition-transform hover:-translate-y-0.5 sm:p-6"
+            className="group mt-8 flex items-center gap-4 rounded-3xl bg-ink p-5 text-[#f1ece1] shadow-pop ring-1 ring-white/10 transition-transform hover:-translate-y-0.5 sm:p-6"
           >
-            <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-bg/10">
+            <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-saffron text-ink">
               <LessonIcon name={next.icon} className="float-icon size-7" />
             </span>
             <span className="min-w-0 flex-1">

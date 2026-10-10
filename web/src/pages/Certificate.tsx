@@ -1,6 +1,8 @@
 import { ArrowLeft, Download, Lock, Share2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { starPath } from '@/components/art/Zellige'
+import { MarkShapes } from '@/components/layout/Logo'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { ProgressRing } from '@/components/ui/progress-ring'
 import { useToast } from '@/components/ui/toast'
@@ -134,7 +136,7 @@ function CertificateView({ track }: { track: Track }) {
         </button>
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-3xl shadow-pop">
+      <div className="mt-8 overflow-hidden rounded-[6px] bg-surface p-2 shadow-pop">
         <CertificateSvg ref={svgRef} name={name.trim() || 'Your name'} track={track} lessons={items.length} date={date} />
       </div>
     </div>
@@ -154,70 +156,65 @@ function CertificateSvg({
   lessons: number
   date: string
 }) {
-  const font = 'Inter, Segoe UI, Arial, sans-serif'
+  // the PNG is drawn from this SVG without the page's web fonts, so every stack ends in fonts most devices have
+  const sans = 'Inter, Segoe UI, Arial, sans-serif'
+  const serif = 'Fraunces, Georgia, Times New Roman, serif'
+  const INK = '#17161b'
+  const MUTED = '#4f4b45'
+  const LINE = '#d6ccb8'
+  const corner = (x: number, y: number) => (
+    <g key={`${x}-${y}`} fill="none" stroke={LINE} strokeWidth="2">
+      <path d={starPath(x, y, 54)} />
+      <path d={starPath(x, y, 32)} />
+      <path d={starPath(x, y, 12)} fill="#2b3fd6" stroke="none" />
+    </g>
+  )
   return (
     <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label={`Certificate: ${name} completed ${track.title}`}>
-      <defs>
-        <linearGradient id="cert-brand" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#f07a45" />
-          <stop offset="1" stopColor="#6d5dfc" />
-        </linearGradient>
-        <radialGradient id="cert-glow-a" cx="0" cy="0" r="1">
-          <stop offset="0" stopColor="#f07a45" stopOpacity="0.28" />
-          <stop offset="1" stopColor="#f07a45" stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id="cert-glow-b" cx="1" cy="1" r="1">
-          <stop offset="0" stopColor="#6d5dfc" stopOpacity="0.28" />
-          <stop offset="1" stopColor="#6d5dfc" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <rect width={W} height={H} fill="#fbfaff" />
-      <rect width={W} height={H} fill="url(#cert-glow-a)" />
-      <rect width={W} height={H} fill="url(#cert-glow-b)" />
-      <rect x="40" y="40" width={W - 80} height={H - 80} rx="36" fill="none" stroke="#12142b" strokeWidth="3" />
-      <rect x="60" y="60" width={W - 120} height={H - 120} rx="24" fill="none" stroke="url(#cert-brand)" strokeWidth="6" />
+      <rect width={W} height={H} fill="#f4efe4" />
+      <rect x="40" y="40" width={W - 80} height={H - 80} fill="none" stroke={INK} strokeWidth="2.5" />
+      <rect x="56" y="56" width={W - 112} height={H - 112} fill="none" stroke={LINE} strokeWidth="1.5" />
+      {[corner(128, 128), corner(W - 128, 128), corner(128, H - 128), corner(W - 128, H - 128)]}
 
-      {/* logo */}
-      <g transform={`translate(${W / 2 - 48} 120) scale(1.5)`}>
-        <rect width="64" height="64" rx="16" fill="#12142b" />
-        <path d="M30.8 24.2A11 11 0 1 0 30.8 39.8" fill="none" stroke="#f07a45" strokeWidth="6.5" strokeLinecap="round" />
-        <path d="M48.5 21.5H37V42.5H48.5M37 32H46" fill="none" stroke="#fff" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M52 8l1.3 3.4L56.7 12.7l-3.4 1.3L52 17.4l-1.3-3.4-3.4-1.3 3.4-1.3z" fill="#aaa6ff" />
+      {/* the CE mark */}
+      <g transform={`translate(${W / 2 - 72} 92) scale(2.25)`}>
+        <MarkShapes />
       </g>
 
-      <text x={W / 2} y="330" textAnchor="middle" fontFamily={font} fontSize="30" letterSpacing="10" fill="#c4531f" fontWeight="700">
+      <text x={W / 2} y="330" textAnchor="middle" fontFamily={sans} fontSize="26" letterSpacing="9" fill="#a3410f" fontWeight="700">
         CERTIFICATE OF COMPLETION
       </text>
-      <text x={W / 2} y="400" textAnchor="middle" fontFamily={font} fontSize="30" fill="#5c6079">
+      <text x={W / 2} y="398" textAnchor="middle" fontFamily={serif} fontSize="32" fontStyle="italic" fill={MUTED}>
         This certifies that
       </text>
-      <text x={W / 2} y="510" textAnchor="middle" fontFamily={font} fontSize="96" fontWeight="800" fill="#12142b" letterSpacing="-2">
+      {/* the name, marked with the saffron highlighter */}
+      <rect x={W / 2 - 330} y="478" width="660" height="40" fill="#f6c04f" transform={`rotate(-1 ${W / 2} 498)`} />
+      <text x={W / 2} y="510" textAnchor="middle" fontFamily={serif} fontSize="100" fontWeight="600" fill={INK} letterSpacing="-2">
         {name}
       </text>
-      <rect x={W / 2 - 300} y="545" width="600" height="4" rx="2" fill="url(#cert-brand)" />
-      <text x={W / 2} y="620" textAnchor="middle" fontFamily={font} fontSize="32" fill="#5c6079">
+      <text x={W / 2} y="612" textAnchor="middle" fontFamily={sans} fontSize="30" fill={MUTED}>
         has completed all {lessons} lessons of the track
       </text>
-      <text x={W / 2} y="705" textAnchor="middle" fontFamily={font} fontSize="64" fontWeight="800" fill="url(#cert-brand)">
+      <text x={W / 2} y="700" textAnchor="middle" fontFamily={serif} fontSize="68" fontWeight="600" fill="#2b3fd6" letterSpacing="-1">
         {track.title}
       </text>
-      <text x={W / 2} y="770" textAnchor="middle" fontFamily="Alexandria, Tahoma, Arial, sans-serif" fontSize="36" fill="#5c6079" direction="rtl">
+      <text x={W / 2} y="772" textAnchor="middle" fontFamily="Aref Ruqaa, Alexandria, Tahoma, Arial, sans-serif" fontSize="44" fontWeight="700" fill={MUTED} direction="rtl">
         {track.titleAr}
       </text>
-      <text x={W / 2} y="830" textAnchor="middle" fontFamily={font} fontSize="26" fill="#7b7f98">
+      <text x={W / 2} y="836" textAnchor="middle" fontFamily={sans} fontSize="25" fill="#696359">
         {track.description}
       </text>
 
-      <line x1="220" y1="960" x2="620" y2="960" stroke="#d4d6e4" strokeWidth="2" />
-      <text x="420" y="1000" textAnchor="middle" fontFamily={font} fontSize="26" fill="#5c6079">
+      <line x1="260" y1="960" x2="640" y2="960" stroke={INK} strokeWidth="1.5" />
+      <text x="450" y="1000" textAnchor="middle" fontFamily={sans} fontSize="24" fill={MUTED}>
         {date}
       </text>
-      <line x1={W - 620} y1="960" x2={W - 220} y2="960" stroke="#d4d6e4" strokeWidth="2" />
-      <text x={W - 420} y="945" textAnchor="middle" fontFamily={font} fontSize="44" fontWeight="800" fill="#12142b">
-        CE
-      </text>
-      <text x={W - 420} y="1000" textAnchor="middle" fontFamily={font} fontSize="26" fill="#5c6079">
-        Claude · English
+      <line x1={W - 640} y1="960" x2={W - 260} y2="960" stroke={INK} strokeWidth="1.5" />
+      <g transform={`translate(${W - 450 - 40} 878) scale(1.25)`}>
+        <MarkShapes />
+      </g>
+      <text x={W - 450} y="1000" textAnchor="middle" fontFamily={sans} fontSize="24" letterSpacing="4" fill={MUTED}>
+        CLAUDE · ENGLISH
       </text>
     </svg>
   )
