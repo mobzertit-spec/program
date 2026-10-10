@@ -7,7 +7,7 @@ import { ZelligePattern } from './Zellige'
  * Files live in public/art as `<name>-<width>.webp`; the browser picks the smallest one that is sharp enough.
  */
 export const ART = {
-  hero: { w: 1280, h: 960, widths: [640, 1280] },
+  hero: { w: 1280, h: 960, widths: [640, 960, 1280] },
   bridge: { w: 1536, h: 1024, widths: [768, 1152, 1536] },
   foundations: { w: 960, h: 1280, widths: [480, 720, 960] },
   prompting: { w: 960, h: 1280, widths: [480, 720, 960] },
@@ -17,8 +17,8 @@ export const ART = {
 } as const
 export type ArtName = keyof typeof ART
 
-/** The prints that are in public/art. Any other name keeps a quiet pattern in its place (no request, no 404). */
-const READY = new Set<ArtName>(['bridge', 'prompting', 'features', 'english', 'students'])
+/** The prints that are in public/art (all of them now). A name left out keeps a quiet pattern in its place (no request, no 404). */
+const READY = new Set<ArtName>(Object.keys(ART) as ArtName[])
 
 const src = (name: ArtName, w: number) => `${import.meta.env.BASE_URL}art/${name}-${w}.webp`
 

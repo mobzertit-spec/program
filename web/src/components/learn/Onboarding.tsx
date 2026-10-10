@@ -38,7 +38,7 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && skip()
     window.addEventListener('keydown', onKey)
-    window.setTimeout(() => dialogRef.current?.querySelector<HTMLElement>('button[aria-pressed]')?.focus(), 60)
+    window.setTimeout(() => dialogRef.current?.querySelector<HTMLElement>('[data-onb-options] button[aria-pressed]')?.focus(), 60)
     return () => window.removeEventListener('keydown', onKey)
   }, [open, step])
 
@@ -105,7 +105,7 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
               <>
                 <h2 id="onb-title" className="mt-6 text-2xl font-[560] tracking-[-0.02em]">How is your English?</h2>
                 <p lang="ar" className="text-fg-muted">ما مستواك في الإنجليزية؟</p>
-                <div className="mt-5 space-y-2.5">
+                <div data-onb-options className="mt-5 space-y-2.5">
                   {LEVELS.map((l) => (
                     <button
                       key={l.id}
@@ -136,7 +136,7 @@ export function Onboarding({ open, onClose }: { open: boolean; onClose: () => vo
               <>
                 <h2 id="onb-title" className="mt-6 text-2xl font-[560] tracking-[-0.02em]">What do you want to do with Claude?</h2>
                 <p lang="ar" className="text-fg-muted">ماذا تريد أن تفعل مع Claude؟</p>
-                <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
+                <div data-onb-options className="mt-5 grid gap-2.5 sm:grid-cols-2">
                   {GOALS.map((g) => (
                     <button
                       key={g.id}
