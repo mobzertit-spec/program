@@ -8,17 +8,17 @@ import { ZelligePattern } from './Zellige'
  */
 export const ART = {
   hero: { w: 1280, h: 960, widths: [640, 1280] },
-  bridge: { w: 1536, h: 1024, widths: [768, 1536] },
-  foundations: { w: 960, h: 1280, widths: [480, 960] },
-  prompting: { w: 960, h: 1280, widths: [480, 960] },
-  features: { w: 960, h: 1280, widths: [480, 960] },
-  english: { w: 960, h: 1280, widths: [480, 960] },
-  students: { w: 960, h: 1280, widths: [480, 960] },
+  bridge: { w: 1536, h: 1024, widths: [768, 1152, 1536] },
+  foundations: { w: 960, h: 1280, widths: [480, 720, 960] },
+  prompting: { w: 960, h: 1280, widths: [480, 720, 960] },
+  features: { w: 960, h: 1280, widths: [480, 720, 960] },
+  english: { w: 960, h: 1280, widths: [480, 720, 960] },
+  students: { w: 960, h: 1280, widths: [480, 720, 960] },
 } as const
 export type ArtName = keyof typeof ART
 
-/** Flip to true once the generated files are in public/art (until then a quiet pattern holds each image's place). */
-export const ART_READY = false
+/** The prints that are in public/art. Any other name keeps a quiet pattern in its place (no request, no 404). */
+const READY = new Set<ArtName>(['bridge', 'prompting', 'features', 'english', 'students'])
 
 const src = (name: ArtName, w: number) => `${import.meta.env.BASE_URL}art/${name}-${w}.webp`
 
@@ -39,7 +39,7 @@ export function Art({
   imgClassName?: string
 }) {
   const a = ART[name]
-  const [failed, setFailed] = useState(!ART_READY)
+  const [failed, setFailed] = useState(!READY.has(name))
   return (
     <div className={cn('relative overflow-hidden bg-[#efe7d6]', className)} style={{ aspectRatio: `${a.w} / ${a.h}` }}>
       {failed ? (

@@ -58,8 +58,8 @@ the writing rules and the official sources to link.
   word until it reads in Arabic; “How it works” keeps the phone in place while its screen follows the step you read;
   the tracks slide sideways while you scroll down (large screens). All of it is off with reduced motion.
 - **Illustrations** (`public/art/<name>-<width>.webp`, see `src/components/art/Art.tsx`): two-ink risograph prints
-  (ultramarine + saffron on paper) — a hero desk, one cover per track and a bridge for the closing section. Until the
-  files are added, `ART_READY = false` keeps a quiet zellige pattern in their place; add the files and flip it to `true`.
+  (ultramarine + saffron on paper) — a hero desk, one cover per track and a bridge for the closing section. Images not listed in
+  `READY` keep a quiet zellige pattern in their place (no request); add the files and list the name there.
 - **Cee, the mascot** — designed in Figma (page *Mascot*, component set *Cee* with the poses Wave, Cheer, Think and
   Sleep) and built as `src/components/mascot/Mascot.tsx`. Cee greets new learners, celebrates levels and badges, and
   keeps empty pages and the 404 page friendly.
