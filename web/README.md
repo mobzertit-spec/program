@@ -40,6 +40,10 @@ npm run build           # static output in dist/ (every page prerendered to HTML
 npm run check:content   # validate lessons: translations, vocab, quizzes, official links
 ```
 
+## Codex reviews
+
+To get a second opinion from OpenAI Codex inside Claude Code, see [docs/codex.md](../docs/codex.md).
+
 ## Add lessons
 
 Ask Claude Code to use the **lesson-writer** skill (`.claude/skills/lesson-writer/SKILL.md`), e.g.
