@@ -1,0 +1,97 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/block.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/checkpoint.tscn" id="3"]
+[ext_resource type="Script" path="res://scripts/fall_zone.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/debug_label.gd" id="5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fall"]
+size = Vector2(6400, 400)
+
+[node name="TestRoom" type="Node2D"]
+
+[node name="LeftWall" parent="." instance=ExtResource("1")]
+position = Vector2(0, -640)
+size = Vector2(64, 1792)
+
+[node name="Floor" parent="." instance=ExtResource("1")]
+position = Vector2(0, 960)
+size = Vector2(1600, 192)
+
+[node name="Step" parent="." instance=ExtResource("1")]
+position = Vector2(896, 768)
+size = Vector2(320, 192)
+
+[node name="HighPlatform" parent="." instance=ExtResource("1")]
+position = Vector2(1280, 448)
+size = Vector2(256, 64)
+
+[node name="HighLedge" parent="." instance=ExtResource("1")]
+position = Vector2(1600, 576)
+size = Vector2(640, 576)
+
+[node name="UpperRock" parent="." instance=ExtResource("1")]
+position = Vector2(2048, -640)
+size = Vector2(1472, 1056)
+
+[node name="Landing" parent="." instance=ExtResource("1")]
+position = Vector2(2560, 576)
+size = Vector2(1472, 576)
+
+[node name="ShaftWall" parent="." instance=ExtResource("1")]
+position = Vector2(3776, -256)
+size = Vector2(256, 832)
+
+[node name="GoalRock" parent="." instance=ExtResource("1")]
+position = Vector2(4032, -256)
+size = Vector2(1664, 1408)
+
+[node name="RightWall" parent="." instance=ExtResource("1")]
+position = Vector2(5696, -640)
+size = Vector2(64, 1792)
+
+[node name="GoalFlag" type="ColorRect" parent="."]
+offset_left = 5440.0
+offset_top = -448.0
+offset_right = 5464.0
+offset_bottom = -256.0
+color = Color(1, 0.702, 0.278, 1)
+
+[node name="Checkpoint1" parent="." instance=ExtResource("3")]
+position = Vector2(1920, 576)
+
+[node name="Checkpoint2" parent="." instance=ExtResource("3")]
+position = Vector2(3648, 576)
+
+[node name="Checkpoint3" parent="." instance=ExtResource("3")]
+position = Vector2(4300, -256)
+
+[node name="FallZone" type="Area2D" parent="."]
+position = Vector2(2880, 1450)
+script = ExtResource("4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FallZone"]
+shape = SubResource("RectangleShape2D_fall")
+
+[node name="Player" parent="." instance=ExtResource("2")]
+position = Vector2(256, 880)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+limit_left = 0
+limit_top = -640
+limit_right = 5760
+limit_bottom = 1152
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="DebugLabel" type="Label" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 624.0
+offset_bottom = 160.0
+theme_override_font_sizes/font_size = 28
+script = ExtResource("5")
+player = NodePath("../../Player")
