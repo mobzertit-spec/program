@@ -9,7 +9,7 @@ extends StaticBody2D
 		update_block()
 
 # لون القطعة
-@export var color := Color("4a4f5c"):
+@export var color := Color("121418"):
 	set(value):
 		color = value
 		update_block()
