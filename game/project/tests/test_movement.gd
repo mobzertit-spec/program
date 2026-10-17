@@ -264,7 +264,7 @@ func run() -> void:
 		await place(Vector2(400, 880))
 		Input.action_press("jump")
 		await frames(3)
-		check(player.get_node("Body").scale.y > 1.05, "body stretches when jumping (scale=%s)" % player.get_node("Body").scale)
+		check(player.get_node("Body").scale.y > 1.02, "body stretches when jumping (scale=%s)" % player.get_node("Body").scale)
 		Input.action_release("jump")
 		var squashed := false
 		for i in 80:

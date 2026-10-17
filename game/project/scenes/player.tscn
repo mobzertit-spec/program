@@ -4,8 +4,10 @@
 [ext_resource type="Script" path="res://scripts/player_animator.gd" id="2"]
 [ext_resource type="Shader" path="res://shaders/cloak.gdshader" id="3"]
 [ext_resource type="Texture2D" path="res://art/player/wanderer_cloak.png" id="4"]
-[ext_resource type="Texture2D" path="res://art/player/wanderer_leg.png" id="5"]
+[ext_resource type="Texture2D" path="res://art/player/wanderer_thigh.png" id="5"]
 [ext_resource type="Texture2D" path="res://art/player/wanderer_body.png" id="6"]
+[ext_resource type="Texture2D" path="res://art/player/wanderer_shin.png" id="7"]
+[ext_resource type="Texture2D" path="res://art/player/wanderer_arm.png" id="8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(28, 96)
@@ -41,7 +43,8 @@ shape = SubResource("RectangleShape2D_1")
 position = Vector2(0, 48)
 
 [node name="Rig" type="Node2D" parent="Body"]
-scale = Vector2(0.5, 0.5)
+position = Vector2(2, 0)
+scale = Vector2(0.47, 0.47)
 script = ExtResource("2")
 
 [node name="Cloak" type="Sprite2D" parent="Body/Rig"]
@@ -50,23 +53,41 @@ texture = ExtResource("4")
 centered = false
 offset = Vector2(-56.3, -209.9)
 
-[node name="BackLeg" type="Sprite2D" parent="Body/Rig"]
+[node name="BackThigh" type="Sprite2D" parent="Body/Rig"]
 modulate = Color(0.62, 0.64, 0.7, 1)
 position = Vector2(-2.1, -44)
 texture = ExtResource("5")
 centered = false
 offset = Vector2(-49.2, -166.8)
 
-[node name="FrontLeg" type="Sprite2D" parent="Body/Rig"]
+[node name="BackShin" type="Sprite2D" parent="Body/Rig/BackThigh"]
+position = Vector2(2.2, 7.8)
+texture = ExtResource("7")
+centered = false
+offset = Vector2(-51.4, -174.6)
+
+[node name="FrontThigh" type="Sprite2D" parent="Body/Rig"]
 position = Vector2(-7.1, -43.1)
 texture = ExtResource("5")
 centered = false
 offset = Vector2(-49.2, -166.8)
 
+[node name="FrontShin" type="Sprite2D" parent="Body/Rig/FrontThigh"]
+position = Vector2(2.2, 7.8)
+texture = ExtResource("7")
+centered = false
+offset = Vector2(-51.4, -174.6)
+
 [node name="Torso" type="Sprite2D" parent="Body/Rig"]
 texture = ExtResource("6")
 centered = false
 offset = Vector2(-56.3, -209.9)
+
+[node name="Arm" type="Sprite2D" parent="Body/Rig"]
+position = Vector2(-7.7, -116.7)
+texture = ExtResource("8")
+centered = false
+offset = Vector2(-48.6, -93.2)
 
 [node name="EyeGlow" type="Sprite2D" parent="Body/Rig"]
 modulate = Color(1, 1, 1, 0.45)

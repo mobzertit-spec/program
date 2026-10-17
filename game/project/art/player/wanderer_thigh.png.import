@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://doyhjqj0w303u"
-path="res://.godot/imported/wanderer_leg.png-0ecc99ffab2e896ce83f107da8343785.ctex"
+uid="uid://cvey4q331o5f8"
+path="res://.godot/imported/wanderer_thigh.png-cb80046c90de187819062f1f03887033.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/player/wanderer_leg.png"
-dest_files=["res://.godot/imported/wanderer_leg.png-0ecc99ffab2e896ce83f107da8343785.ctex"]
+source_file="res://art/player/wanderer_thigh.png"
+dest_files=["res://.godot/imported/wanderer_thigh.png-cb80046c90de187819062f1f03887033.ctex"]
 
 [params]
 

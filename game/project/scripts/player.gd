@@ -49,7 +49,7 @@ extends CharacterBody2D
 
 # ===== الإحساس =====
 # سرعة رجوع الشكل لحجمه الطبيعي بعد التمدد والانضغاط
-@export var stretch_recover_speed := 12.0
+@export var stretch_recover_speed := 10.0
 
 # حالات الرحّال: يا يتحرك عادي، يا يندفع
 enum State { NORMAL, DASH }
@@ -80,9 +80,10 @@ func _physics_process(delta: float) -> void:
 			dash_state(delta)
 
 	var was_on_floor := is_on_floor()
+	var fall_speed := velocity.y
 	move_and_slide()
 	if not was_on_floor and is_on_floor():
-		on_land()
+		on_land(fall_speed)
 	update_visual(delta)
 
 
@@ -165,7 +166,7 @@ func jump(strength: float) -> void:
 	velocity.y = strength
 	jump_buffer_timer = 0.0
 	coyote_timer = 0.0
-	body_stretch = Vector2(0.75, 1.25)
+	body_stretch = Vector2(0.95, 1.06)
 
 
 func wall_jump() -> void:
@@ -176,7 +177,7 @@ func wall_jump() -> void:
 	wall_jump_lock_timer = wall_jump_lock_time
 	jump_buffer_timer = 0.0
 	is_wall_sliding = false
-	body_stretch = Vector2(0.75, 1.25)
+	body_stretch = Vector2(0.95, 1.06)
 
 
 func handle_dash() -> void:
@@ -193,7 +194,7 @@ func start_dash() -> void:
 	dash_cooldown_timer = dash_cooldown
 	if not is_on_floor():
 		can_air_dash = false
-	body_stretch = Vector2(1.3, 0.75)
+	body_stretch = Vector2(1.06, 0.95)
 
 
 func dash_state(delta: float) -> void:
@@ -205,8 +206,10 @@ func dash_state(delta: float) -> void:
 		velocity.x = facing * max_speed
 
 
-func on_land() -> void:
-	body_stretch = Vector2(1.25, 0.8)
+func on_land(fall_speed: float) -> void:
+	# كل ما كان النزول أقوى، كل ما انضغط أكثر
+	var impact := clampf(fall_speed / max_fall_speed, 0.0, 1.0)
+	body_stretch = Vector2(1.0 + 0.1 * impact, 1.0 - 0.12 * impact)
 
 
 func update_visual(delta: float) -> void:
