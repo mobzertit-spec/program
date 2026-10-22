@@ -5,9 +5,19 @@
         "source": "github",
         "repo": "openai/codex-plugin-cc"
       }
+    },
+    "ecc": {
+      "source": {
+        "source": "github",
+        "repo": "affaan-m/ECC"
+      }
     }
   },
   "enabledPlugins": {
-    "codex@openai-codex": true
+    "codex@openai-codex": true,
+    "ecc@ecc": true
+  },
+  "env": {
+    "ECC_HOOKS_ENABLED": "false"
   }
 }
