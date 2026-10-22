@@ -22,6 +22,10 @@ extends AnimatedSprite2D
 @export var skid_speed_ratio := 0.7
 @export var skid_time := 0.14
 
+# ===== النعومة =====
+# لما تتغيّر الحركة، الإطار القديم يختفي بالتدريج فوق الجديد هالمدة (ثواني). 0 = تبديل مباشر
+@export var blend_time := 0.08
+
 # ===== المؤثرات =====
 @export var dust_color := Color(0.85, 0.82, 0.76, 0.55)
 @export var ghost_color := Color(0.55, 0.78, 1.0, 0.45)
@@ -113,6 +117,8 @@ func show_state(state: StringName) -> void:
 		if sprite_frames.has_animation(option):
 			anim = option
 			break
+	if anim != animation and blend_time > 0.0 and sprite_frames.has_animation(animation):
+		fade_out(sprite_frames.get_frame_texture(animation, frame))
 	if anim == &"jump":
 		# إطارات القفز تختارها السرعة العمودية، مو الوقت
 		animation = anim
@@ -133,6 +139,22 @@ func update_playback() -> void:
 			speed_scale = clampf(absf(player.velocity.x) / base, 0.6, 1.6)
 		_:
 			speed_scale = 1.0
+
+
+func fade_out(texture: Texture2D) -> void:
+	# نسخة من الإطار القديم فوق الجديد، تختفي بسرعة، فالتبديل بين الحركات يصير ناعم
+	var old := Sprite2D.new()
+	old.texture = texture
+	old.centered = false
+	old.offset = offset
+	old.scale = scale
+	old.position = position
+	old.texture_filter = texture_filter
+	old.modulate.a = 0.6
+	feet.add_child(old)
+	var tween := old.create_tween()
+	tween.tween_property(old, "modulate:a", 0.0, blend_time)
+	tween.tween_callback(old.queue_free)
 
 
 func update_effects(delta: float) -> void:

@@ -38,11 +38,12 @@ How each frame is placed:
           "sheet" frames keep their height relative to the ground of their row or cell;
                   the lowest one touches the baseline (jumps)
   halign  "torso" (default) the middle of the body sits on the centre line
+          "head"  the middle of the head sits on the centre line (steadiest for walk and run)
           "left"  the back of the body touches the centre line (wall slide: the wall is there)
   scale   extra size factor when the generator drew this sheet a bit bigger or smaller
 The "reference" animation (normally idle) sets the size: its tallest frame becomes `height`.
-Every other animation is scaled so its body area matches the reference, which holds up
-across poses far better than the bounding box does.
+Every other animation is scaled so the head is as big as in the reference: the head keeps
+its size whatever the pose, unlike the height or the area of the whole body.
 """
 import json
 import sys
@@ -74,7 +75,21 @@ def key_background(im):
     border = np.concatenate([im[0], im[-1], im[:, 0], im[:, -1]])
     bg = np.median(border, axis=0)
     dist = np.sqrt(((im - bg) ** 2).sum(axis=2))
-    alpha = np.clip((dist - ALPHA_LOW) / (ALPHA_HIGH - ALPHA_LOW), 0, 1)
+    if bg[1] < min(bg[0], bg[2]) - 60:
+        # magenta/pink: how magenta a pixel is (red and blue above green) is how much background
+        # it holds, so ink mixed with background in small gaps (shoelaces, between the legs) clears too
+        pink = np.minimum(im[..., 0], im[..., 2]) - im[..., 1]
+        share = np.clip(pink / (min(bg[0], bg[2]) - bg[1]), 0, 1)
+        alpha = np.clip((0.9 - share) / 0.8, 0, 1)
+    else:
+        # Only pixels right next to the background get a soft edge; everything else is solid.
+        # Light skin on a light grey sheet is close to the paper colour, and a soft key over the
+        # whole picture would make it see-through.
+        background = dist < 18
+        fringe = ndimage.binary_dilation(background, iterations=2) & ~background
+        alpha = np.ones_like(dist)
+        alpha[background] = 0
+        alpha[fringe] = np.clip((dist[fringe] - ALPHA_LOW) / (ALPHA_HIGH - ALPHA_LOW), 0, 1)
     a = alpha[..., None]
     rgb = np.where(a > 0.02, (im - (1 - a) * bg) / np.maximum(a, 0.02), im)
     # background spill near the outline: pull edge colours away from the background hue
@@ -207,7 +222,7 @@ def load_sheet(path, opts):
         crop = rgba[top:bottom, left:right].copy()
         crop[..., 3] *= soft
         frames.append({'row': r, 'col': c, 'rgba': crop, 'top': top, 'bottom': bottom,
-                       'ground': y1, 'area': float(crop[..., 3].sum())})
+                       'ground': y1})
     # frames found from empty space: their row's ground is the lowest foot in that row
     if not opts.get('grid'):
         for f in frames:
@@ -249,7 +264,7 @@ def breathe(frame, count, amount=0.012):
         a = np.clip(img[..., 3:4], 0, 1)
         img[..., :3] = np.where(a > 0.004, img[..., :3] / np.maximum(a, 0.004), 0)
         img[..., 3:4] = a
-        out.append(dict(frame, rgba=img, top=frame['top'] - room, area=float(a.sum())))
+        out.append(dict(frame, rgba=img, top=frame['top'] - room))
     return out
 
 
@@ -267,11 +282,30 @@ def premultiplied_resize(rgba, size):
     return np.clip(out, 0, [255, 255, 255, 1])
 
 
+def neck_row(alpha):
+    """Row of the neck: the narrowest row between 15% and 50% of the figure's height."""
+    solid = alpha > 0.5
+    ys = np.nonzero(solid.any(axis=1))[0]
+    top, height = ys[0], ys[-1] - ys[0]
+    widths = []
+    for y in range(top + int(0.15 * height), top + int(0.5 * height)):
+        xs = np.nonzero(solid[y])[0]
+        widths.append(xs[-1] - xs[0] if len(xs) else 0)
+    return top + int(0.15 * height) + int(np.argmin(widths))
+
+
+def head_size(alpha):
+    ys = np.nonzero((alpha > 0.5).any(axis=1))[0]
+    return neck_row(alpha) - ys[0]
+
+
 def body_anchor(alpha, halign):
     """x of the centre line inside a frame (same pixels as `alpha`)."""
     ys, xs = np.nonzero(alpha > 0.5)
     if halign == 'left':
         return float(np.percentile(xs, 1))
+    if halign == 'head':
+        return float(np.median(xs[ys < neck_row(alpha)]))
     top, bottom = ys.min(), ys.max()
     torso = (ys >= top + 0.25 * (bottom - top)) & (ys <= top + 0.6 * (bottom - top))
     return float(np.median(xs[torso]))
@@ -302,7 +336,7 @@ def build(spec_path):
     ref = next((a for a in anims if a.get('reference')), anims[0])
     ref_frames = chosen[ref['name']]
     ref_scale = spec['height'] / max(f['bottom'] - f['top'] for f in ref_frames)
-    ref_area = np.median([f['area'] for f in ref_frames]) * ref_scale ** 2
+    ref_head = np.median([head_size(f['rgba'][..., 3]) for f in ref_frames]) * ref_scale
 
     # scale every frame and place it relative to its anchor (centre line x, baseline y)
     placed = {}
@@ -311,7 +345,7 @@ def build(spec_path):
         if anim is ref:
             scale = ref_scale
         else:
-            scale = np.sqrt(ref_area / np.median([f['area'] for f in frames]))
+            scale = ref_head / np.median([head_size(f['rgba'][..., 3]) for f in frames])
         scale *= anim.get('scale', 1.0)
         rise = [f['ground'] - f['bottom'] for f in frames]
         items = []
