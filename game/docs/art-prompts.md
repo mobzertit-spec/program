@@ -1,25 +1,104 @@
-# برومبتات الرسم
+# رسم الرحّال وحركاته
 
-برومبتات تلصقها في ChatGPT أو Higgsfield عشان تولّد صور اللعبة. البرومبتات بالإنجليزي لأن نتايجها أدق، والشرح بالعربي.
+نولّد الرسمات في **Higgsfield**. البرومبتات بالإنجليزي لأن نتايجها أدق، والشرح بالعربي.
 
-**الشكل الجديد [متفق عليه]:** شاب صغير الحجم وراسه كبير شوي، وجهه بسيط، وشعره مميّز (غرّة جانبية طويلة وذيل صغير ورا) لونه بني مائل للأصفر. لابس تيشرت أزرق فاتح خفيف، وسروال بيج، وحذاء قماش، وما معه سلاح. الستايل مرسوم باليد: خطوط حبر وألوان مسطّحة ناعمة.
+**الشكل المعتمد [متفق عليه]:** ورقة الشخصية في `game/art/concept/hero_sheet.png`.
+- ولد صغير راسه كبير.
+- شعره بني مائل للأصفر.
+- تيشرت أزرق فاتح، وسروال بيج، وحذاء قماش.
+- ما معه سلاح.
+- مرسوم باليد: خطوط حبر وألوان مسطّحة ناعمة.
 
-ما نكتب أسماء ألعاب ولا شخصيات في البرومبت (مثل لينك أو هورنت). نوصف الشكل بالكلام، عشان الرسمة تطلع خاصة فينا.
+## الصورة الجانبية (ارفعها مع كل حركة)
 
-## كيف تستخدمها
+[`game/art/hero/reference_side.png`](https://github.com/mobzertit-spec/program/raw/claude/jolly-fermat-x99np1/game/art/hero/reference_side.png): الولد من الجنب بس، مطالع يمين، على خلفية فاضية. قصّيتها من ورقة الشخصية.
 
-1. **ورقة الشخصية أول (رقم 1).** ولّدها لين يطلع شكل يعجبك، وأرسلها لي. أشيّك على الحجم والخلفية قبل ما تكمل.
-2. **بعدها الحركات (رقم 2).** لكل حركة:
-   - افتح محادثة جديدة.
-   - ارفع صورة ورقة الشخصية اللي اخترتها.
-   - الصق برومبت الحركة كامل.
-3. لو سألك عن الحجم، اختر **الأفقي** (Landscape).
-4. لو إطار واحد خرب (يد زايدة، شعر مختلف، الشخصية مقصوصة)، اطلب صورة ثانية أو استخدم جمل التعديل اللي تحت.
-5. أرسل لي كل الصور مع اسم الحركة.
+**ليش ما نرفع الورقة كاملة:** في المحاولة الأولى رفعنا الورقة كاملة، فرسم الموقع الولد من قدام ومن ورا وسط الحركات. الصورة الجانبية تمنع هالشي.
 
-## 1. ورقة الشخصية
+## 1. الطريقة الأفضل: AutoSprite
 
-الشاب ثلاث مرات: من قدام، ومن الجنب، ومن ورا. هذي المرجع اللي ترفعه مع كل برومبت حركة، فلازم تكون الأوضح.
+في Higgsfield أداة اسمها **AutoSprite Animation**. ترفع لها صورة وحدة للشخصية، وتطلّع لك ورقة إطارات لحركة كاملة. تسوي الحركة من فيديو، فالإطارات **متناسقة مع بعض**، أحسن بكثير من برومبت صور يرسم صف وضعيات.
+
+**كل مرة:**
+1. افتح **AutoSprite Animation** في Higgsfield.
+2. ارفع `reference_side.png`.
+3. اختر الحركة من الجدول تحت.
+4. خلّ **حجم الإطار** (Frame size) على **512**، وشغّل **إزالة الخلفية** (Remove background).
+5. خلّ عدد الإطارات على الافتراضي.
+6. نزّل الصورة وأرسلها لي مع اسم الحركة.
+
+لو الخيارات عندك مختلفة شوي، اختر الأقرب لها.
+
+**رصيدك محدود** (الحساب المجاني فيه تقريباً 46 رصيد)، فسوّها بهالترتيب. لو خلص الرصيد، أرسل اللي سويته وأنا أكمل بالإطارات المؤقتة:
+
+| # | الحركة | اختر | الوصف (لو اخترت Custom) |
+|---|---|---|---|
+| 1 | الجري | **Run** | |
+| 2 | الوقوف | **Idle** | |
+| 3 | القفز | **Jump** | |
+| 4 | المشي | **Walk** | |
+| 5 | الاندفاع | **Custom**، والاسم `dash` | الوصف 5 تحت |
+| 6 | النزول | **Custom**، والاسم `land` | الوصف 6 تحت |
+| 7 | الجدار | **Custom**، والاسم `wall_slide` | الوصف 7 تحت |
+| 8 | الفرملة (اختياري) | **Custom**، والاسم `skid` | الوصف 8 تحت |
+
+**5. الاندفاع:**
+```
+A quick forward dash: he crouches for an instant, then bursts forward with his body leaning far forward, arms swept back and hair blown back, feet off the ground, then catches himself.
+```
+
+**6. النزول:**
+```
+Landing after a jump: he drops onto the ground, his knees bend into a low crouch to absorb the impact, arms forward for balance, then he stands back up.
+```
+
+**7. الجدار:**
+```
+Sliding down a wall that is behind his back, on the left side. He faces right, away from the wall; his back, his left hand and one foot press against the wall to slow down, and his hair is pushed upward. Do not show the wall.
+```
+
+**8. الفرملة:**
+```
+Running fast, then braking hard to a sudden stop: he leans back, plants his front foot and slides a little, arms out for balance, then stands still.
+```
+
+## 2. الطريقة الاحتياطية: برومبت صور لكل حركة
+
+لو AutoSprite ما اشتغلت أو خلص رصيدها:
+- استخدم موديل صور يقبل صورة مرجع، مثل **Nano Banana Pro** أو **Seedream**.
+- ارفع `reference_side.png`، واختر الحجم الأفقي **16:9**.
+- **حركة وحدة في كل صورة**، لأن الحركات كلها في صورة وحدة طلعت غلط.
+- البرومبت فيه تحذيرات من أغلاط المحاولة الأولى: خط أرض، وجدار، ورسمات من قدام وورا، وخطوط حركة.
+
+انسخ القالب، وبدّل `[MOVE]` بوصف الحركة، و `[N]` بعدد الإطارات من الجدول اللي تحت:
+
+```
+Using the attached image as the exact character reference, draw a sprite sheet of this same boy for a 2D side-scrolling game: [MOVE].
+- [N] frames in ONE horizontal row, evenly spaced, with clear empty space between frames.
+- Every frame is a side view facing right. No front views, no back views.
+- Full body in every frame, nothing cropped. Same size, proportions, hair, clothes and colours as the reference in every frame.
+- The animation plays in place: the boy does not move across the row.
+- Hand-drawn 2D game art, clean dark ink outlines, soft flat colours, minimal shading, same style as the reference.
+- Solid flat pure magenta (#FF00FF) background. No ground line, no floor, no wall, no motion lines, no shadows, no text, no numbers.
+```
+
+| الحركة | `[N]` | `[MOVE]` |
+|---|---|---|
+| الجري | 8 | `a fast, natural run cycle: both feet leave the ground between steps, arms pump opposite to the legs, body leans forward, hair bounces; the last frame leads back into the first` |
+| الوقوف | 6 | `an idle loop: standing relaxed, breathing gently, chest rising and falling slightly, hair moving a little` |
+| القفز | 5 | `a jump in this order: pushing off the ground, rising with knees up and arms raised, the top of the jump, falling with hair blown upward, legs reaching down about to land` |
+| المشي | 8 | `a calm walk cycle: one foot always on the ground, relaxed arm swing; the last frame leads back into the first` |
+| الاندفاع | 3 | `a quick forward dash: bracing low, then bursting forward with the body leaning far forward, arms back, hair blown back, feet off the ground` |
+| النزول | 3 | `landing after a jump: feet touch down with knees bending, a low crouch absorbing the impact, standing back up` |
+| الجدار | 2 | `sliding down an invisible wall on his LEFT, behind his back; he faces right; back, left hand and one foot press against it; hair pushed up. Do not draw the wall` |
+
+**لو طلع غلط:**
+- خطوط أو جدار مرسوم: `Remove the ground line, the wall and all motion lines. Keep everything else the same.`
+- رسمات من قدام أو ورا: `Make every frame a side view facing right. Keep everything else the same.`
+
+## 3. ورقة الشخصية (خلصت)
+
+هذا البرومبت اللي طلّع ورقة الشخصية. نرجع له لو احتجنا نعيدها، أو لما نسوي ملابس جديدة.
 
 ```
 Character reference sheet for a 2D hand-drawn metroidvania game.
@@ -37,118 +116,9 @@ Background: plain flat light grey. No scenery, no text, no labels.
 Keep the proportions, colours and details exactly the same in all three views.
 ```
 
-**وش يقول البرومبت:** شاب عمره تقريباً 17، صغير وراسه كبير شوي (طوله ثلاث رؤوس ونص)، ومو طفل. بعدها الوجه البسيط، والشعر، والملابس، وإنه بدون سلاح ولا شنطة. وفي الأخير الثلاث زوايا، والستايل، وخلفية رمادية فاضية بدون كتابة.
+## 4. ورقة السيف المكسور (خلصت)
 
-## 2. الحركات
-
-ست صور، كل صورة لحركة وحدة. كل إطارات الحركة في **صف واحد**، والشاب **مطالع يمين**، ورجوله على **نفس الخط** في كل إطار. الخلفية **فوشيا** (#FF00FF) لأنه لون ما يجي في الرسمة، فأقدر أشيلها بدقة.
-
-| الحركة | الإطارات | متى تطلع في اللعبة |
-|---|---|---|
-| الوقوف | 6 | لما يكون واقف |
-| الجري | 8 | لما يجري يمين أو يسار |
-| القفز | 5 | من أول ما يقفز لين قبل ما يلمس الأرض |
-| النزول | 3 | لحظة ما يلمس الأرض بعد القفز |
-| الاندفاع | 3 | الانطلاقة السريعة |
-| الجدار | 2 | لما ينزلق على جدار |
-
-ارفع ورقة الشخصية مع كل واحد منها.
-
-### الوقوف (6 إطارات)
-
-```
-Using the attached character sheet as the exact reference, draw a sprite sheet of the same character for a 2D game animation: an idle loop. He stands relaxed and breathes gently; his chest rises and falls slightly, and his hair and t-shirt move a little.
-- 6 frames in one horizontal row, evenly spaced, every frame the same size.
-- Side view facing right, full body in every frame, nothing cropped.
-- The animation plays in place: the character does not move across the sheet, and the feet sit on the same invisible ground line in every frame.
-- Same proportions, colours, hair and clothes as the reference in every frame.
-- Hand-drawn 2D game art, clean dark ink outlines, soft flat colours, minimal shading.
-- Solid flat pure magenta (#FF00FF) background, no gradient. No shadow, no text, no numbers, no labels.
-```
-
-### الجري (8 إطارات)
-
-```
-Using the attached character sheet as the exact reference, draw a sprite sheet of the same character for a 2D game animation: a run cycle. A full, natural, light running loop: the arms swing opposite to the legs, the body leans slightly forward, and the hair bounces with each step. The last frame leads smoothly back into the first.
-- 8 frames in one horizontal row, evenly spaced, every frame the same size.
-- Side view facing right, full body in every frame, nothing cropped.
-- The animation plays in place: the character does not move across the sheet, and the feet sit on the same invisible ground line in every frame.
-- Same proportions, colours, hair and clothes as the reference in every frame.
-- Hand-drawn 2D game art, clean dark ink outlines, soft flat colours, minimal shading.
-- Solid flat pure magenta (#FF00FF) background, no gradient. No shadow, no text, no numbers, no labels.
-```
-
-### القفز (5 إطارات)
-
-```
-Using the attached character sheet as the exact reference, draw a sprite sheet of the same character for a 2D game animation: a jump, in this order: 1. pushing off the ground, 2. rising with knees pulled up and arms raised, 3. the top of the jump, body almost weightless, 4. falling with hair and t-shirt blown upward, 5. legs reaching down, about to land.
-- 5 frames in one horizontal row, evenly spaced, every frame the same size.
-- Side view facing right, full body in every frame, nothing cropped.
-- The character stays in the same spot in every frame; do not draw him higher or lower across the sheet.
-- Same proportions, colours, hair and clothes as the reference in every frame.
-- Hand-drawn 2D game art, clean dark ink outlines, soft flat colours, minimal shading.
-- Solid flat pure magenta (#FF00FF) background, no gradient. No shadow, no text, no numbers, no labels.
-```
-
-### النزول (3 إطارات)
-
-```
-Using the attached character sheet as the exact reference, draw a sprite sheet of the same character for a 2D game animation: landing after a jump, in this order: 1. feet touching the ground, knees bending, 2. a low crouch absorbing the impact, arms forward for balance, 3. standing back up.
-- 3 frames in one horizontal row, evenly spaced, every frame the same size.
-- Side view facing right, full body in every frame, nothing cropped.
-- The animation plays in place: the character does not move across the sheet, and the feet sit on the same invisible ground line in every frame.
-- Same proportions, colours, hair and clothes as the reference in every frame.
-- Hand-drawn 2D game art, clean dark ink outlines, soft flat colours, minimal shading.
-- Solid flat pure magenta (#FF00FF) background, no gradient. No shadow, no text, no numbers, no labels.
-```
-
-### الاندفاع (3 إطارات)
-
-```
-Using the attached character sheet as the exact reference, draw a sprite sheet of the same character for a 2D game animation: a quick forward dash, in this order: 1. bracing, body low and coiled, 2. bursting forward, body stretched and leaning far forward, arms back, hair and t-shirt blown back, 3. the same burst a moment later. His feet are off the ground in frames 2 and 3.
-- 3 frames in one horizontal row, evenly spaced, every frame the same size.
-- Side view facing right, full body in every frame, nothing cropped.
-- The character stays in the same spot in every frame; do not move him across the sheet.
-- Same proportions, colours, hair and clothes as the reference in every frame.
-- Hand-drawn 2D game art, clean dark ink outlines, soft flat colours, minimal shading.
-- Solid flat pure magenta (#FF00FF) background, no gradient. No speed lines, no shadow, no text, no numbers, no labels.
-```
-
-### الجدار (إطارين)
-
-```
-Using the attached character sheet as the exact reference, draw a sprite sheet of the same character for a 2D game animation: sliding down a wall. The wall is on the LEFT side, behind his back, but do not draw the wall. He faces right, away from the wall; his back, his left hand and one foot press against the invisible wall to slow the slide, and his hair is pushed upward. The two frames differ slightly, so the slide looks alive.
-- 2 frames in one horizontal row, evenly spaced, every frame the same size.
-- Side view facing right, full body in every frame, nothing cropped.
-- Same proportions, colours, hair and clothes as the reference in every frame.
-- Hand-drawn 2D game art, clean dark ink outlines, soft flat colours, minimal shading.
-- Solid flat pure magenta (#FF00FF) background, no gradient. No wall, no shadow, no text, no numbers, no labels.
-```
-
-## 3. جمل للتعديل
-
-اكتبها في نفس المحادثة بعد ما تطلع الصورة:
-
-| تبي | اكتب |
-|---|---|
-| تغيّر شي واحد بس | `Keep everything exactly the same. Only change: ...` |
-| الشاب طلع طويل | `Make the character smaller and more compact, about 3 heads tall, with a slightly larger head. Keep everything else the same.` |
-| الشاب طلع طفل أو كرتوني مرة | `Make the character a little older and less cartoonish, about 4 heads tall. Keep everything else the same.` |
-| الشعر مو مميّز | `Make the hair more distinctive: long side-swept bangs framing the face and a small short ponytail at the back. Keep everything else the same.` |
-| طلع كلام أو أرقام في الصورة | `Remove all text, numbers and labels.` |
-| الزوايا أو الإطارات مو نفس الشخصية | `Make every view the same character with identical proportions, hair and colours.` |
-| الألوان مظلّلة مرة | `Use flatter colours and clean ink outlines, almost no shading.` |
-| الخلفية مو فوشيا ثابت | `Make the background one solid flat colour: pure magenta #FF00FF, no gradient, no shadow.` |
-| الإطارات لازقة في بعض أو الشخصية مقصوصة | `Leave clear empty space between the frames and around the character, so no frame touches another.` |
-| رجوله مو على نفس الخط | `Place the feet on the same ground line in every frame.` |
-
-**لو الشاب طلع صغير مرة في ورقة الجري:** اطلبها صورتين، كل وحدة 4 إطارات: الأولى `the first half of the run cycle (frames 1 to 4)`، والثانية `the second half of the run cycle (frames 5 to 8)`.
-
-**علامة الموقع:** لو الموقع يحط علامته على الصورة، تأكد إنها بعيدة عن الشاب. أنا أشيلها.
-
-## 4. ورقة السيف المكسور
-
-الشاب ما معه سلاح في البداية، ويلقى هالسيف بعد ما يطلع من القرية. الورقة جاهزة (شوف تحت)، فما تحتاج تولّدها مرة ثانية إلا لو تبي شكل جديد.
+الرحّال يلقى هالسيف بعد ما يطلع من القرية.
 
 ```
 Item reference sheet for a 2D hand-drawn dark fantasy platformer game.
@@ -163,13 +133,24 @@ Background: plain flat light grey. No text, no labels.
 
 ## 5. وش صار بالرسمات
 
-- **السيف:** قصّيت طرفه فصار مكسور، وشلت علامة الموقع. الورقة في `game/art/concept/sword_sheet.png`، والسيف لحاله بخلفية شفافة في `game/project/art/items/sword_broken.png`.
-- **الرحّال القديم (بالغطاء والعباءة):** انشال من التصميم. ورقته في `game/art/concept/old/wanderer_sheet.png`، ويضل في غرفة التجربة لين توصل رسمات الشاب الجديد.
+- **ورقة الشخصية:** نظّفت الخلفية (`game/art/concept/hero_sheet.png`)، وقصّيت منها الصورة الجانبية. الأصل في `game/art/hero/source/character_sheet.png`.
+- **محاولة الحركات الأولى** (`game/art/hero/source/first_try_sheet.png`):
+  - شلت خطوط الأرض والجدار، وأخذت الإطارات الجانبية بس.
+  - صارت حركات **مؤقتة** في اللعبة:
+    - المشي والجري من نفس إطارات المشي.
+    - الوقوف من إطار واقف تقريباً، مع تنفّس خفيف.
+    - القفز من إطار ركبته مرفوعة.
+    - الجدار من إطار ظهره على الجدار.
+  - تتبدّل كلها لما توصل حركات AutoSprite.
+- **السيف:** الورقة في `game/art/concept/sword_sheet.png`، والسيف لحاله بخلفية شفافة في `game/project/art/items/sword_broken.png`.
+- **الرحّال القديم (بالغطاء والعباءة):** انشال. ورقته في `game/art/concept/old/wanderer_sheet.png`.
 
-## 6. بعد ما ترسل الصور
+## 6. كيف تدخل الحركات اللعبة (لي أنا)
 
-1. أشيل الخلفية الفوشيا، وأقص كل إطار لحاله.
-2. أحط رجوله على نفس الخط في كل الإطارات، وأخليها كلها بنفس الحجم.
-3. أركّبها في اللعبة: كل حركة تطلع في وقتها (وقوف، جري، قفز، نزول، اندفاع، جدار).
-4. أكبّر الشاب أو أصغّره لين يصير حجمه تقريباً سُبع طول الشاشة.
-5. أرسل لك مقطع وهو يتحرك، وملف اللعبة الجديد.
+1. أحط الصور في `game/art/hero/source/`، وأكتب كل حركة في `game/art/hero/frames.json`: أي صورة، وأي إطارات، وكم إطار في الثانية.
+2. أشغّل `python game/tools/sprite_sheet.py game/art/hero/frames.json`. الأداة:
+   - تشيل الخلفية أو الخطوط.
+   - تقص الإطارات.
+   - تخلي كل الحركات بنفس الحجم ورجوله على نفس الخط.
+   - تكتب `game/project/art/hero/frames.tres`.
+3. Godot يقرأ الرسمات الجديدة على طول. سكربت `player_visual.gd` يختار الحركة حسب حالة الرحّال، ولو حركة ما لها رسمات يستخدم أقرب حركة لها.

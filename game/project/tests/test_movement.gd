@@ -279,6 +279,7 @@ func run() -> void:
 		await climb_shaft()
 		await dash_corridor()
 		await fall_and_respawn()
+		await hero_checks()
 
 	print("DONE stage %d — failures: %d" % [stage, failures])
 	release_all()
@@ -423,3 +424,88 @@ func climb_small_shaft() -> void:
 	release_all()
 	await frames(30)
 	check(player.is_on_floor() and player.global_position.y < 160.0, "bot climbs the small shaft onto ClimbWall (pos=%s)" % player.global_position)
+
+
+# The drawn hero: each move shows its animation, walking (stick and walk zone), camera look-ahead.
+func hero_checks() -> void:
+	var sprite = player.get_node_or_null("Body/Sprite")
+	if sprite == null or not ("current" in sprite):
+		return
+	player.spawn_position = Vector2(256, 880)
+	await place(Vector2(400, 880))
+	check(sprite.current == &"idle" and sprite.animation == &"idle", "standing shows idle (%s)" % sprite.animation)
+
+	Input.action_press("move_right")
+	await frames(20)
+	check(sprite.current == &"run" and sprite.is_playing(), "running shows run (%s)" % sprite.current)
+	check(sprite.speed_scale > 0.9, "run frames play at running speed (scale=%.2f)" % sprite.speed_scale)
+	var cam := player.get_node("Camera2D") as Camera2D
+	await frames(60)
+	check(cam.position.x > 60.0, "camera looks ahead when facing right (x=%.0f)" % cam.position.x)
+	await place(Vector2(400, 880))
+	Input.action_press("move_right")
+	await frames(20)
+	Input.action_release("move_right")
+	var skidded := false
+	for i in 6:
+		await physics_frame
+		skidded = skidded or sprite.current == &"skid"
+	check(skidded, "letting go at full speed brakes (skid)")
+	await frames(20)
+	check(sprite.current == &"idle", "idle again after stopping (%s)" % sprite.current)
+
+	Input.action_press("move_right", 0.4)
+	await frames(20)
+	check(absf(player.velocity.x - player.walk_speed) < 1.0, "a light stick push walks (vx=%.0f)" % player.velocity.x)
+	check(sprite.current == &"walk", "walking shows walk (%s)" % sprite.current)
+	Input.action_press("move_right", 1.0)
+	await frames(20)
+	check(absf(player.velocity.x - player.max_speed) < 1.0, "a full stick push runs (vx=%.0f)" % player.velocity.x)
+	release_all()
+
+	await place(Vector2(400, 880))
+	Input.action_press("jump")
+	await frames(3)
+	var rise_frame: int = sprite.frame
+	check(sprite.current == &"jump", "jumping shows jump (%s)" % sprite.current)
+	await frames(28)
+	check(sprite.frame > rise_frame, "jump frames go from rising to falling (%d -> %d)" % [rise_frame, sprite.frame])
+	Input.action_release("jump")
+	var landed_anim := false
+	for i in 60:
+		await physics_frame
+		landed_anim = landed_anim or (player.is_on_floor() and sprite.current == &"land")
+	check(landed_anim, "landing from a jump shows land")
+	check(sprite.current == &"idle", "idle again after landing (%s)" % sprite.current)
+
+	await place(Vector2(400, 880))
+	Input.action_press("dash")
+	await frames(3)
+	Input.action_release("dash")
+	check(sprite.current == &"dash", "dashing shows dash (%s)" % sprite.current)
+	var ghosts := 0
+	for child in room.get_children():
+		if child is Sprite2D and child.material is ShaderMaterial:
+			ghosts += 1
+	check(ghosts > 0, "dash leaves after-images (%d)" % ghosts)
+	await frames(30)
+
+	place_air(Vector2(150, 300))
+	Input.action_press("move_left")
+	for i in 90:
+		await physics_frame
+		if player.is_wall_sliding:
+			break
+	await frames(3)
+	check(sprite.current == &"wall", "wall slide shows wall (%s)" % sprite.current)
+	release_all()
+	await frames(90)
+
+	await place(Vector2(4800, -310))
+	Input.action_press("move_right")
+	await frames(20)
+	check(player.walk_zones > 0 and absf(player.velocity.x - player.walk_speed) < 1.0,
+		"inside the walk zone the hero walks (vx=%.0f)" % player.velocity.x)
+	release_all()
+	await place(Vector2(4400, -310))
+	check(player.walk_zones == 0, "leaving the walk zone lets the hero run again")

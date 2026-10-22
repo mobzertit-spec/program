@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://11lu2e8ur6qr"
-path="res://.godot/imported/wanderer_cloak.png-9924b21cd90f2ce10fa64cc8f8843c36.ctex"
+uid="uid://dbgaaxo6hi6d0"
+path="res://.godot/imported/dash.png-ccb7c9cec9fca69b2ec69bfd401b42a2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/player/wanderer_cloak.png"
-dest_files=["res://.godot/imported/wanderer_cloak.png-9924b21cd90f2ce10fa64cc8f8843c36.ctex"]
+source_file="res://art/hero/dash.png"
+dest_files=["res://.godot/imported/dash.png-ccb7c9cec9fca69b2ec69bfd401b42a2.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

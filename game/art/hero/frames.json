@@ -1,0 +1,17 @@
+{
+  "out_dir": "../../project/art/hero",
+  "res_dir": "res://art/hero",
+  "height": 240,
+  "sheets": {
+    "first": {"file": "source/first_try_sheet.png", "remove_lines": true}
+  },
+  "animations": [
+    {"name": "idle", "sheet": "first", "pick": [1], "breathe": 6, "fps": 6, "loop": true, "reference": true},
+    {"name": "walk", "sheet": "first", "pick": [13, 12, 11, 7, 2, 1, 6, 8], "fps": 9, "loop": true},
+    {"name": "run", "sheet": "first", "pick": [13, 12, 11, 7, 2, 1, 6, 8], "fps": 15, "loop": true},
+    {"name": "jump", "sheet": "first", "pick": [10, 11, 5], "fps": 10, "loop": false},
+    {"name": "land", "sheet": "first", "pick": [12], "fps": 12, "loop": false},
+    {"name": "dash", "sheet": "first", "pick": [5], "fps": 12, "loop": false},
+    {"name": "wall", "sheet": "first", "pick": [14], "fps": 6, "loop": true, "halign": "left"}
+  ]
+}

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgt7mwyu4483d"
-path="res://.godot/imported/wanderer_body.png-1080351f749d429bf35dd2a8c75d8d6b.ctex"
+uid="uid://coapelv0v4nyv"
+path="res://.godot/imported/land.png-17e6c493d67865562aad6edaa72fffc4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/player/wanderer_body.png"
-dest_files=["res://.godot/imported/wanderer_body.png-1080351f749d429bf35dd2a8c75d8d6b.ctex"]
+source_file="res://art/hero/land.png"
+dest_files=["res://.godot/imported/land.png-17e6c493d67865562aad6edaa72fffc4.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

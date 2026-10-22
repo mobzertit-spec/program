@@ -5,9 +5,14 @@
 [ext_resource type="PackedScene" path="res://scenes/checkpoint.tscn" id="3"]
 [ext_resource type="Script" path="res://scripts/fall_zone.gd" id="4"]
 [ext_resource type="Script" path="res://scripts/debug_label.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/camera_follow.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/walk_zone.gd" id="7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fall"]
 size = Vector2(6400, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_walk"]
+size = Vector2(700, 200)
 
 [node name="TestRoom" type="Node2D"]
 
@@ -58,6 +63,20 @@ offset_right = 5464.0
 offset_bottom = -256.0
 color = Color(1, 0.702, 0.278, 1)
 
+[node name="DockPlanks" type="ColorRect" parent="."]
+offset_left = 4700.0
+offset_top = -256.0
+offset_right = 5400.0
+offset_bottom = -244.0
+color = Color(0.45, 0.33, 0.22, 1)
+
+[node name="WalkZone" type="Area2D" parent="."]
+position = Vector2(5050, -356)
+script = ExtResource("7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WalkZone"]
+shape = SubResource("RectangleShape2D_walk")
+
 [node name="Checkpoint1" parent="." instance=ExtResource("3")]
 position = Vector2(1920, 576)
 
@@ -85,6 +104,7 @@ limit_right = 5760
 limit_bottom = 1152
 position_smoothing_enabled = true
 position_smoothing_speed = 6.0
+script = ExtResource("6")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

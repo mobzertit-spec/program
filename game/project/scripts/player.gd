@@ -1,6 +1,12 @@
 class_name Player
 extends CharacterBody2D
-## الرحّال: كل حركة البطل في هذا السكربت.
+## الرحّال: كل حركة البطل في هذا السكربت. الرسمة يختارها player_visual.gd.
+
+# تنطلق للرسمة والمؤثرات: kind يا &"ground" يا &"air" (القفزة المزدوجة) يا &"wall"
+signal jumped(kind: StringName)
+# impact من 0 (نزول خفيف) لين 1 (أقوى سقوط)
+signal landed(impact: float)
+signal dashed
 
 # ===== القدرات (شغّلها أو طفّها من الـ Inspector) =====
 @export var can_double_jump := true
@@ -14,6 +20,12 @@ extends CharacterBody2D
 @export var acceleration := 5000.0
 # كم بسرعة يوقف لما تفك الزر
 @export var friction := 6000.0
+
+# ===== المشي =====
+# يمشي لما تدفع عصا اليد شوي، أو داخل منطقة مشي (القرية)
+@export var walk_speed := 200.0
+# دفعة العصا أقل من هالنسبة = مشي، وأكثر = جري
+@export var walk_threshold := 0.6
 
 # ===== الجاذبية =====
 @export var gravity := 3400.0
@@ -66,6 +78,11 @@ var can_air_dash := true
 var is_wall_sliding := false
 var wall_jump_lock_timer := 0.0
 var body_stretch := Vector2.ONE
+# اتجاه الزر الحين: -1 يسار، 0 ولا شي، 1 يمين
+var move_input := 0.0
+var is_walking := false
+# كم منطقة مشي الرحّال داخلها (walk_zone.gd يزيدها وينقصها)
+var walk_zones := 0
 
 @onready var body: Node2D = $Body
 @onready var spawn_position := global_position
@@ -118,12 +135,16 @@ func apply_gravity(delta: float) -> void:
 
 
 func handle_run(delta: float) -> void:
+	var axis := Input.get_axis("move_left", "move_right")
+	move_input = signf(axis)
+	is_walking = move_input != 0.0 and (walk_zones > 0 or absf(axis) < walk_threshold)
 	if wall_jump_lock_timer > 0.0:
 		return
-	var direction := Input.get_axis("move_left", "move_right")
-	if direction != 0.0:
-		velocity.x = move_toward(velocity.x, direction * max_speed, acceleration * delta)
-		facing = 1 if direction > 0.0 else -1
+	if move_input != 0.0:
+		# سرعتين بس: مشي أو جري، عشان الرسمة دايماً تطابق السرعة
+		var target := walk_speed if is_walking else max_speed
+		velocity.x = move_toward(velocity.x, move_input * target, acceleration * delta)
+		facing = int(move_input)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, friction * delta)
 
@@ -150,23 +171,24 @@ func handle_jump() -> void:
 		jump_buffer_timer = jump_buffer_time
 
 	if jump_buffer_timer > 0.0 and coyote_timer > 0.0:
-		jump(jump_velocity)
+		jump(jump_velocity, &"ground")
 	elif jump_buffer_timer > 0.0 and is_wall_sliding:
 		wall_jump()
 	elif Input.is_action_just_pressed("jump") and can_double_jump and air_jumps_left > 0:
 		air_jumps_left -= 1
-		jump(double_jump_velocity)
+		jump(double_jump_velocity, &"air")
 
 	# قفزة قصيرة: لو فكّيت الزر والرحّال لسا طالع، نقص سرعته
 	if Input.is_action_just_released("jump") and velocity.y < 0.0:
 		velocity.y *= jump_cut_multiplier
 
 
-func jump(strength: float) -> void:
+func jump(strength: float, kind: StringName) -> void:
 	velocity.y = strength
 	jump_buffer_timer = 0.0
 	coyote_timer = 0.0
 	body_stretch = Vector2(0.95, 1.06)
+	jumped.emit(kind)
 
 
 func wall_jump() -> void:
@@ -178,6 +200,7 @@ func wall_jump() -> void:
 	jump_buffer_timer = 0.0
 	is_wall_sliding = false
 	body_stretch = Vector2(0.95, 1.06)
+	jumped.emit(&"wall")
 
 
 func handle_dash() -> void:
@@ -195,6 +218,7 @@ func start_dash() -> void:
 	if not is_on_floor():
 		can_air_dash = false
 	body_stretch = Vector2(1.06, 0.95)
+	dashed.emit()
 
 
 func dash_state(delta: float) -> void:
@@ -210,6 +234,7 @@ func on_land(fall_speed: float) -> void:
 	# كل ما كان النزول أقوى، كل ما انضغط أكثر
 	var impact := clampf(fall_speed / max_fall_speed, 0.0, 1.0)
 	body_stretch = Vector2(1.0 + 0.1 * impact, 1.0 - 0.12 * impact)
+	landed.emit(impact)
 
 
 func update_visual(delta: float) -> void:

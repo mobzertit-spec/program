@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b73rgb70s1khr"
-path="res://.godot/imported/wanderer_shin.png-8ae5783cf8557f05f8ea80378b3fdc47.ctex"
+uid="uid://d1q8kpdmyipbs"
+path="res://.godot/imported/jump.png-85abb7980a3962e4102c5208443e2383.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/player/wanderer_shin.png"
-dest_files=["res://.godot/imported/wanderer_shin.png-8ae5783cf8557f05f8ea80378b3fdc47.ctex"]
+source_file="res://art/hero/jump.png"
+dest_files=["res://.godot/imported/jump.png-85abb7980a3962e4102c5208443e2383.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

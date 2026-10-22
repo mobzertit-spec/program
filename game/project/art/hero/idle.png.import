@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjn1qgnqtd2vu"
-path="res://.godot/imported/wanderer_arm.png-13837fb82fa4788172ef0ed28f60173c.ctex"
+uid="uid://ckvgkv6cqsvxj"
+path="res://.godot/imported/idle.png-98fddd131f0a8fdc30187ec74467d6c1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/player/wanderer_arm.png"
-dest_files=["res://.godot/imported/wanderer_arm.png-13837fb82fa4788172ef0ed28f60173c.ctex"]
+source_file="res://art/hero/idle.png"
+dest_files=["res://.godot/imported/idle.png-98fddd131f0a8fdc30187ec74467d6c1.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

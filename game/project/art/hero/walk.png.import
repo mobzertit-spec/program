@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvey4q331o5f8"
-path="res://.godot/imported/wanderer_thigh.png-cb80046c90de187819062f1f03887033.ctex"
+uid="uid://b2gn26d0o3dm0"
+path="res://.godot/imported/walk.png-bd1b8a24d3f53cc0382e568bdb5a763f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/player/wanderer_thigh.png"
-dest_files=["res://.godot/imported/wanderer_thigh.png-cb80046c90de187819062f1f03887033.ctex"]
+source_file="res://art/hero/walk.png"
+dest_files=["res://.godot/imported/walk.png-bd1b8a24d3f53cc0382e568bdb5a763f.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
