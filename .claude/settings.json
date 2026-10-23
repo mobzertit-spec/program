@@ -5,9 +5,16 @@
         "source": "github",
         "repo": "openai/codex-plugin-cc"
       }
+    },
+    "superdesign": {
+      "source": {
+        "source": "github",
+        "repo": "superdesigndev/superdesign-skill"
+      }
     }
   },
   "enabledPlugins": {
-    "codex@openai-codex": true
+    "codex@openai-codex": true,
+    "superdesign@superdesign": true
   }
 }
